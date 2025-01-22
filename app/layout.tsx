@@ -1,18 +1,19 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import {IBM_Plex_Sans_Hebrew} from 'next/font/google'
 
 export const metadata = {
-  metadataBase: new URL('https://postgres-starter.vercel.app'),
-  title: 'Vercel Postgres Demo',
+  metadataBase: new URL('https://pi-factor.vercel.app'),
+  title: 'Pi-Factor',
   description:
-    'A simple Next.js app with Vercel Postgres as the database',
+    'TAU-Factor 2',
 }
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
+const ibmPlexSansHebrew = IBM_Plex_Sans_Hebrew({
+  subsets: ["hebrew", "latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  display: "swap",
 })
+
 
 export default function RootLayout({
   children,
@@ -21,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.variable}>{children}</body>
+      <body className={ibmPlexSansHebrew.className}>{children}</body>
     </html>
   )
 }

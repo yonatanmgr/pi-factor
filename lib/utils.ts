@@ -1,4 +1,6 @@
-import ms from 'ms'
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+import ms from "ms";
 
 export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
   if (!timestamp) return 'never'
@@ -6,3 +8,8 @@ export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
     timeOnly ? '' : ' ago'
   }`
 }
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
