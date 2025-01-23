@@ -8,7 +8,7 @@ import {
   SemesterGroupGradeInfo,
 } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import {LucidePencil, LucideTrash, LucideUsers, LucideX} from "lucide-react";
+import { LucidePencil, LucideTrash, LucideUsers, LucideX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GradeChart } from "@/components/Chart";
 import useSWRImmutable from "swr/immutable";
@@ -102,25 +102,33 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
     ),
   ).sort();
 
-  const selectedMoeds = Object.entries(visibleMoeds).filter((m) => m[1] && m[0].startsWith(semester));
-  const selectedMoedsLabel = selectedMoeds.length === 0 ? "אף מועד" :
-    selectedMoeds.length === 1 && selectedMoeds[0][0].endsWith("0")
-      ? "מועד קובע"
-      : (selectedMoeds.length === 1 ? "מועד " : "מועדים ")+
-        selectedMoeds
-          .filter((m) => !m[0].endsWith("0"))
-          .map((m) => MOEDS[parseInt(m[0][m[0].length - 1])].split(" ")[1])
-          .join(", ");
+  const selectedMoeds = Object.entries(visibleMoeds).filter(
+    (m) => m[1] && m[0].startsWith(semester),
+  );
+  const selectedMoedsLabel =
+    selectedMoeds.length === 0
+      ? "אף מועד"
+      : selectedMoeds.length === 1 && selectedMoeds[0][0].endsWith("0")
+        ? "מועד קובע"
+        : (selectedMoeds.length === 1 ? "מועד " : "מועדים ") +
+          selectedMoeds
+            .filter((m) => !m[0].endsWith("0"))
+            .map((m) => MOEDS[parseInt(m[0][m[0].length - 1])].split(" ")[1])
+            .join(", ");
 
-  const selectedGroups = Object.entries(visibleGroups).filter((g) => g[1] && g[0].startsWith(semester));
-    const selectedGroupsLabel = selectedGroups.length === 0 ? "אף קבוצה" :
-        selectedGroups.length === 1 && selectedGroups[0][0].endsWith("00")
+  const selectedGroups = Object.entries(visibleGroups).filter(
+    (g) => g[1] && g[0].startsWith(semester),
+  );
+  const selectedGroupsLabel =
+    selectedGroups.length === 0
+      ? "אף קבוצה"
+      : selectedGroups.length === 1 && selectedGroups[0][0].endsWith("00")
         ? "כל הקבוצות"
-        : (selectedGroups.length === 1 ? "קבוצה " : "קבוצות ")+
-            selectedGroups
-                .filter((g) => !g[0].endsWith("00"))
-                .map((g) => g[0].slice(-2))
-                .join(", ");
+        : (selectedGroups.length === 1 ? "קבוצה " : "קבוצות ") +
+          selectedGroups
+            .filter((g) => !g[0].endsWith("00"))
+            .map((g) => g[0].slice(-2))
+            .join(", ");
 
   return (
     <Card className={"flex p-2 bg-zinc-50/50 rounded-md flex-col gap-1"}>
@@ -130,7 +138,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
       <div className={"flex flex-col gap-1"}>
         <div className={"flex flex-row gap-1 text-sm"}>
           <span className={"font-bold"}>
-            {lecturers.size == 1 ? "מרצה" : "מרצים"}: {" "}
+            {lecturers.size == 1 ? "מרצה" : "מרצים"}:{" "}
             <span className={"font-normal"}>
               {lecturers.size ? Array.from(lecturers).join(", ") : "לא ידוע"}
             </span>
@@ -192,11 +200,45 @@ export default function Home() {
       Object.entries(courses ?? {}).map((c) => [c[0], { ...c[1], id: c[0] }]),
     ) ?? null;
   const [selectedCourses, setSelectedCourses] = useState<
-    AllTimeCourseInfo[] | null
-  >(null);
-  const [selectedTab, setSelectedTab] = useState<number | null>(null);
+    AllTimeCourseInfo[]
+  >([]);
 
-  const {  visibleMoeds,  clearMoeds } = useCourseFilters();
+  useEffect(() => {
+    const selectedCourses = localStorage.getItem("selectedCourses");
+    if (selectedCourses && !isLoading) {
+      setSelectedCourses(
+        JSON.parse(selectedCourses).map((id: string) => {
+          return options[id];
+        }),
+      );
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (selectedCourses.length > 0) {
+      localStorage.setItem(
+          "selectedCourses",
+          JSON.stringify(selectedCourses.map((c) => c.id)),
+      );
+    }
+  }, [selectedCourses]);
+
+  const [selectedTab, setSelectedTab] = useState<number>(-1);
+
+  useEffect(() => {
+    if (selectedTab >= 0) {
+      localStorage.setItem("selectedTab", selectedTab.toString());
+    }
+  }, [selectedTab]);
+
+  useEffect(() => {
+    const selectedTab = localStorage.getItem("selectedTab");
+    if (selectedTab) {
+      setSelectedTab(parseInt(selectedTab));
+    }
+  }, []);
+
+  const { visibleMoeds, clearMoeds } = useCourseFilters();
 
   const onSelectedOptions = (course: AllTimeCourseInfo) => {
     if (selectedCourses) {
@@ -210,6 +252,14 @@ export default function Home() {
             (selectedCourse) => selectedCourse.name !== course.name,
           ),
         );
+        localStorage.setItem(
+            "selectedCourses",
+            JSON.stringify(
+                selectedCourses.filter(
+                (selectedCourse) => selectedCourse.name !== course.name,
+                ),
+            ),
+          );
         setSelectedTab(
           selectedCourses.indexOf(selectedCourses[selectedTab ?? 0]) - 1,
         );
@@ -227,7 +277,6 @@ export default function Home() {
   const currentCourseGrades = selectedCourse
     ? (grades ?? {})[selectedCourse.id ?? ""]
     : null;
-
 
   useEffect(() => {
     if (selectedCourse) {
@@ -269,11 +318,12 @@ export default function Home() {
               variant={"secondary"}
               disabled={!selectedCourses?.length}
               onClick={() => {
-                setSelectedCourses(null);
-                setSelectedTab(null);
+                setSelectedCourses([]);
+                localStorage.setItem("selectedCourses", "[]");
+                setSelectedTab(-1);
               }}
             >
-              <LucideTrash className={"text-red-500"} size={14} />                   נקה בחירה
+              <LucideTrash className={"text-red-500"} size={14} /> נקה בחירה
             </Button>
           </div>
           {selectedCourse &&
@@ -282,17 +332,23 @@ export default function Home() {
             ) && (
               <>
                 <div className={"h-px w-full bg-zinc-300/50 my-2"}></div>
-                <header className={"flex flex-row gap-2 justify-between w-full items-center"}>
-                <h2 className={"text-xl font-bold select-none"}>סינון מועדים</h2>
+                <header
+                  className={
+                    "flex flex-row gap-2 justify-between w-full items-center"
+                  }
+                >
+                  <h2 className={"text-xl font-bold select-none"}>
+                    סינון מועדים
+                  </h2>
                   <Button
-                      disabled={!Object.values(visibleMoeds).some((v) => v)}
-                      className={"bg-zinc-50 border"}
-                      variant={"secondary"}
-                      onClick={clearMoeds}
+                    disabled={!Object.values(visibleMoeds).some((v) => v)}
+                    className={"bg-zinc-50 border"}
+                    variant={"secondary"}
+                    onClick={clearMoeds}
                   >
-                    <LucideTrash className={"text-red-500"} size={14} />                   נקה מועדים
+                    <LucideTrash className={"text-red-500"} size={14} /> נקה
+                    מועדים
                   </Button>
-
                 </header>
 
                 <div className={"grow overflow-hidden"}>
@@ -333,27 +389,41 @@ export default function Home() {
             )}
             {selectedCourses?.map((course) => (
               <Button
-                  title={grades?.[course.id ?? ""] === undefined || !grades?.[course.id ?? ""] ? "אין נתוני ציונים זמינים" : ""}
+                title={
+                  grades?.[course.id ?? ""] === undefined ||
+                  !grades?.[course.id ?? ""]
+                    ? "אין נתוני ציונים זמינים"
+                    : ""
+                }
                 key={course.name}
                 className={cn(
                   "bg-zinc-50 border",
                   selectedTab !== null &&
                     selectedTab == selectedCourses.indexOf(course) &&
                     "bg-zinc-800 text-zinc-50 hover:bg-zinc-900",
-                  (grades?.[course.id ?? ""] === undefined || !grades?.[course.id ?? ""]) && "opacity-50 cursor-help",
+                  (grades?.[course.id ?? ""] === undefined ||
+                    !grades?.[course.id ?? ""]) &&
+                    "opacity-50 cursor-help",
                 )}
                 variant={"secondary"}
                 onClick={() => {
-                  if (grades?.[course.id ?? ""] === undefined || !grades?.[course.id ?? ""]) {
+                  if (
+                    grades?.[course.id ?? ""] === undefined ||
+                    !grades?.[course.id ?? ""]
+                  ) {
                     return;
                   }
-                  setSelectedTab(
-                    selectedTab == selectedCourses.indexOf(course)
-                      ? null
-                      : selectedCourses.indexOf(course),
+                  const tab = selectedTab == selectedCourses.indexOf(course)
+                      ? -1
+                      : selectedCourses.indexOf(course)
+
+                  setSelectedTab(tab);
+
+                  localStorage.setItem(
+                    "selectedTab",
+                      tab.toString()
                   );
-                }
-                }
+                }}
               >
                 <span>{course?.name}</span>|
                 <span className={"opacity-80 font-light"}>{course.id}</span>
@@ -372,7 +442,7 @@ export default function Home() {
                       selectedTab !== null &&
                       selectedTab == selectedCourses.indexOf(course)
                     ) {
-                      setSelectedTab(null);
+                      setSelectedTab(-1);
                     } else {
                       setSelectedTab(
                         selectedCourses.indexOf(
@@ -401,7 +471,7 @@ export default function Home() {
                 הוסיפו קורסים מהרשימה...
               </div>
             )}
-            {selectedCourses && (selectedTab === null) && (
+            {selectedCourses && selectedTab === null && (
               <div
                 className={
                   "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
