@@ -66,10 +66,9 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
   useEffect(() => {
     setVisibility("group", semester + "00", true);
     setVisibility("moed", semester + "0", true);
-  }, [semesterInfo, courseId]);
+  }, [grades]);
 
   const lecturers = new Set<string>();
-  // Initially, only show teahers of שיעור.
   for (const group of semesterInfo?.[courseId]?.groups ?? []) {
     if (!group.lessons?.some((lesson) => lesson.type === "שיעור")) {
       continue;
@@ -79,7 +78,6 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
       lecturers.add(lecturer.trim());
     }
   }
-  // If this is empty, show everyone.
   if (lecturers.size === 0) {
     for (const group of semesterInfo?.[courseId]?.groups ?? []) {
       for (const lecturer of group.lecturer?.split(",") ?? []) {
