@@ -10,7 +10,7 @@
  * A map from a course ID (like "03661111") to the collected course info throughout all time (since 1999).
  */
 export interface AllTimeCourses {
-    [courseId: string]: AllTimeCourseInfo | undefined
+  [courseId: string]: AllTimeCourseInfo | undefined;
 }
 
 /**
@@ -20,7 +20,7 @@ export interface AllTimeCourses {
  * A map from a course ID (like "03661111") to the collected course info in the given semester.
  */
 export interface SemesterCourses {
-    [courseId: string]: SemesterCourseInfo | undefined
+  [courseId: string]: SemesterCourseInfo | undefined;
 }
 
 /**
@@ -30,11 +30,11 @@ export interface SemesterCourses {
  * A map from a faculty (like "הפקולטה למדעים מדויקים") to a map from a plan name (like "תוכנית דו-חוגית במתמטיקה ובמדעי המחשב") to the plan's info.
  */
 export interface SemesterPlans {
-    [faculty: string]:
-        | {
-        [plan: string]: YearPlanInfo | undefined
-    }
-        | undefined
+  [faculty: string]:
+    | {
+        [plan: string]: YearPlanInfo | undefined;
+      }
+    | undefined;
 }
 
 /**
@@ -43,13 +43,13 @@ export interface SemesterPlans {
  * A map from a course ID (like "03661111") to a map from a semester (like "2024a") to a map from a group (like "01") to the group's grade info per moed.
  */
 export interface AllTimeGrades {
-    [courseId: string]:
-        | {
+  [courseId: string]:
+    | {
         [semester: string]:
-            | { [group: string]: SemesterGroupGradeInfo[] | undefined }
-            | undefined
-    }
-        | undefined
+          | { [group: string]: SemesterGroupGradeInfo[] | undefined }
+          | undefined;
+      }
+    | undefined;
 }
 
 /**
@@ -57,117 +57,118 @@ export interface AllTimeGrades {
  * Generated manually.
  */
 export interface GeneralInfo {
-    /** The current semester at Tel Aviv University, like "2025a". */
-    currentSemester?: string
-    semesters?: {
-        [semester: string]: GeneralSemesterInfo | undefined
-    }
+  /** The current semester at Tel Aviv University, like "2025a". */
+  currentSemester?: string;
+  semesters?: {
+    [semester: string]: GeneralSemesterInfo | undefined;
+  };
 }
 
 export interface AllTimeCourseInfo {
-    /** The course's name (the latest one, if changed). */
-    name?: string
-    /** The course's faculty (the latest one, if changed). */
-    faculty?: string
-    /** The semesters in which the course was taught (like "2024a"). */
-    semesters?: string[]
-    /** Everyone who has ever taught this course. */
-    lecturers?: string[]
-    id?: string
+  /** The course's name (the latest one, if changed). */
+  name?: string;
+  /** The course's faculty (the latest one, if changed). */
+  faculty?: string;
+  /** The semesters in which the course was taught (like "2024a"). */
+  semesters?: string[];
+  /** Everyone who has ever taught this course. */
+  lecturers?: string[];
+  /** The course's identifier (like "03661111"). */
+  id?: string;
 }
 
 /** All information about the course in the given semester. */
 export interface SemesterCourseInfo {
-    /** The course's name. */
-    name?: string
-    /** The course's faculty. */
-    faculty?: string
-    /** The course's exams and their dates. */
-    exams?: SemesterCourseExamInfo[]
-    /** The course's groups and their lessons & lecturers. */
-    groups?: SemesterCourseGroupInfo[]
-    /** Links to the course's exams in the given semester in the Moodle. Currently only available for exact sciences. */
-    exam_links?: string[]
+  /** The course's name. */
+  name?: string;
+  /** The course's faculty. */
+  faculty?: string;
+  /** The course's exams and their dates. */
+  exams?: SemesterCourseExamInfo[];
+  /** The course's groups and their lessons & lecturers. */
+  groups?: SemesterCourseGroupInfo[];
+  /** Links to the course's exams in the given semester in the Moodle. Currently only available for exact sciences. */
+  exam_links?: string[];
 }
 
 /** All information about a given course's exam. */
 export interface SemesterCourseExamInfo {
-    /** Whether's it's מועד א or מועד ב etc. */
-    moed?: string
-    /** The date string of the exam (like "13/02/2025"). */
-    date?: string
-    /** The hour string of the exam (like "09:30"). */
-    hour?: string
-    /** The type of the exam (like "בחינה סופית"). */
-    type?: string
+  /** Whether's it's מועד א or מועד ב etc. */
+  moed?: string;
+  /** The date string of the exam (like "13/02/2025"). */
+  date?: string;
+  /** The hour string of the exam (like "09:30"). */
+  hour?: string;
+  /** The type of the exam (like "בחינה סופית"). */
+  type?: string;
 }
 
 /** All information about a given course's group. */
 export interface SemesterCourseGroupInfo {
-    /** The group's ID, for example "01". */
-    group?: string
-    /** The groups's lecturer separated by commas. */
-    lecturer?: string
-    /** The group's lessons and their time & locations. */
-    lessons?: SemesterCourseGroupLessonInfo[]
+  /** The group's ID, for example "01". */
+  group?: string;
+  /** The groups's lecturer separated by commas. */
+  lecturer?: string;
+  /** The group's lessons and their time & locations. */
+  lessons?: SemesterCourseGroupLessonInfo[];
 }
 
 /** All information about a given group's lesson. */
 export interface SemesterCourseGroupLessonInfo {
-    /** The day of the lesson (like "ד"). */
-    day?: string
-    /** The time string of the lesson (like "15:00-18:00"). */
-    time?: string
-    /** The building of the lesson (like "מכסיקו"). */
-    building?: string
-    /** The room of the building (like "207א"). */
-    room?: string
-    /** The type of the lesson (like "תרגיל"). */
-    type?: string
+  /** The day of the lesson (like "ד"). */
+  day?: string;
+  /** The time string of the lesson (like "15:00-18:00"). */
+  time?: string;
+  /** The building of the lesson (like "מכסיקו"). */
+  building?: string;
+  /** The room of the building (like "207א"). */
+  room?: string;
+  /** The type of the lesson (like "תרגיל"). */
+  type?: string;
 }
 
 /** All information about a study plan in a given year. */
 export interface YearPlanInfo {
-    /** A mapping from the category's name (like "שנה א' - סמסטר א' - קורסי חובה") to the category's info. */
-    [category: string]: YearPlanCategoryInfo | undefined
+  /** A mapping from the category's name (like "שנה א' - סמסטר א' - קורסי חובה") to the category's info. */
+  [category: string]: YearPlanCategoryInfo | undefined;
 }
 
 /** All information about a category in a study plan. */
 export interface YearPlanCategoryInfo {
-    /** The courses in the category. */
-    courses: {
-        [courseId: string]: YearPlanCourseInfo | undefined
-    }
-    /** The total courses needed from this category. */
-    count: number
+  /** The courses in the category. */
+  courses: {
+    [courseId: string]: YearPlanCourseInfo | undefined;
+  };
+  /** The total courses needed from this category. */
+  count: number;
 }
 
 /** All information about a course in a study plan. */
 export interface YearPlanCourseInfo {
-    /** The course's ID, like "03661111". */
-    id?: string
-    /** The course's weight (שעות סמסטריאליות). */
-    weight?: number
+  /** The course's ID, like "03661111". */
+  id?: string;
+  /** The course's weight (שעות סמסטריאליות). */
+  weight?: number;
 }
 
 /** All information about the course's grades in the given semester for a given group. */
 export interface SemesterGroupGradeInfo {
-    /** The moed of the exam. */
-    moed?: number
-    /** The grade distribution of the exam. The first is the count from 0-49, then 50-59, 60-64, 65-69, 70-74, 75-79, 80-84, 85-89, 90-94, 95-100, 200-210. */
-    distribution?: number[]
-    /** The mean of the grade distribution. */
-    mean?: number
-    /** The median of the grade distribution. */
-    median?: number
-    /** The standard deviation of the grade distribution. */
-    standard_deviation?: number
+  /** The moed of the exam. */
+  moed?: number;
+  /** The grade distribution of the exam. The first is the count from 0-49, then 50-59, 60-64, 65-69, 70-74, 75-79, 80-84, 85-89, 90-94, 95-100, 200-210. */
+  distribution?: number[];
+  /** The mean of the grade distribution. */
+  mean?: number;
+  /** The median of the grade distribution. */
+  median?: number;
+  /** The standard deviation of the grade distribution. */
+  standard_deviation?: number;
 }
 
 /** General information about the given semester. */
 export interface GeneralSemesterInfo {
-    /** The start date of the semester (e.g. March 16, 2025 00:00:00). */
-    startDate: string
-    /** The end date of the semester (e.g. July 2, 2025 00:00:00). */
-    endDate: string
+  /** The start date of the semester (e.g. March 16, 2025 00:00:00). */
+  startDate: string;
+  /** The end date of the semester (e.g. July 2, 2025 00:00:00). */
+  endDate: string;
 }
