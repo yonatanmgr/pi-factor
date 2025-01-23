@@ -12,6 +12,8 @@ import { SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters } from "@/lib/store";
 import { useMemo, useState} from "react";
 
+const MOEDS = ["מועד קובע", "מועד א'", "מועד ב'", "מועד ג'"];
+
 const GRADE_LABELS = [
   "0-49",
   "50-59",
@@ -84,7 +86,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const textToRGB = (text: string) => {
+export const textToRGB = (text: string) => {
   let hash = 0;
   for (let i = 0; i < text.length; i++) {
     hash = text.charCodeAt(i) + ((hash << 5) - hash);
@@ -96,13 +98,13 @@ const textToRGB = (text: string) => {
 export function GradeChart({ data }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
 
-  const [barKeys, setBarKeys] = useState<Set<string>>(new Set());
+  const [barKeys, setBarKeys] = useState<Set<{ key: string, label: string }>>(new Set());
 
 
   const preprocessedData = useMemo(() => {
     if (!data) return {};
     const preprocessed: { [key: string]: number[] } = {};
-    const newBarKeys = new Set<string>();
+    const newBarKeys = new Set<{ key: string, label: string }>();
 
     Object.keys(data).forEach((semester) => {
       Object.keys(data[semester] ?? {}).forEach((groupKey) => {
@@ -111,7 +113,8 @@ export function GradeChart({ data }: ChartProps) {
           group.forEach((moed) => {
             if (moed.distribution) {
               const key = `${semester}${moed.moed}-${semester}${groupKey}`;
-              newBarKeys.add(key);
+              const label = `${semester.replace("a", " א'").replace("b", " ב'")} - ${groupKey == "00" ? "כל הקבוצות" : "קבוצה " + groupKey} - ${MOEDS[moed.moed ?? 0]}`;
+              newBarKeys.add({ key, label});
               preprocessed[key] = moed.distribution;
             }
           });
@@ -142,7 +145,7 @@ export function GradeChart({ data }: ChartProps) {
   }
 
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer  config={chartConfig}>
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis
@@ -151,12 +154,14 @@ export function GradeChart({ data }: ChartProps) {
           tickMargin={10}
           axisLine={false}
         />
-        <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+        <ChartTooltip content={<ChartTooltipContent dir={"rtl"} nameKey={"label"}  />} />
         {/*<ChartLegend content={<ChartLegendContent/>}/>*/}
-        {Array.from(barKeys).map((key) => (
+        {Array.from(barKeys).map(({ key , label}) => (
           <Bar
+              name={label}
             key={key}
             isAnimationActive={false}
+            //   animationDuration={50}
             dataKey={key}
             stackId="a"
             fill={"#" + textToRGB(key)}

@@ -66,7 +66,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
   useEffect(() => {
     setVisibility("group", semester + "00", true);
     setVisibility("moed", semester + "0", true);
-  }, []);
+  }, [semesterInfo]);
 
   const lecturers = new Set<string>();
   // Initially, only show teahers of שיעור.
