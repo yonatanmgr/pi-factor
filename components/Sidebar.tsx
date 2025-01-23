@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { LucideTrash } from "lucide-react";
-import React from "react";
+import React, {useEffect} from "react";
 import { useCourseFilters } from "@/lib/store";
 import Semester from "@/components/Semester";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -18,7 +19,16 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
-  const { visibleMoeds, clearMoeds } = useCourseFilters();
+  const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
+
+    useEffect(() => {
+        if (selectedCourse?.id) {
+            for (const semester of selectedCourse.semesters ?? []) {
+                setVisibility("moed", semester + "0", true);
+                setVisibility("group", semester + "00", true);
+            }
+        }
+    }, [selectedCourse]);
   return (
     <section
       className={
@@ -36,8 +46,15 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                 "flex flex-row gap-2 h-10 justify-between w-full items-center"
               }
             >
-              <h2 className={"text-xl font-bold select-none"}>סינון מועדים</h2>
+              <h2 className={"text-xl pr-1 font-bold select-none"}>
+                סינון מועדים
+              </h2>
               <Button
+                triggerclassname={cn(
+                  !Object.values(visibleMoeds).some((v) => v)
+                    ? "cursor-default"
+                    : "",
+                )}
                 disabled={!Object.values(visibleMoeds).some((v) => v)}
                 className={"bg-zinc-50 border"}
                 variant={"secondary"}

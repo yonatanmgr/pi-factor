@@ -5,7 +5,7 @@ import { SWRConfig } from "swr";
 export const metadata = {
   metadataBase: new URL("https://pi-factor.vercel.app"),
   title: "Pi-Factor",
-  description: "TAU-Factor 2",
+  description: "TAU-Factor 2"
 };
 
 const ibmPlexSansHebrew = IBM_Plex_Sans_Hebrew({

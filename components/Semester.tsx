@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { CheckboxDropdown } from "@/components/CheckboxDropdown";
 import { LucidePencil, LucideUsers } from "lucide-react";
 import { GROUPS, MOEDS } from "@/lib/constants";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface SemesterProps {
   semester: string;
@@ -30,10 +31,10 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
 
   const groups = Object.keys(grades ?? {}).sort();
 
-  useEffect(() => {
-    setVisibility("group", semester + "00", true);
-    setVisibility("moed", semester + "0", true);
-  }, [grades, courseId, semester]);
+  // useEffect(() => {
+  //   setVisibility("group", semester + "00", true);
+  //   setVisibility("moed", semester + "0", true);
+  // }, [grades, courseId, semester]);
 
   const lecturers = new Set<string>();
   for (const group of semesterInfo?.[courseId]?.groups ?? []) {
@@ -58,7 +59,27 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
   }
 
   if (isValidating) {
-    return <Card className={"flex p-2 h-[106px] w-full animate-pulse opacity-80 bg-zinc-50 rounded-md flex-col gap-1"}></Card>
+    return (
+      <AnimatePresence mode={"popLayout"}>
+        <motion.div
+          key={`loading-semester-${semester}`}
+          initial={{ opacity: 0, y: 5, scale: 0.99 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 5, scale: 0.99 }}
+          transition={{ duration: 0.3 }}
+          className={
+            "flex p-2 w-full min-h-[126px] animate-pulse opacity-80 bg-zinc-50 rounded-md flex-col gap-2"
+          }
+        >
+          <div className={"w-full rounded-md bg-zinc-300/50 h-10"}></div>
+          <div className={"w-full rounded-md bg-zinc-300/50 h-8"}></div>
+          <div className={"w-full  h-8 flex flex-row gap-2"}>
+            <div className={"w-full rounded-md bg-zinc-300/20 h-8"}></div>
+            <div className={"w-full rounded-md bg-zinc-300/20 h-8"}></div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    );
   }
 
   const moeds = Array.from(
@@ -97,73 +118,90 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
             .map((g) => g[0].slice(-2))
             .join(", ");
 
-  const avarageMean = groups
-    .map((g) => grades[g]?.[0]?.mean ?? 0)
-    .reduce((a, b) => a + b, 0) / groups.length;
+  const avarageMean =
+    groups.map((g) => grades[g]?.[0]?.mean ?? 0).reduce((a, b) => a + b, 0) /
+    groups.length;
 
   return (
-    <Card className={"flex p-2 bg-zinc-50 rounded-md flex-col gap-1"}>
-      <h3 className={"font-bold flex flex-row items-center justify-between pl-1"}>
-        {semester.replace("a", " א'").replace("b", " ב'")}
-        <span className={"font-normal text-sm text-zinc-500"}>
-          ממוצע: {" "}
-          <span className={"font-bold text-zinc-800"}>{avarageMean ? avarageMean.toFixed(2) : "אין מידע"}</span>
-        </span>
-      </h3>
-      <div className={"flex flex-col gap-1"}>
-        <div className={"flex flex-row gap-1 text-sm"}>
-          <span className={"font-normal text-zinc-500"}>
-            {lecturers.size == 1 ? "מרצה" : "מרצים"}:{" "}
+    <AnimatePresence mode={"popLayout"}>
+      <motion.div
+        key={`semester-${semester}`}
+        initial={{ opacity: 0, y: 5, scale: 0.99 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 5, scale: 0.99 }}
+        transition={{ duration: 0.3 }}
+        className={
+          "flex p-2 bg-zinc-50 rounded-md flex-col gap-1 border bg-card text-card-foreground shadow"
+        }
+      >
+        <h3
+          className={
+            "font-bold flex flex-row items-center justify-between pl-1"
+          }
+        >
+          {semester.replace("a", " א'").replace("b", " ב'")}
+          <span className={"font-normal text-sm text-zinc-500"}>
+            ממוצע:{" "}
             <span className={"font-bold text-zinc-800"}>
-              {lecturers.size ? Array.from(lecturers).join(", ") : "לא ידוע"}
+              {avarageMean ? avarageMean.toFixed(2) : "אין מידע"}
             </span>
           </span>
-        </div>
-        <div className={"w-full flex flex-row justify-evenly gap-2"}>
-          <CheckboxDropdown
-            icon={<LucideUsers size={15} className={"text-zinc-600"} />}
-            label={selectedGroupsLabel}
-            items={groups.map((g) => ({
-              label: GROUPS[g] ?? "קבוצה " + g,
-              value: g,
-              checked: visibleGroups[semester + g],
-            }))}
-            onSelect={(group, checked) => {
-              if (group === "00") {
-                setVisibility("group", semester + "00", checked == true);
-                for (const g of groups) {
-                  if (g !== "00") setVisibility("group", semester + g, false);
+        </h3>
+        <div className={"flex flex-col gap-1"}>
+          <div className={"flex flex-row gap-1 text-sm"}>
+            <span className={"font-normal text-zinc-500"}>
+              {lecturers.size == 1 ? "מרצה" : "מרצים"}:{" "}
+              <span className={"font-bold text-zinc-800"}>
+                {lecturers.size ? Array.from(lecturers).join(", ") : "לא ידוע"}
+              </span>
+            </span>
+          </div>
+          <div className={"w-full flex flex-row justify-evenly gap-2"}>
+            <CheckboxDropdown
+              icon={<LucideUsers size={15} className={"text-zinc-600"} />}
+              label={selectedGroupsLabel}
+              items={groups.map((g) => ({
+                label: GROUPS[g] ?? "קבוצה " + g,
+                value: g,
+                checked: visibleGroups[semester + g],
+              }))}
+              onSelect={(group, checked) => {
+                if (group === "00") {
+                  setVisibility("group", semester + "00", checked == true);
+                  for (const g of groups) {
+                    if (g !== "00") setVisibility("group", semester + g, false);
+                  }
+                } else {
+                  setVisibility("group", semester + "00", false);
+                  setVisibility("group", semester + group, checked == true);
                 }
-              } else {
-                setVisibility("group", semester + "00", false);
-                setVisibility("group", semester + group, checked == true);
-              }
-            }}
-          />
-          <CheckboxDropdown
-            icon={<LucidePencil size={15} className={"text-zinc-600"} />}
-            label={selectedMoedsLabel}
-            items={moeds.map((m) => ({
-              label: MOEDS[m],
-              value: m,
-              checked: visibleMoeds[semester + m],
-            }))}
-            onSelect={(moed, checked) => {
-              if (parseInt(moed) === 0) {
-                setVisibility("moed", semester + "0", checked == true);
-                for (const m of moeds) {
-                  if (parseInt(m) !== 0)
-                    setVisibility("moed", semester + m, false);
+              }}
+            />
+            <CheckboxDropdown
+              icon={<LucidePencil size={15} className={"text-zinc-600"} />}
+              label={selectedMoedsLabel}
+              items={moeds.map((m) => ({
+                label: MOEDS[m],
+                value: m,
+                checked: visibleMoeds[semester + m],
+              }))}
+              onSelect={(moed, checked) => {
+                if (parseInt(moed) === 0) {
+                  setVisibility("moed", semester + "0", checked == true);
+                  for (const m of moeds) {
+                    if (parseInt(m) !== 0)
+                      setVisibility("moed", semester + m, false);
+                  }
+                } else {
+                  setVisibility("moed", semester + moed, checked == true);
+                  setVisibility("moed", semester + "0", false);
                 }
-              } else {
-                setVisibility("moed", semester + moed, checked == true);
-                setVisibility("moed", semester + "0", false);
-              }
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
-      </div>
-    </Card>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

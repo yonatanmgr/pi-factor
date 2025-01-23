@@ -17,6 +17,12 @@ import {
   DrawerFooter,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import {
+  Dialog, DialogClose,
+  DialogContent, DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface MainSectionProps {
   selectedCourses: any[];
@@ -33,6 +39,50 @@ interface MainSectionProps {
   onSelectedOptions: (option: AllTimeCourseInfo) => void;
 }
 
+interface CourseListProps {
+  options: {
+    [id: string]: AllTimeCourseInfo & { id: string };
+  };
+  isLoading: boolean;
+  selectedCourses: any[];
+  onSelectedOptions: (option: AllTimeCourseInfo) => void;
+  setSelectedCourses: any;
+  setSelectedTab: any;
+}
+
+const CourseList = ({
+  options,
+  isLoading,
+  selectedCourses,
+  onSelectedOptions,
+  setSelectedTab,
+  setSelectedCourses,
+}: CourseListProps) => {
+  return (
+    <div className={"flex flex-col gap-2"}>
+      <VirtualizedList
+        options={options ?? {}}
+        isLoading={isLoading}
+        selectedOptions={selectedCourses ?? []}
+        onSelectedOption={onSelectedOptions}
+      />
+
+      <Button
+        className={"bg-zinc-50 border w-full"}
+        variant={"secondary"}
+        disabled={!selectedCourses?.length}
+        onClick={() => {
+          setSelectedCourses([]);
+          localStorage.setItem("selectedCourses", "[]");
+          setSelectedTab(-1);
+        }}
+      >
+        <LucideTrash className={"text-red-500"} size={14} /> נקה בחירה
+      </Button>
+    </div>
+  );
+};
+
 const MainSection = ({
   selectedCourses,
   setSelectedCourses,
@@ -47,36 +97,10 @@ const MainSection = ({
 }: MainSectionProps) => {
   const { isMobile } = useViewport();
 
-  const CourseList = () => {
-    return (
-      <div className={"flex flex-col gap-2"}>
-        <VirtualizedList
-          options={options ?? {}}
-          isLoading={isLoading}
-          selectedOptions={selectedCourses ?? []}
-          onSelectedOption={onSelectedOptions}
-        />
-
-        <Button
-          className={"bg-zinc-50 border w-full"}
-          variant={"secondary"}
-          disabled={!selectedCourses?.length}
-          onClick={() => {
-            setSelectedCourses([]);
-            localStorage.setItem("selectedCourses", "[]");
-            setSelectedTab(-1);
-          }}
-        >
-          <LucideTrash className={"text-red-500"} size={14} /> נקה בחירה
-        </Button>
-      </div>
-    );
-  };
-
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit flex flex-col gap-2 p-3 sm:h-full w-full rounded-lg bg-zinc-100 border"
+        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-3 sm:h-full w-full rounded-lg bg-zinc-100 border"
       }
     >
       <header
@@ -88,48 +112,71 @@ const MainSection = ({
           <Drawer>
             <DrawerTrigger asChild>
               <Button
-                  className={"bg-zinc-50 border"}
-                  variant={"secondary"}
-                  disabled={isLoading}
+                className={"bg-zinc-50 border"}
+                variant={"secondary"}
+                disabled={isLoading}
               >
                 <LucideBookPlus className={"text-zinc-500"} size={14} />
                 עריכת קורסים
               </Button>
             </DrawerTrigger>
             <DrawerContent dir={"rtl"} className={"px-4"}>
-              <CourseList />
+              <CourseList
+                {...{
+                  selectedCourses,
+                  setSelectedCourses,
+                  onSelectedOptions,
+                  setSelectedTab,
+                  options,
+                  isLoading,
+                }}
+              />
               <DrawerFooter className="pt-1"></DrawerFooter>
             </DrawerContent>
           </Drawer>
         ) : (
-          <Popover modal={false}>
-            <PopoverTrigger asChild>
+          <Dialog>
+            <DialogTrigger asChild>
               <Button
-                  className={"bg-zinc-50 border"}
-                  variant={"secondary"}
-                  disabled={isLoading}
+                className={"bg-zinc-50 border"}
+                variant={"secondary"}
+                disabled={isLoading}
               >
                 <LucideBookPlus className={"text-zinc-500"} size={14} />
                 עריכת קורסים
               </Button>
-            </PopoverTrigger>
-            <PopoverContent className={"min-w-[300px]"} dir={"rtl"}>
-              <CourseList />
-            </PopoverContent>
-          </Popover>
+            </DialogTrigger>
+            <DialogContent className={"min-w-[300px]"} dir={"rtl"}>
+              <DialogTitle>
+                <h2 className={"text-xl font-bold select-none"}>
+                  עריכת קורסים
+                </h2>
+              </DialogTitle>
+              <CourseList
+                  {...{
+                    selectedCourses,
+                    setSelectedCourses,
+                    onSelectedOptions,
+                    setSelectedTab,
+                    options,
+                    isLoading,
+                  }}
+              />
+            </DialogContent>
+          </Dialog>
         )}
         {!selectedCourses?.length && (
-            <span
-                className={
-                  "w-full text-sm h-9 mr-1 text-zinc-400 select-none flex flex-row items-center"
-                }
-            >
+          <span
+            className={
+              "w-full text-sm h-9 mr-1 text-zinc-400 select-none flex flex-row items-center"
+            }
+          >
             קורסים נבחרים יופיעו כאן...
           </span>
         )}
         {selectedCourses?.map((course) => (
           <Button
-            tooltipProviderProps={{ delayDuration: 300 }}
+            tooltipproviderprops={{ delayDuration: 300 }}
             tooltip={
               grades?.[course.id ?? ""] === undefined ||
               !grades?.[course.id ?? ""] ? (

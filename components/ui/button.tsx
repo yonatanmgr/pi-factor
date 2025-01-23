@@ -46,17 +46,17 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   tooltip?: React.ReactNode;
-  triggerClassname?: ClassNameValue;
-  tooltipProviderProps?: Omit<React.ComponentProps<typeof TooltipProvider>, "children">;
+  triggerclassname?: ClassNameValue;
+  tooltipproviderprops?: Omit<React.ComponentProps<typeof TooltipProvider>, "children">;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
-      <TooltipProvider {...props.tooltipProviderProps}>
+      <TooltipProvider {...props.tooltipproviderprops}>
         <Tooltip>
-          <TooltipTrigger className={cn(props.triggerClassname)}>
+          <TooltipTrigger className={cn(props.triggerclassname)}>
             <Comp
               className={cn(buttonVariants({ variant, size, className }))}
               ref={ref}

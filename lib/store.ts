@@ -4,9 +4,9 @@ interface SCourseFilters {
   visibleMoeds: Record<string, boolean>;
   visibleGroups: Record<string, boolean>;
   setVisibility: (type: "moed" | "group", id: string, value: boolean) => void;
-    setVisibleMoeds: (moeds: string[]) => void;
-    clearGroups: () => void;
-    clearMoeds: () => void;
+  setVisibleMoeds: (moeds: string[]) => void;
+  clearGroups: () => void;
+  clearMoeds: () => void;
 }
 
 export const useCourseFilters = create<SCourseFilters>((set) => ({
@@ -21,21 +21,21 @@ export const useCourseFilters = create<SCourseFilters>((set) => ({
       }
       return { ...state };
     }),
-    setVisibleMoeds: (moeds) => {
-      set((state) => {
-        state.visibleMoeds = {};
-        moeds.forEach((moed) => {
-          state.visibleMoeds[moed] = true;
-        });
-        return { ...state };
+  setVisibleMoeds: (moeds) => {
+    set((state) => {
+      state.visibleMoeds = {};
+      moeds.forEach((moed) => {
+        state.visibleMoeds[moed] = true;
       });
-    },
-    clearMoeds: () =>
+      return { ...state };
+    });
+  },
+  clearMoeds: () =>
     set((state) => {
       state.visibleMoeds = {};
       return { ...state };
     }),
-    clearGroups: () =>
+  clearGroups: () =>
     set((state) => {
       state.visibleGroups = {};
       return { ...state };

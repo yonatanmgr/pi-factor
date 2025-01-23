@@ -98,12 +98,6 @@ export default function Home() {
     ? (grades ?? {})[selectedCourse.id ?? ""]
     : null;
 
-  useEffect(() => {
-    if (selectedCourse) {
-      clearMoeds();
-    }
-  }, [selectedCourse]);
-
   return (
     <main
       dir={"rtl"}
