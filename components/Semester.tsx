@@ -58,7 +58,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
   }
 
   if (isValidating) {
-    return <></>;
+    return <Card className={"flex p-2 h-[106px] w-full animate-pulse opacity-80 bg-zinc-50 rounded-md flex-col gap-1"}></Card>
   }
 
   const moeds = Array.from(
@@ -97,16 +97,24 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
             .map((g) => g[0].slice(-2))
             .join(", ");
 
+  const avarageMean = groups
+    .map((g) => grades[g]?.[0]?.mean ?? 0)
+    .reduce((a, b) => a + b, 0) / groups.length;
+
   return (
     <Card className={"flex p-2 bg-zinc-50 rounded-md flex-col gap-1"}>
-      <h3 className={"font-bold"}>
+      <h3 className={"font-bold flex flex-row items-center justify-between pl-1"}>
         {semester.replace("a", " א'").replace("b", " ב'")}
+        <span className={"font-normal text-sm text-zinc-500"}>
+          ממוצע: {" "}
+          <span className={"font-bold text-zinc-800"}>{avarageMean ? avarageMean.toFixed(2) : "אין מידע"}</span>
+        </span>
       </h3>
       <div className={"flex flex-col gap-1"}>
         <div className={"flex flex-row gap-1 text-sm"}>
-          <span className={"font-bold"}>
+          <span className={"font-normal text-zinc-500"}>
             {lecturers.size == 1 ? "מרצה" : "מרצים"}:{" "}
-            <span className={"font-normal"}>
+            <span className={"font-bold text-zinc-800"}>
               {lecturers.size ? Array.from(lecturers).join(", ") : "לא ידוע"}
             </span>
           </span>

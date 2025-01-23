@@ -102,7 +102,6 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
       tabIndex={0} // Makes the container focusable to capture keyboard events
     >
       <input
-        autoFocus
         type="text"
         value={search}
         onChange={(e) => {

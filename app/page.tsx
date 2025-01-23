@@ -108,7 +108,7 @@ export default function Home() {
     <main
       dir={"rtl"}
       className={
-        "flex text-zinc-800 sm:overflow-hidden flex-col gap-4 p-4 items-center h-screen min-h-screen max-h-screen justify-between"
+        "flex text-zinc-800 sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between"
       }
     >
       <header className={"w-full flex flex-row items-stretch"}>
