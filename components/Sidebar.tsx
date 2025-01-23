@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { LucideTrash } from "lucide-react";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useCourseFilters } from "@/lib/store";
 import Semester from "@/components/Semester";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useViewport } from "@/components/CheckboxDropdown";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -20,19 +21,21 @@ interface SidebarProps {
 
 const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
   const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
+  const { isMobile } = useViewport();
+  const [showSemesters, setShowSemesters] = React.useState(true);
 
-    useEffect(() => {
-        if (selectedCourse?.id) {
-            for (const semester of selectedCourse.semesters ?? []) {
-                setVisibility("moed", semester + "0", true);
-                setVisibility("group", semester + "00", true);
-            }
-        }
-    }, [selectedCourse]);
+  useEffect(() => {
+    if (selectedCourse?.id) {
+      for (const semester of selectedCourse.semesters ?? []) {
+        setVisibility("moed", semester + "0", true);
+        setVisibility("group", semester + "00", true);
+      }
+    }
+  }, [selectedCourse]);
   return (
     <section
       className={
-        "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
+        "max-h-full sm:py-3 sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
       }
     >
       {selectedCourse &&
@@ -45,8 +48,12 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
               className={
                 "flex flex-row gap-2 h-10 justify-between w-full items-center"
               }
+              onClick={(e) => {
+                isMobile && setShowSemesters(!showSemesters);
+                e.stopPropagation();
+              }}
             >
-              <h2 className={"text-xl pr-1 font-bold select-none"}>
+              <h2 className={"text-lg pr-1 font-bold select-none"}>
                 סינון מועדים
               </h2>
               <Button
@@ -58,28 +65,33 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                 disabled={!Object.values(visibleMoeds).some((v) => v)}
                 className={"bg-zinc-50 border"}
                 variant={"secondary"}
-                onClick={clearMoeds}
+                onClick={(e) => {
+                  clearMoeds();
+                  e.stopPropagation();
+                }}
               >
                 <LucideTrash className={"text-red-500"} size={14} /> נקה מועדים
               </Button>
             </header>
 
-            <div className={"grow overflow-hidden"}>
-              <div className={"flex flex-col gap-2 max-h-full overflow-auto"}>
-                {Object.entries(currentCourseGrades ?? {})
-                  .filter((o) => Object.values(o[1] ?? {}).length)
-                  .map(([semester, data]) => {
-                    return (
-                      <Semester
-                        key={semester}
-                        semester={semester}
-                        grades={data}
-                        courseId={selectedCourse.id ?? ""}
-                      />
-                    );
-                  })}
+            {showSemesters && (
+              <div className={"grow overflow-hidden"}>
+                <div className={"flex flex-col gap-2 max-h-full overflow-auto"}>
+                  {Object.entries(currentCourseGrades ?? {})
+                    .filter((o) => Object.values(o[1] ?? {}).length)
+                    .map(([semester, data]) => {
+                      return (
+                        <Semester
+                          key={semester}
+                          semester={semester}
+                          grades={data}
+                          courseId={selectedCourse.id ?? ""}
+                        />
+                      );
+                    })}
+                </div>
               </div>
-            </div>
+            )}
           </>
         )}
     </section>
