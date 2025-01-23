@@ -11,7 +11,12 @@ import {
 import VirtualizedList from "@/components/ui/list";
 import { AllTimeCourseInfo } from "@/lib/types";
 import { useViewport } from "@/components/CheckboxDropdown";
-import {Drawer, DrawerContent, DrawerFooter, DrawerTrigger} from "@/components/ui/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 interface MainSectionProps {
   selectedCourses: any[];
@@ -53,7 +58,7 @@ const MainSection = ({
         />
 
         <Button
-          className={"bg-zinc-50 border"}
+          className={"bg-zinc-50 border w-full"}
           variant={"secondary"}
           disabled={!selectedCourses?.length}
           onClick={() => {
@@ -79,44 +84,33 @@ const MainSection = ({
           "flex flex-row gap-2 overflow-x-auto overflow-y-hidden min-h-10"
         }
       >
-        {!selectedCourses?.length && (
-          <span
-            className={
-              "w-full h-9 mr-1 text-zinc-400 select-none flex flex-row items-center"
-            }
-          >
-            קורסים נבחרים יופיעו כאן...
-          </span>
-        )}
         {isMobile ? (
           <Drawer>
             <DrawerTrigger asChild>
               <Button
-                className={"bg-zinc-50 border"}
-                variant={"secondary"}
-                disabled={isLoading}
+                  className={"bg-zinc-50 border"}
+                  variant={"secondary"}
+                  disabled={isLoading}
               >
                 <LucideBookPlus className={"text-zinc-500"} size={14} />
-                הוסף קורס
+                עריכת קורסים
               </Button>
             </DrawerTrigger>
             <DrawerContent dir={"rtl"} className={"px-4"}>
               <CourseList />
-                <DrawerFooter className="pt-1">
-                </DrawerFooter>
-
+              <DrawerFooter className="pt-1"></DrawerFooter>
             </DrawerContent>
           </Drawer>
         ) : (
           <Popover modal={false}>
             <PopoverTrigger asChild>
               <Button
-                className={"bg-zinc-50 border"}
-                variant={"secondary"}
-                disabled={isLoading}
+                  className={"bg-zinc-50 border"}
+                  variant={"secondary"}
+                  disabled={isLoading}
               >
                 <LucideBookPlus className={"text-zinc-500"} size={14} />
-                הוסף קורס
+                עריכת קורסים
               </Button>
             </PopoverTrigger>
             <PopoverContent className={"min-w-[300px]"} dir={"rtl"}>
@@ -124,15 +118,25 @@ const MainSection = ({
             </PopoverContent>
           </Popover>
         )}
+        {!selectedCourses?.length && (
+            <span
+                className={
+                  "w-full text-sm h-9 mr-1 text-zinc-400 select-none flex flex-row items-center"
+                }
+            >
+            קורסים נבחרים יופיעו כאן...
+          </span>
+        )}
         {selectedCourses?.map((course) => (
           <Button
-            title={
+            tooltipProviderProps={{ delayDuration: 300 }}
+            tooltip={
               grades?.[course.id ?? ""] === undefined ||
-              !grades?.[course.id ?? ""]
-                ? "אין נתוני ציונים זמינים"
-                : ""
+              !grades?.[course.id ?? ""] ? (
+                <span>אין נתוני ציונים זמינים</span>
+              ) : null
             }
-            key={course.name}
+            key={course?.name}
             className={cn(
               "bg-zinc-50 border",
               selectedTab !== null &&
@@ -161,7 +165,7 @@ const MainSection = ({
             }}
           >
             <span>{course?.name}</span>|
-            <span className={"opacity-80 font-light"}>{course.id}</span>
+            <span className={"opacity-80 font-light"}>{course?.id}</span>
             <span
               className={
                 "h-4 w-4 flex flex-row items-center cursor-pointer hover:text-red-500 active:text-red-600 transition-all justify-center"
@@ -203,7 +207,7 @@ const MainSection = ({
             הוסיפו קורסים מהרשימה...
           </div>
         )}
-        {selectedCourses.length > 0 && selectedTab === -1 && (
+        {selectedCourses.length > 0 && selectedTab < 0 && (
           <div
             className={
               "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
@@ -212,28 +216,33 @@ const MainSection = ({
             סמנו קורס מלמעלה כדי לראות את התפלגות הציונים שלו...
           </div>
         )}
-        {selectedCourses.length > 0 &&
-          selectedTab !== null &&
-          selectedCourse && (
-            <div className={"px-4 py-3 flex flex-col gap-2 max-h-full"}>
-              <div className={"flex flex-col sm:flex-row gap-2 text-2xl"}>
-                {selectedCourse?.name && (
-                  <span className={"font-bold"}>{selectedCourse?.name}</span>
-                )}
-                {selectedCourse?.id && (
-                  <span className={"font-light"}>| {selectedCourse?.id}</span>
-                )}
-              </div>
-              <div className={"flex flex-row gap-1"}>
-                <span className={"font-bold"}>פקולטה:</span>
-                <span>{selectedCourse?.faculty}</span>
-              </div>
-              <div className={"w-full h-px bg-zinc-300/50 my-2"}></div>
-              <div className={"grow h-1/2 w-full overflow-auto"}>
-                <GradeChart data={currentCourseGrades} />
-              </div>
+        {selectedCourses.length > 0 && selectedTab > -1 && selectedCourse && (
+          <div className={"px-4 py-3 flex flex-col gap-2 max-h-full"}>
+            <div className={"flex flex-row flex-wrap gap-2 text-2xl"}>
+              {selectedCourse?.name && (
+                <span className={"font-bold"}>
+                  {selectedCourse?.name}
+                  {selectedCourse?.id && (
+                    <span className={"font-light"}>
+                      {" "}
+                      | {selectedCourse?.id}
+                    </span>
+                  )}
+                </span>
+              )}
             </div>
-          )}
+
+            <span className={"font-bold"}>
+              פקולטה:{" "}
+              <span className={"font-normal"}>{selectedCourse?.faculty}</span>
+            </span>
+
+            <div className={"w-full h-px bg-zinc-300/50 my-2"}></div>
+            <div className={"grow h-1/2 w-full overflow-auto"}>
+              <GradeChart data={currentCourseGrades} />
+            </div>
+          </div>
+        )}
       </section>
     </section>
   );

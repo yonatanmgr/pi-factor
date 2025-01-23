@@ -1,6 +1,6 @@
 "use client";
 
-import {Bar, BarChart, CartesianGrid, XAxis, YAxis} from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   ChartConfig,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters } from "@/lib/store";
-import { useMemo, useState} from "react";
+import { useMemo, useState } from "react";
 
 const MOEDS = ["מועד קובע", "מועד א'", "מועד ב'", "מועד ג'"];
 
@@ -98,13 +98,14 @@ export const textToRGB = (text: string) => {
 export function GradeChart({ data }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
 
-  const [barKeys, setBarKeys] = useState<Set<{ key: string, label: string }>>(new Set());
-
+  const [barKeys, setBarKeys] = useState<Set<{ key: string; label: string }>>(
+    new Set(),
+  );
 
   const preprocessedData = useMemo(() => {
     if (!data) return {};
     const preprocessed: { [key: string]: number[] } = {};
-    const newBarKeys = new Set<{ key: string, label: string }>();
+    const newBarKeys = new Set<{ key: string; label: string }>();
 
     Object.keys(data).forEach((semester) => {
       Object.keys(data[semester] ?? {}).forEach((groupKey) => {
@@ -114,7 +115,7 @@ export function GradeChart({ data }: ChartProps) {
             if (moed.distribution) {
               const key = `${semester}${moed.moed}-${semester}${groupKey}`;
               const label = `${semester.replace("a", " א'").replace("b", " ב'")} - ${groupKey == "00" ? "כל הקבוצות" : "קבוצה " + groupKey} - ${MOEDS[moed.moed ?? 0]}`;
-              newBarKeys.add({ key, label});
+              newBarKeys.add({ key, label });
               preprocessed[key] = moed.distribution;
             }
           });
@@ -126,9 +127,10 @@ export function GradeChart({ data }: ChartProps) {
     return preprocessed;
   }, [data]);
 
+  const groupsKeys = Object.keys(visibleGroups);
+  const moedsKeys = Object.keys(visibleMoeds);
 
-
-  const chartData =  useMemo(() => {
+  const chartData = useMemo(() => {
     // let total = 0;
     // Object.keys(preprocessedData).forEach((key) => {
     //   if (visibleMoeds[key.split("-")[0]] && visibleGroups[key.split("-")[1]]) {
@@ -141,20 +143,24 @@ export function GradeChart({ data }: ChartProps) {
     return GRADE_LABELS.map((label, index) => {
       const entry: any = { gradeRange: label };
       Object.keys(preprocessedData).forEach((key) => {
-        if (visibleMoeds[key.split("-")[0]] && visibleGroups[key.split("-")[1]] && preprocessedData[key][index] !== undefined) {
+        if (
+          visibleMoeds[key.split("-")[0]] &&
+          visibleGroups[key.split("-")[1]] &&
+          preprocessedData[key][index] !== undefined
+        ) {
           entry[key] = (entry[key] || 0) + preprocessedData[key][index];
         }
       });
       return entry;
-    })
-  }, [Object.keys(visibleGroups), Object.keys(visibleMoeds)]);
+    });
+  }, [groupsKeys, moedsKeys]);
 
   if (!data) {
     return null;
   }
 
   return (
-    <ChartContainer  config={chartConfig}>
+    <ChartContainer config={chartConfig}>
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis
@@ -163,16 +169,14 @@ export function GradeChart({ data }: ChartProps) {
           tickMargin={10}
           axisLine={false}
         />
-        <YAxis
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
+        <YAxis tickLine={false} tickMargin={10} axisLine={false} />
+        <ChartTooltip
+          content={<ChartTooltipContent dir={"rtl"} nameKey={"label"} />}
         />
-        <ChartTooltip content={<ChartTooltipContent dir={"rtl"} nameKey={"label"}  />} />
         {/*<ChartLegend content={<ChartLegendContent/>}/>*/}
-        {Array.from(barKeys).map(({ key , label}) => (
+        {Array.from(barKeys).map(({ key, label }) => (
           <Bar
-              name={label}
+            name={label}
             key={key}
             isAnimationActive={false}
             //   animationDuration={50}
