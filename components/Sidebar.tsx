@@ -18,10 +18,7 @@ interface SidebarProps {
     | undefined;
 }
 
-const Sidebar = ({
-  selectedCourse,
-  currentCourseGrades,
-}: SidebarProps) => {
+const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
   const { visibleMoeds, clearMoeds } = useCourseFilters();
   return (
     <section
@@ -29,7 +26,6 @@ const Sidebar = ({
         "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
       }
     >
-
       {selectedCourse &&
         Object.entries(currentCourseGrades ?? {}).some(
           (o) => Object.values(o[1] ?? {}).length,

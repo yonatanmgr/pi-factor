@@ -21,7 +21,7 @@ interface Props {
   onSelect: (label: string, checked: Checked) => void;
 }
 
-const useViewport = () => {
+export const useViewport = () => {
     const [width, setWidth] = React.useState(window.innerWidth);
     const [height, setHeight] = React.useState(window.innerHeight);
 
@@ -35,12 +35,14 @@ const useViewport = () => {
         return () => window.removeEventListener("resize", handleWindowResize);
     }, []);
 
-    return { width, height };
+    const isMobile = width < 640;
+
+    return { width, height, isMobile };
 }
 
 export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const isMobile = useViewport().width < 640;
+  const isMobile = useViewport().isMobile;
 
 
   return (
