@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters } from "@/lib/store";
-import {useEffect, useMemo, useState} from "react";
+import { useMemo, useState} from "react";
 
 const GRADE_LABELS = [
   "0-49",
@@ -96,9 +96,6 @@ const textToRGB = (text: string) => {
 export function GradeChart({ data }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
 
-  if (!data) {
-    return null;
-  }
   const [barKeys, setBarKeys] = useState<Set<string>>(new Set());
 
 
@@ -139,6 +136,10 @@ export function GradeChart({ data }: ChartProps) {
       return entry;
     })
   }, [Object.keys(visibleGroups), Object.keys(visibleMoeds)]);
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <ChartContainer config={chartConfig}>
