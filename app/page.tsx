@@ -1,20 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetcher, useCourses, useGrades } from "@/lib/api";
-import VirtualizedList from "@/components/ui/list";
+import { useCourses, useGrades } from "@/lib/api";
 import {
   AllTimeCourseInfo,
-  SemesterCourses,
-  SemesterGroupGradeInfo,
 } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { LucidePencil, LucideTrash, LucideUsers, LucideX } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { GradeChart } from "@/components/Chart";
-import useSWRImmutable from "swr/immutable";
 import { useCourseFilters } from "@/lib/store";
-import { Card } from "@/components/ui/card";
-import { CheckboxDropdown } from "@/components/CheckboxDropdown";
 import MainSection from "@/components/MainSection";
 import Sidebar from "@/components/Sidebar";
 
@@ -130,7 +120,9 @@ export default function Home() {
           "flex sm:flex-row sm:overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
         }
       >
-        <Sidebar {...{selectedCourse, currentCourseGrades}} />
+        {selectedCourses && selectedTab >= 0 && (
+            <Sidebar {...{selectedCourse, currentCourseGrades}} />
+        )}
        <MainSection {...{grades, options, onSelectedOptions, isLoading, selectedCourses, setSelectedCourses, selectedTab, setSelectedTab, selectedCourse, currentCourseGrades}} />
       </section>
     </main>

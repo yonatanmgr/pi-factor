@@ -11,7 +11,7 @@ import {
 import VirtualizedList from "@/components/ui/list";
 import { AllTimeCourseInfo } from "@/lib/types";
 import { useViewport } from "@/components/CheckboxDropdown";
-import {Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerTrigger} from "@/components/ui/drawer";
+import {Drawer, DrawerContent, DrawerFooter, DrawerTrigger} from "@/components/ui/drawer";
 
 interface MainSectionProps {
   selectedCourses: any[];
@@ -71,7 +71,7 @@ const MainSection = ({
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit flex flex-col gap-2 p-3 sm:h-full sm:w-3/4 w-full rounded-lg bg-zinc-100 border"
+        "sm:min-h-full max-sm:grow h-fit flex flex-col gap-2 p-3 sm:h-full w-full rounded-lg bg-zinc-100 border"
       }
     >
       <header

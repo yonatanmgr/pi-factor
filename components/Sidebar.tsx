@@ -1,4 +1,3 @@
-import VirtualizedList from "@/components/ui/list";
 import { Button } from "@/components/ui/button";
 import { LucideTrash } from "lucide-react";
 import React from "react";
@@ -23,7 +22,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
   return (
     <section
       className={
-        "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
+        "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
       }
     >
       {selectedCourse &&
