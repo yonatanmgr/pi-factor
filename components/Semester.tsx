@@ -33,7 +33,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
   useEffect(() => {
     setVisibility("group", semester + "00", true);
     setVisibility("moed", semester + "0", true);
-  }, [grades]);
+  }, [grades, courseId, semester]);
 
   const lecturers = new Set<string>();
   for (const group of semesterInfo?.[courseId]?.groups ?? []) {
