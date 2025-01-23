@@ -114,20 +114,20 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
       />
 
       {isLoading && (
-        <div className="h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 border-gray-200 rounded-md">
+        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 border-gray-200 rounded-md">
           <Spinner />
           <span>טוען נתונים...</span>
         </div>
       )}
       {filteredOptions.length === 0 && !isLoading && (
-        <div className="h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 border-gray-200 rounded-md">
+        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 border-gray-200 rounded-md">
           לא נמצאו תוצאות
         </div>
       )}
       {filteredOptions.length > 0 && (
         <div
           ref={parentRef}
-          className="h-72 overflow-auto border gap-0 bg-zinc-50 border-gray-200 rounded-md"
+          className="h-52 sm:h-72 overflow-auto border gap-0 bg-zinc-50 border-gray-200 rounded-md"
           style={{ contain: "strict" }}
         >
           <div

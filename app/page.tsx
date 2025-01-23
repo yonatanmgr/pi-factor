@@ -8,7 +8,7 @@ import {
   SemesterGroupGradeInfo,
 } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import {LucideTrash, LucideX} from "lucide-react";
+import {LucidePencil, LucideTrash, LucideUsers, LucideX} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GradeChart } from "@/components/Chart";
 import useSWRImmutable from "swr/immutable";
@@ -20,21 +20,21 @@ export const runtime = "edge";
 export const preferredRegion = "home";
 export const dynamic = "force-dynamic";
 
-const getDefaultVisibleGroups = (
-  semester: string,
-  grades:
-    | {
-        [group: string]: SemesterGroupGradeInfo[] | undefined;
-      }
-    | undefined,
-) => {
-  const visibleGroups: { [key: string]: boolean } = {};
-  for (const group of Object.keys(grades ?? {})) {
-    visibleGroups[semester + group] = true;
-  }
-  console.log(visibleGroups);
-  return visibleGroups;
-};
+// const getDefaultVisibleGroups = (
+//   semester: string,
+//   grades:
+//     | {
+//         [group: string]: SemesterGroupGradeInfo[] | undefined;
+//       }
+//     | undefined,
+// ) => {
+//   const visibleGroups: { [key: string]: boolean } = {};
+//   for (const group of Object.keys(grades ?? {})) {
+//     visibleGroups[semester + group] = true;
+//   }
+//   console.log(visibleGroups);
+//   return visibleGroups;
+// };
 
 const MOEDS = ["מועד קובע", "מועד א'", "מועד ב'", "מועד ג'"];
 const GROUPS: { [key: string]: string } = {
@@ -48,18 +48,18 @@ interface SemesterProps {
 }
 
 const Semester = ({ semester, grades, courseId }: SemesterProps) => {
-  const { visibleGroups, visibleMoeds, setVisibleMoeds, setVisibility } = useCourseFilters();
+  const { visibleGroups, visibleMoeds, setVisibility } = useCourseFilters();
 
   const { data: semesterInfo, isValidating } = useSWRImmutable<SemesterCourses>(
     `https://arazim-project.com/data/courses-${semester}.json`,
     fetcher,
   );
 
-  const maxMoed = Math.max(
-    ...Object.values(grades ?? {}).map((grade) =>
-      Math.max(...(grade?.map((v: any) => v.moed ?? 0) ?? [0])),
-    ),
-  );
+  // const maxMoed = Math.max(
+  //   ...Object.values(grades ?? {}).map((grade) =>
+  //     Math.max(...(grade?.map((v: any) => v.moed ?? 0) ?? [0])),
+  //   ),
+  // );
 
   const groups = Object.keys(grades ?? {}).sort();
 
@@ -125,19 +125,22 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
                 .join(", ");
 
   return (
-    <Card className={"flex p-2 rounded-md flex-col gap-1"}>
+    <Card className={"flex p-2 bg-zinc-50/50 rounded-md flex-col gap-1"}>
       <h3 className={"font-bold"}>
         {semester.replace("a", " א'").replace("b", " ב'")}
       </h3>
       <div className={"flex flex-col gap-1"}>
-        <div className={"flex flex-row gap-2"}>
-          <span className={"font-bold"}>מרצים:</span>
-          <span>
-            {lecturers.size ? Array.from(lecturers).join(", ") : "לא ידוע"}
+        <div className={"flex flex-row gap-1 text-sm"}>
+          <span className={"font-bold"}>
+            {lecturers.size == 1 ? "מרצה" : "מרצים"}: {" "}
+            <span className={"font-normal"}>
+              {lecturers.size ? Array.from(lecturers).join(", ") : "לא ידוע"}
+            </span>
           </span>
         </div>
         <div className={"w-full flex flex-row justify-evenly gap-2"}>
           <CheckboxDropdown
+            icon={<LucideUsers size={15} className={"text-zinc-600"} />}
             label={selectedGroupsLabel}
             items={groups.map((g) => ({
               label: GROUPS[g] ?? "קבוצה " + g,
@@ -145,19 +148,19 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
               checked: visibleGroups[semester + g],
             }))}
             onSelect={(group, checked) => {
-                if (group === "00") {
-                    setVisibility("group", semester + "00", checked == true);
-                    for (const g of groups) {
-                        if (g !== "00") setVisibility("group", semester + g, false);
-                    }
-                } else {
-                    setVisibility("group", semester + "00", false);
-                    setVisibility("group", semester + group, checked == true);
+              if (group === "00") {
+                setVisibility("group", semester + "00", checked == true);
+                for (const g of groups) {
+                  if (g !== "00") setVisibility("group", semester + g, false);
                 }
+              } else {
+                setVisibility("group", semester + "00", false);
+                setVisibility("group", semester + group, checked == true);
+              }
             }}
           />
           <CheckboxDropdown
-            // if all selected moeds is 0, show "מועד קובע", else show "מועד א', מועד ב', מועד ג'"
+            icon={<LucidePencil size={15} className={"text-zinc-600"} />}
             label={selectedMoedsLabel}
             items={moeds.map((m) => ({
               label: MOEDS[m],
@@ -168,7 +171,8 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
               if (parseInt(moed) === 0) {
                 setVisibility("moed", semester + "0", checked == true);
                 for (const m of moeds) {
-                  if (parseInt(m) !== 0) setVisibility("moed", semester + m, false);
+                  if (parseInt(m) !== 0)
+                    setVisibility("moed", semester + m, false);
                 }
               } else {
                 setVisibility("moed", semester + moed, checked == true);
@@ -184,7 +188,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
 
 export default function Home() {
   const { courses, isLoading } = useCourses();
-  const { grades, isLoading: isLoadingGrades } = useGrades();
+  const { grades } = useGrades();
   const options =
     Object.fromEntries(
       Object.entries(courses ?? {}).map((c) => [c[0], { ...c[1], id: c[0] }]),
@@ -194,7 +198,7 @@ export default function Home() {
   >(null);
   const [selectedTab, setSelectedTab] = useState<number | null>(null);
 
-  const { visibleGroups, visibleMoeds, setVisibility, clearMoeds } = useCourseFilters();
+  const {  visibleMoeds,  clearMoeds } = useCourseFilters();
 
   const onSelectedOptions = (course: AllTimeCourseInfo) => {
     if (selectedCourses) {
@@ -241,17 +245,17 @@ export default function Home() {
       }
     >
       <header className={"w-full flex flex-row items-stretch"}>
-        <h1 className={"text-3xl font-black"}>📊 Pi-Factor</h1>
+        <h1 className={"text-3xl font-black select-none"}>📊 Pi-Factor</h1>
       </header>
       <section
         dir={"rtl"}
         className={
-          "flex sm:flex-row overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
+          "flex sm:flex-row sm:overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
         }
       >
         <section
           className={
-            "max-h-full min-h-full h-full overflow-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
+            "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
           }
         >
           <div className={"flex flex-col gap-2"}>
@@ -316,7 +320,7 @@ export default function Home() {
         </section>
         <section
           className={
-            "min-h-full flex flex-col gap-2 p-3 h-full sm:w-3/4 w-full rounded-lg bg-zinc-100 border"
+            "sm:min-h-full max-sm:grow h-fit flex flex-col gap-2 p-3 sm:h-full sm:w-3/4 w-full rounded-lg bg-zinc-100 border"
           }
         >
           <header className={"flex flex-row gap-2 flex-wrap min-h-10"}>
@@ -393,16 +397,16 @@ export default function Home() {
             {!selectedCourses?.length && (
               <div
                 className={
-                  "w-full h-full text-lg text-zinc-400 select-none flex flex-row items-center justify-center"
+                  "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
                 }
               >
-                הוסיפו קורסים מהרשימה בצד שמאל...
+                הוסיפו קורסים מהרשימה...
               </div>
             )}
-            {selectedCourses && selectedTab === null && (
+            {selectedCourses && (selectedTab === null) && (
               <div
                 className={
-                  "w-full h-full text-lg text-zinc-400 select-none flex flex-row items-center justify-center"
+                  "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
                 }
               >
                 סמנו קורס מלמעלה כדי לראות את התפלגות הציונים שלו...
@@ -410,7 +414,7 @@ export default function Home() {
             )}
             {selectedCourses && selectedTab !== null && selectedCourse && (
               <div className={"px-4 py-3 flex flex-col gap-2 max-h-full"}>
-                <div className={"flex flex-row gap-2 text-2xl"}>
+                <div className={"flex flex-col sm:flex-row gap-2 text-2xl"}>
                   {selectedCourse?.name && (
                     <span className={"font-bold"}>{selectedCourse?.name}</span>
                   )}
