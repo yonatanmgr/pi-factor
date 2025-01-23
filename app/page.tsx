@@ -377,7 +377,7 @@ export default function Home() {
             "sm:min-h-full max-sm:grow h-fit flex flex-col gap-2 p-3 sm:h-full sm:w-3/4 w-full rounded-lg bg-zinc-100 border"
           }
         >
-          <header className={"flex flex-row gap-2 flex-wrap min-h-10"}>
+          <header className={"flex flex-row gap-2 overflow-x-auto overflow-y-hidden min-h-10"}>
             {!selectedCourses?.length && (
               <span
                 className={
@@ -471,7 +471,7 @@ export default function Home() {
                 הוסיפו קורסים מהרשימה...
               </div>
             )}
-            {selectedCourses && selectedTab === null && (
+            {selectedCourses.length > 0 && selectedTab === -1 && (
               <div
                 className={
                   "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
@@ -480,7 +480,7 @@ export default function Home() {
                 סמנו קורס מלמעלה כדי לראות את התפלגות הציונים שלו...
               </div>
             )}
-            {selectedCourses && selectedTab !== null && selectedCourse && (
+            {selectedCourses.length > 0 && selectedTab !== null && selectedCourse && (
               <div className={"px-4 py-3 flex flex-col gap-2 max-h-full"}>
                 <div className={"flex flex-col sm:flex-row gap-2 text-2xl"}>
                   {selectedCourse?.name && (

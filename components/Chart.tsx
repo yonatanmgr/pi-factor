@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import {Bar, BarChart, CartesianGrid, XAxis, YAxis} from "recharts";
 
 import {
   ChartConfig,
@@ -129,6 +129,15 @@ export function GradeChart({ data }: ChartProps) {
 
 
   const chartData =  useMemo(() => {
+    // let total = 0;
+    // Object.keys(preprocessedData).forEach((key) => {
+    //   if (visibleMoeds[key.split("-")[0]] && visibleGroups[key.split("-")[1]]) {
+    //     preprocessedData[key].forEach((value) => {
+    //       total += value;
+    //     });
+    //   }
+    // });
+
     return GRADE_LABELS.map((label, index) => {
       const entry: any = { gradeRange: label };
       Object.keys(preprocessedData).forEach((key) => {
@@ -150,6 +159,11 @@ export function GradeChart({ data }: ChartProps) {
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="gradeRange"
+          tickLine={false}
+          tickMargin={10}
+          axisLine={false}
+        />
+        <YAxis
           tickLine={false}
           tickMargin={10}
           axisLine={false}
