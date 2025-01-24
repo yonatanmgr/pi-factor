@@ -152,7 +152,7 @@ const MainSection = ({
                 עריכת קורסים
               </Button>
             </DrawerTrigger>
-            <DrawerContent dir={"rtl"} className={"px-4 overflow-x-hidden"}>
+            <DrawerContent dir={"rtl"} className={"px-4 overflow-hidden"}>
               <CourseList
                 {...{
                   selectedCourses,
