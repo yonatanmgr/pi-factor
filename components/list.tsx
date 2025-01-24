@@ -161,7 +161,9 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                 >
                   <span className={"flex flex-row gap-2 items-center"}>
                     {
-                      <span className={"text-zinc-500 dark:text-zinc-400 mt-[1px]"}>
+                      <span
+                        className={"text-zinc-500 dark:text-zinc-400 mt-[1px]"}
+                      >
                         {isSelected ? (
                           <LucideCheckSquare size={17} />
                         ) : (
@@ -169,11 +171,13 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                         )}
                       </span>
                     }
-                    <span className={"truncate"}>
-                      {course?.name}
-                    </span>
+                    <span className={"truncate"}>{course?.name}</span>
                   </span>
-                  <span className={"text-zinc-500 dark:text-zinc-400 font-light"}>{option}</span>
+                  <span
+                    className={"text-zinc-500 dark:text-zinc-400 font-light"}
+                  >
+                    {option}
+                  </span>
                 </div>
               );
             })}

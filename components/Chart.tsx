@@ -80,15 +80,15 @@ const chartConfig = {
 
 export const textToRGB = (text: string) => {
   let hash = 0;
-  text.split('').forEach((char: string) => {
-    hash = char.charCodeAt(0) + ((hash << 5) - hash)
-  })
-  let colour = '#'
+  text.split("").forEach((char: string) => {
+    hash = char.charCodeAt(0) + ((hash << 5) - hash);
+  });
+  let colour = "#";
   for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xff
-    colour += value.toString(16).padStart(2, '0')
+    const value = (hash >> (i * 8)) & 0xff;
+    colour += value.toString(16).padStart(2, "0");
   }
-  return colour
+  return colour;
 };
 
 export function GradeChart({ data }: ChartProps) {
@@ -202,7 +202,9 @@ export function GradeChart({ data }: ChartProps) {
                           } as React.CSSProperties
                         }
                       />
-                      <span className={"text-zinc-700 dark:text-zinc-200"}>{n}</span>
+                      <span className={"text-zinc-700 dark:text-zinc-200"}>
+                        {n}
+                      </span>
                     </section>
                     <span className={"font-mono font-bold pl-1"}>
                       {parseFloat(v.toString()).toFixed(2)}%

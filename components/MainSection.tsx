@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {LucideBookPlus, LucideListFilter, LucideTrash, LucideX} from "lucide-react";
+import {
+  LucideBookPlus,
+  LucideListFilter,
+  LucideTrash,
+  LucideX,
+} from "lucide-react";
 import { GradeChart } from "@/components/Chart";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import VirtualizedList from "@/components/list";
-import {AllTimeCourseInfo, SemesterGroupGradeInfo} from "@/lib/types";
+import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import { useViewport } from "@/components/CheckboxDropdown";
 import {
   Drawer,
@@ -25,9 +30,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Semester from "@/components/Semester";
-import {useCourseFilters} from "@/lib/store";
+import { useCourseFilters } from "@/lib/store";
 
-const snapPoints = ['355px', 1];
+const snapPoints = ["355px", 1];
 
 interface MainSectionProps {
   selectedCourses: any[];
@@ -37,13 +42,14 @@ interface MainSectionProps {
   grades: any;
   selectedCourse: AllTimeCourseInfo | null;
   currentCourseGrades:
-      | {
-    [p: string]:
-        | { [p: string]: SemesterGroupGradeInfo[] | undefined }
-        | undefined;
-  }
-      | null
-      | undefined;  options: {
+    | {
+        [p: string]:
+          | { [p: string]: SemesterGroupGradeInfo[] | undefined }
+          | undefined;
+      }
+    | null
+    | undefined;
+  options: {
     [id: string]: AllTimeCourseInfo & { id: string };
   };
   isLoading: boolean;
@@ -108,7 +114,6 @@ const MainSection = ({
 }: MainSectionProps) => {
   const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
   const { isMobile } = useViewport();
-  const [showSemesters, setShowSemesters] = React.useState(true);
 
   useEffect(() => {
     if (selectedCourse?.id) {
@@ -120,7 +125,6 @@ const MainSection = ({
   }, [selectedCourse]);
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
-
 
   return (
     <section
@@ -141,7 +145,10 @@ const MainSection = ({
                 variant={"secondary"}
                 disabled={isLoading}
               >
-                <LucideBookPlus className={"text-zinc-500 dark:text-zinc-400"} size={14} />
+                <LucideBookPlus
+                  className={"text-zinc-500 dark:text-zinc-400"}
+                  size={14}
+                />
                 עריכת קורסים
               </Button>
             </DrawerTrigger>
@@ -162,11 +169,11 @@ const MainSection = ({
         ) : (
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                variant={"outlined"}
-                disabled={isLoading}
-              >
-                <LucideBookPlus className={"text-zinc-500 dark:text-zinc-400"} size={14} />
+              <Button variant={"outlined"} disabled={isLoading}>
+                <LucideBookPlus
+                  className={"text-zinc-500 dark:text-zinc-400"}
+                  size={14}
+                />
                 עריכת קורסים
               </Button>
             </DialogTrigger>
@@ -219,8 +226,12 @@ const MainSection = ({
                 !grades?.[course.id ?? ""]) &&
                 "opacity-50 cursor-help",
             )}
-            variant={selectedTab !== null &&
-                selectedTab == selectedCourses.indexOf(course) ? "default" : "outlined"}
+            variant={
+              selectedTab !== null &&
+              selectedTab == selectedCourses.indexOf(course)
+                ? "default"
+                : "outlined"
+            }
             onClick={() => {
               if (
                 grades?.[course.id ?? ""] === undefined ||
@@ -286,7 +297,9 @@ const MainSection = ({
         ))}
       </header>
       <section
-        className={"grow rounded-md w-full bg-zinc-50 dark:bg-zinc-900 border overflow-hidden"}
+        className={
+          "grow rounded-md w-full bg-zinc-50 dark:bg-zinc-900 border overflow-hidden"
+        }
       >
         {!selectedCourses?.length && (
           <div
@@ -307,10 +320,13 @@ const MainSection = ({
           </div>
         )}
         {selectedCourses.length > 0 && selectedTab > -1 && selectedCourse && (
-          <div dir={"rtl"} className={"px-4 py-3 h-full flex flex-col gap-2 max-h-full"}>
+          <div
+            dir={"rtl"}
+            className={"px-4 py-3 h-full flex flex-col gap-2 max-h-full"}
+          >
             <div className={"flex flex-row flex-wrap gap-2 text-2xl"}>
               {selectedCourse?.name && (
-                  <span className={"font-bold"}>
+                <span className={"font-bold"}>
                   {selectedCourse?.name}
                   {selectedCourse?.id && (
                     <span className={"font-light"}>
@@ -332,92 +348,106 @@ const MainSection = ({
               <GradeChart data={currentCourseGrades} />
             </div>
             {isMobile ? (
-                <Drawer snapPoints={snapPoints} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
-                  <DrawerTrigger asChild>
-                    <Button
-                        className={"bg-zinc-50 w-full dark:bg-zinc-900 border"}
-                        variant={"secondary"}
-                        disabled={isLoading}
-                    >
-                      <LucideListFilter className={"text-zinc-500 dark:text-zinc-400"} size={14} />
-                      סינון מועדים
-                    </Button>
-                  </DrawerTrigger>
-                  <DrawerContent
-                      className="fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
-                      dir={"rtl"}>
-                    <div
-                        className={cn('flex flex-col max-w-md mx-auto gap-4 w-full p-4 pt-5', {
-                          'overflow-y-auto': snap === 1,
-                          'overflow-hidden': snap !== 1,
-                        })}
-                    >
-                      {selectedCourse &&
-                          Object.entries(currentCourseGrades ?? {}).some(
-                              (o) => Object.values(o[1] ?? {}).length,
-                          ) && (
-                              <>
-                                {/*<div className={"h-px w-full bg-zinc-300/50 my-2"}></div>*/}
-                                <header
-                                    className={
-                                      "flex flex-row gap-2 justify-between w-full items-center"
-                                    }
-                                    onClick={(e) => {
-                                      isMobile && setShowSemesters(!showSemesters);
-                                      e.stopPropagation();
-                                    }}
-                                >
-                                  <h2
-                                      className={
-                                        "text-lg pr-1 font-bold select-none flex flex-row gap-2 items-center"
-                                      }
-                                  >
-                                    <LucideListFilter className={"text-zinc-500 dark:text-zinc-400"} size={20}/>
-                                    סינון מועדים
-                                  </h2>
-                                  <Button
-                                      triggerclassname={cn(
-                                          !Object.values(visibleMoeds).some((v) => v)
-                                              ? "cursor-default"
-                                              : "",
-                                      )}
-                                      disabled={!Object.values(visibleMoeds).some((v) => v)}
-                                      className={"bg-zinc-50 dark:bg-zinc-900 border"}
-                                      variant={"secondary"}
-                                      onClick={(e) => {
-                                        clearMoeds();
-                                        e.stopPropagation();
-                                      }}
-                                  >
-                                    <LucideTrash className={"text-red-500"} size={14}/> נקה מועדים
-                                  </Button>
-                                </header>
+              <Drawer
+                snapPoints={snapPoints}
+                activeSnapPoint={snap}
+                setActiveSnapPoint={setSnap}
+              >
+                <DrawerTrigger asChild>
+                  <Button
+                    className={"bg-zinc-50 w-full dark:bg-zinc-900 border"}
+                    variant={"secondary"}
+                    disabled={isLoading}
+                  >
+                    <LucideListFilter
+                      className={"text-zinc-500 dark:text-zinc-400"}
+                      size={14}
+                    />
+                    סינון מועדים
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent
+                  className="fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
+                  dir={"rtl"}
+                >
+                  <div
+                    className={cn(
+                      "flex flex-col max-w-md mx-auto gap-4 w-full p-4 pt-5",
+                      {
+                        "overflow-y-auto": snap === 1,
+                        "overflow-hidden": snap !== 1,
+                      },
+                    )}
+                  >
+                    {selectedCourse &&
+                      Object.entries(currentCourseGrades ?? {}).some(
+                        (o) => Object.values(o[1] ?? {}).length,
+                      ) && (
+                        <>
+                          {/*<div className={"h-px w-full bg-zinc-300/50 my-2"}></div>*/}
+                          <header
+                            className={
+                              "flex flex-row gap-2 justify-between w-full items-center"
+                            }
+                          >
+                            <h2
+                              className={
+                                "text-lg pr-1 font-bold select-none flex flex-row gap-2 items-center"
+                              }
+                            >
+                              <LucideListFilter
+                                className={"text-zinc-500 dark:text-zinc-400"}
+                                size={20}
+                              />
+                              סינון מועדים
+                            </h2>
+                            <Button
+                              triggerclassname={cn(
+                                !Object.values(visibleMoeds).some((v) => v)
+                                  ? "cursor-default"
+                                  : "",
+                              )}
+                              disabled={
+                                !Object.values(visibleMoeds).some((v) => v)
+                              }
+                              className={"bg-zinc-50 dark:bg-zinc-900 border"}
+                              variant={"secondary"}
+                              onClick={(e) => {
+                                clearMoeds();
+                                e.stopPropagation();
+                              }}
+                            >
+                              <LucideTrash
+                                className={"text-red-500"}
+                                size={14}
+                              />{" "}
+                              נקה מועדים
+                            </Button>
+                          </header>
 
-                                {showSemesters && (
-                                    <div className={""}>
-                                      <div className={"flex flex-col gap-2"}>
-                                        {Object.entries(currentCourseGrades ?? {})
-                                            .filter((o) => Object.values(o[1] ?? {}).length)
-                                            .map(([semester, data]) => {
-                                              return (
-                                                  <Semester
-                                                      key={semester}
-                                                      semester={semester}
-                                                      grades={data}
-                                                      courseId={selectedCourse.id ?? ""}
-                                                  />
-                                              );
-                                            })}
-                                      </div>
-                                    </div>
-                                )}
-                              </>
-                          )}
-                    </div>
-                  </DrawerContent>
-                </Drawer>
+                          <div className={""}>
+                            <div className={"flex flex-col gap-2"}>
+                              {Object.entries(currentCourseGrades ?? {})
+                                .filter((o) => Object.values(o[1] ?? {}).length)
+                                .map(([semester, data]) => {
+                                  return (
+                                    <Semester
+                                      key={semester}
+                                      semester={semester}
+                                      grades={data}
+                                      courseId={selectedCourse.id ?? ""}
+                                    />
+                                  );
+                                })}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                  </div>
+                </DrawerContent>
+              </Drawer>
             ) : (
-                <></>
+              <></>
             )}
           </div>
         )}

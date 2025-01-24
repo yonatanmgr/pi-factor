@@ -4,12 +4,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 import {
+  Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-    Tooltip
 } from "@/components/ui/tooltip";
-import {ClassNameValue} from "tailwind-merge";
+import { ClassNameValue } from "tailwind-merge";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -18,8 +18,8 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
-          outlined:
-            "border border-input bg-zinc-50 dark:bg-zinc-800/70 hover:bg-zinc-100/50 active:bg-zinc-100 dark:hover:bg-zinc-800/80 dark:hover:bg-zinc-800/40 hover:text-accent-foreground shadow-xs",
+        outlined:
+          "border border-input bg-zinc-50 dark:bg-zinc-800/70 hover:bg-zinc-100/50 active:bg-zinc-100 dark:hover:bg-zinc-800/80 dark:hover:bg-zinc-800/40 hover:text-accent-foreground shadow-xs",
         destructive:
           "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
         outline:
@@ -49,7 +49,10 @@ export interface ButtonProps
   asChild?: boolean;
   tooltip?: React.ReactNode;
   triggerclassname?: ClassNameValue;
-  tooltipproviderprops?: Omit<React.ComponentProps<typeof TooltipProvider>, "children">;
+  tooltipproviderprops?: Omit<
+    React.ComponentProps<typeof TooltipProvider>,
+    "children"
+  >;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

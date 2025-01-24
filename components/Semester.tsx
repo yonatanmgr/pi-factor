@@ -119,7 +119,9 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
           }
         >
           {semester.replace("a", " א'").replace("b", " ב'")}
-          <span className={"font-normal text-sm text-zinc-500 dark:text-zinc-300"}>
+          <span
+            className={"font-normal text-sm text-zinc-500 dark:text-zinc-300"}
+          >
             ממוצע:{" "}
             <span className={"font-bold"}>
               {avarageMean ? avarageMean.toFixed(2) : "אין מידע"}
@@ -137,7 +139,12 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
           </div>
           <div className={"w-full flex flex-row justify-evenly gap-2 mt-1"}>
             <CheckboxDropdown
-              icon={<LucideUsers size={15} className={"text-zinc-600 dark:text-zinc-300"} />}
+              icon={
+                <LucideUsers
+                  size={15}
+                  className={"text-zinc-600 dark:text-zinc-300"}
+                />
+              }
               label={selectedGroupsLabel}
               items={groups.map((g) => ({
                 label: GROUPS[g] ?? "קבוצה " + g,
@@ -157,7 +164,12 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
               }}
             />
             <CheckboxDropdown
-              icon={<LucidePencil size={15} className={"text-zinc-600 dark:text-zinc-300"} />}
+              icon={
+                <LucidePencil
+                  size={15}
+                  className={"text-zinc-600 dark:text-zinc-300"}
+                />
+              }
               label={selectedMoedsLabel}
               items={moeds.map((m) => ({
                 label: MOEDS[m],
