@@ -367,7 +367,7 @@ const MainSection = ({
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent
-                  className="fixed flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
+                  className="fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
                   dir={"rtl"}
                 >
                   <div
