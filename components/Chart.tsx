@@ -80,11 +80,15 @@ const chartConfig = {
 
 export const textToRGB = (text: string) => {
   let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = text.charCodeAt(i) + ((hash << 5) - hash);
+  text.split('').forEach((char: string) => {
+    hash = char.charCodeAt(0) + ((hash << 5) - hash)
+  })
+  let colour = '#'
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xff
+    colour += value.toString(16).padStart(2, '0')
   }
-  const c = (hash & 0x00ffffff).toString(16).toUpperCase();
-  return "00000".substring(0, 6 - c.length) + c;
+  return colour
 };
 
 export function GradeChart({ data }: ChartProps) {
@@ -168,7 +172,7 @@ export function GradeChart({ data }: ChartProps) {
   });
 
   return (
-    <ChartContainer className={"grow h-full"} config={chartConfig}>
+    <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
       <BarChart accessibilityLayer data={dataAsPercentage}>
         <CartesianGrid vertical={false} />
         <XAxis
@@ -216,17 +220,15 @@ export function GradeChart({ data }: ChartProps) {
             />
           }
         />
-        {Array.from(barKeys).map(({ key, label }, index) => (
+        {Array.from(barKeys).map(({ key, label }) => (
           <Bar
             name={label}
             key={key}
             isAnimationActive={false}
             unit={"%"}
-            //   animationDuration={50}
-            radius={index == barKeys.size - 1 ? [10, 10, 0, 0] : [0, 0, 0, 0]}
             dataKey={key}
             stackId="a"
-            fill={"#" + textToRGB(key)}
+            fill={textToRGB(label)}
           />
         ))}
       </BarChart>

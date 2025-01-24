@@ -2,12 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { useCourses, useGrades } from "@/lib/api";
 import { AllTimeCourseInfo } from "@/lib/types";
-import { useCourseFilters } from "@/lib/store";
 import MainSection from "@/components/MainSection";
 import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
-import { LucideSunMoon } from "lucide-react";
-import {useDarkMode} from "@/lib/hooks/useDarkMode"
+import { LucideMoon, LucideSun } from "lucide-react";
+import { useDarkMode } from "@/lib/hooks/useDarkMode";
 
 export const runtime = "edge";
 export const preferredRegion = "home";
@@ -16,7 +15,10 @@ export const dynamic = "force-dynamic";
 export default function Home() {
   const { courses, isLoading } = useCourses();
   const { grades } = useGrades();
-  const { toggle, isDarkMode } = useDarkMode({defaultValue: false, localStorageKey: "pi-factor-theme"});
+  const { toggle, isDarkMode } = useDarkMode({
+    defaultValue: false,
+    localStorageKey: "pi-factor-theme",
+  });
 
   useEffect(() => {
     if (isDarkMode) {
@@ -117,12 +119,12 @@ export default function Home() {
       <header className={"w-full flex flex-row justify-between items-center"}>
         <h1 className={"text-3xl font-black select-none"}>📊 Pi-Factor</h1>
         <section>
-          <Button
-              className={"w-9 h-9"}
-              variant={"outline"}
-            onClick={toggle}
-          >
-            <LucideSunMoon size={20} />
+          <Button className={"w-9 h-9"} variant={"outline"} onClick={toggle}>
+            {isDarkMode ? (
+              <LucideSun className={"text-amber-300"} size={24} />
+            ) : (
+              <LucideMoon className={"text-sky-800"} size={24} />
+            )}
           </Button>
         </section>
       </header>
