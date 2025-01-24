@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/chart";
 import { SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters } from "@/lib/store";
+import * as React from "react";
 import { useMemo, useState } from "react";
 import { LucideUserX } from "lucide-react";
-import * as React from "react";
 
 const MOEDS = ["מועד קובע", "מועד א'", "מועד ב'", "מועד ג'"];
 
@@ -184,47 +184,46 @@ export function GradeChart({ data }: ChartProps) {
               formatter={(v, n, i) => {
                 return (
                   <div className={"flex flex-row gap-1 items-center w-full"}>
-                    <section className={"flex flex-row gap-1.5 items-center grow"}>
+                    <section
+                      className={"flex flex-row gap-1.5 items-center grow"}
+                    >
                       <div
-                          className={
-                            "shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg] h-2.5 w-2.5 mt-[1px]"
-                          }
-                          style={
-                            {
-                              "--color-bg": i.color,
-                              "--color-border": i.color,
-                            } as React.CSSProperties
-                          }
+                        className={
+                          "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5 mt-[1px]"
+                        }
+                        style={
+                          {
+                            "--color-bg": i.color,
+                            "--color-border": i.color,
+                          } as React.CSSProperties
+                        }
                       />
-                      <span className={"text-zinc-700"}>{n}:</span>
+                      <span className={"text-zinc-700 dark:text-zinc-200"}>{n}</span>
                     </section>
-                      <span className={"font-mono font-bold pl-1"}>
+                    <span className={"font-mono font-bold pl-1"}>
                       {parseFloat(v.toString()).toFixed(2)}%
                     </span>
                   </div>
-              );
+                );
               }}
-              labelFormatter={
-                (v) => <span>טווח ציונים: <span className={"font-bold"}>{v}</span></span>
-              }
-              dir={
-                "rtl"
-              }
-              nameKey={
-                "label"
-              }
-              />
-              }
-              />
-              {
-                Array.from(barKeys).map(({key, label}, index) => (
-                    <Bar
-                        name={label}
-                        key={key}
-                        isAnimationActive={false}
-                        unit={"%"}
-                        //   animationDuration={50}
-            radius={index == barKeys.size - 1 ? [10, 10, 0,0] : [0,0,0,0]}
+              labelFormatter={(v) => (
+                <span>
+                  טווח ציונים: <span className={"font-bold"}>{v}</span>
+                </span>
+              )}
+              dir={"rtl"}
+              nameKey={"label"}
+            />
+          }
+        />
+        {Array.from(barKeys).map(({ key, label }, index) => (
+          <Bar
+            name={label}
+            key={key}
+            isAnimationActive={false}
+            unit={"%"}
+            //   animationDuration={50}
+            radius={index == barKeys.size - 1 ? [10, 10, 0, 0] : [0, 0, 0, 0]}
             dataKey={key}
             stackId="a"
             fill={"#" + textToRGB(key)}

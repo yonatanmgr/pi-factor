@@ -47,10 +47,10 @@ export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
     <DropdownMenu open={isOpen} modal={false} dir={"rtl"}>
       <DropdownMenuTrigger asChild>
         <Button
-            triggerclassname={"w-full"}
+          triggerclassname={"w-full"}
           onClick={() => setIsOpen(!isOpen)}
           className={"w-full flex flex-row gap-2 items-center"}
-          variant="outline"
+          variant="outlined"
         >
           {icon ? icon : null}
           {label}

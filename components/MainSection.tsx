@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { LucideBookPlus, LucideTrash, LucideX } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
 import React from "react";
-import VirtualizedList from "@/components/ui/list";
+import VirtualizedList from "@/components/list";
 import { AllTimeCourseInfo } from "@/lib/types";
 import { useViewport } from "@/components/CheckboxDropdown";
 import {
@@ -18,6 +18,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface MainSectionProps {
   selectedCourses: any[];
@@ -63,7 +69,7 @@ const CourseList = ({
       />
 
       <Button
-        className={"bg-zinc-50 border w-full"}
+        className={"bg-zinc-50 dark:bg-zinc-900 border w-full"}
         variant={"secondary"}
         disabled={!selectedCourses?.length}
         onClick={() => {
@@ -95,7 +101,7 @@ const MainSection = ({
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-lg bg-zinc-100 border"
+        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-lg bg-zinc-100 dark:bg-zinc-950 border"
       }
     >
       <header
@@ -107,11 +113,11 @@ const MainSection = ({
           <Drawer>
             <DrawerTrigger asChild>
               <Button
-                className={"bg-zinc-50 border"}
+                className={"bg-zinc-50 dark:bg-zinc-900 border"}
                 variant={"secondary"}
                 disabled={isLoading}
               >
-                <LucideBookPlus className={"text-zinc-500"} size={14} />
+                <LucideBookPlus className={"text-zinc-500 dark:text-zinc-400"} size={14} />
                 עריכת קורסים
               </Button>
             </DrawerTrigger>
@@ -133,11 +139,10 @@ const MainSection = ({
           <Dialog>
             <DialogTrigger asChild>
               <Button
-                className={"bg-zinc-50 border"}
-                variant={"secondary"}
+                variant={"outlined"}
                 disabled={isLoading}
               >
-                <LucideBookPlus className={"text-zinc-500"} size={14} />
+                <LucideBookPlus className={"text-zinc-500 dark:text-zinc-400"} size={14} />
                 עריכת קורסים
               </Button>
             </DialogTrigger>
@@ -145,17 +150,23 @@ const MainSection = ({
               <DialogTitle>
                 <h2 className={"text-xl font-bold select-none"}>
                   עריכת קורסים
+                  {selectedCourses?.length > 0 && (
+                    <span className={"text-zinc-500 dark:text-zinc-400"}>
+                      {" "}
+                      ({selectedCourses.length})
+                    </span>
+                  )}
                 </h2>
               </DialogTitle>
               <CourseList
-                  {...{
-                    selectedCourses,
-                    setSelectedCourses,
-                    onSelectedOptions,
-                    setSelectedTab,
-                    options,
-                    isLoading,
-                  }}
+                {...{
+                  selectedCourses,
+                  setSelectedCourses,
+                  onSelectedOptions,
+                  setSelectedTab,
+                  options,
+                  isLoading,
+                }}
               />
             </DialogContent>
           </Dialog>
@@ -180,15 +191,12 @@ const MainSection = ({
             }
             key={course?.name}
             className={cn(
-              "bg-zinc-50 border",
-              selectedTab !== null &&
-                selectedTab == selectedCourses.indexOf(course) &&
-                "bg-zinc-800 text-zinc-50 hover:bg-zinc-900",
               (grades?.[course.id ?? ""] === undefined ||
                 !grades?.[course.id ?? ""]) &&
                 "opacity-50 cursor-help",
             )}
-            variant={"secondary"}
+            variant={selectedTab !== null &&
+                selectedTab == selectedCourses.indexOf(course) ? "default" : "outlined"}
             onClick={() => {
               if (
                 grades?.[course.id ?? ""] === undefined ||
@@ -208,37 +216,53 @@ const MainSection = ({
           >
             <span>{course?.name}</span>|
             <span className={"opacity-80 font-light"}>{course?.id}</span>
-            <span
-              className={
-                "h-4 w-4 flex flex-row items-center cursor-pointer hover:text-red-500 active:text-red-600 transition-all justify-center"
+            <TooltipProvider
+              delayDuration={
+                grades?.[course.id ?? ""] === undefined ||
+                !grades?.[course.id ?? ""]
+                  ? 300
+                  : 100
               }
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedCourses(
-                  selectedCourses.filter(
-                    (selectedCourse) => selectedCourse.name !== course.name,
-                  ),
-                );
-                if (
-                  selectedTab !== null &&
-                  selectedTab == selectedCourses.indexOf(course)
-                ) {
-                  setSelectedTab(-1);
-                } else {
-                  setSelectedTab(
-                    selectedCourses.indexOf(selectedCourses[selectedTab ?? 0]) -
-                      1,
-                  );
-                }
-              }}
             >
-              <LucideX size={14} />
-            </span>
+              <Tooltip>
+                <TooltipTrigger className={"h-4 w-4"}>
+                  <span
+                    className={
+                      "h-4 w-4 flex flex-row items-center hover:text-red-500 active:text-red-600 transition-all justify-center"
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedCourses(
+                        selectedCourses.filter(
+                          (selectedCourse) =>
+                            selectedCourse.name !== course.name,
+                        ),
+                      );
+                      if (
+                        selectedTab !== null &&
+                        selectedTab == selectedCourses.indexOf(course)
+                      ) {
+                        setSelectedTab(-1);
+                      } else {
+                        setSelectedTab(
+                          selectedCourses.indexOf(
+                            selectedCourses[selectedTab ?? 0],
+                          ) - 1,
+                        );
+                      }
+                    }}
+                  >
+                    <LucideX size={14} />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>הסרת קורס</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </Button>
         ))}
       </header>
       <section
-        className={"grow rounded-md w-full bg-zinc-50 border overflow-hidden"}
+        className={"grow rounded-md w-full bg-zinc-50 dark:bg-zinc-900 border overflow-hidden"}
       >
         {!selectedCourses?.length && (
           <div

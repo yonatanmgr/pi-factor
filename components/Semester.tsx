@@ -2,8 +2,7 @@ import { SemesterCourses, SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters } from "@/lib/store";
 import useSWRImmutable from "swr/immutable";
 import { fetcher } from "@/lib/api";
-import React, { useEffect } from "react";
-import { Card } from "@/components/ui/card";
+import React from "react";
 import { CheckboxDropdown } from "@/components/CheckboxDropdown";
 import { LucidePencil, LucideUsers } from "lucide-react";
 import { GROUPS, MOEDS } from "@/lib/constants";
@@ -59,27 +58,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
   }
 
   if (isValidating) {
-    return (
-      <AnimatePresence mode={"popLayout"}>
-        <motion.div
-          key={`loading-semester-${semester}`}
-          initial={{ opacity: 0, y: 5, scale: 0.99 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 5, scale: 0.99 }}
-          transition={{ duration: 0.3 }}
-          className={
-            "flex p-2 w-full min-h-[126px] animate-pulse opacity-80 bg-zinc-50 rounded-md flex-col gap-2"
-          }
-        >
-          <div className={"w-full rounded-md bg-zinc-300/50 h-10"}></div>
-          <div className={"w-full rounded-md bg-zinc-300/50 h-8"}></div>
-          <div className={"w-full  h-8 flex flex-row gap-2"}>
-            <div className={"w-full rounded-md bg-zinc-300/20 h-8"}></div>
-            <div className={"w-full rounded-md bg-zinc-300/20 h-8"}></div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    );
+    return <></>;
   }
 
   const moeds = Array.from(
@@ -131,7 +110,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
         exit={{ opacity: 0, y: 5, scale: 0.99 }}
         transition={{ duration: 0.3 }}
         className={
-          "flex p-2 bg-zinc-50 rounded-md flex-col gap-1 border bg-card text-card-foreground shadow"
+          "flex p-2 bg-zinc-50 dark:bg-zinc-900 rounded-md flex-col gap-1 border bg-card text-card-foreground shadow-sm"
         }
       >
         <h3
@@ -140,25 +119,25 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
           }
         >
           {semester.replace("a", " א'").replace("b", " ב'")}
-          <span className={"font-normal text-sm text-zinc-500"}>
+          <span className={"font-normal text-sm text-zinc-500 dark:text-zinc-300"}>
             ממוצע:{" "}
-            <span className={"font-bold text-zinc-800"}>
+            <span className={"font-bold"}>
               {avarageMean ? avarageMean.toFixed(2) : "אין מידע"}
             </span>
           </span>
         </h3>
         <div className={"flex flex-col gap-1"}>
           <div className={"flex flex-row gap-1 text-sm"}>
-            <span className={"font-normal text-zinc-500"}>
+            <span className={"font-normal text-zinc-500 dark:text-zinc-300"}>
               {lecturers.size == 1 ? "מרצה" : "מרצים"}:{" "}
-              <span className={"font-bold text-zinc-800"}>
+              <span className={"font-bold"}>
                 {lecturers.size ? Array.from(lecturers).join(", ") : "לא ידוע"}
               </span>
             </span>
           </div>
-          <div className={"w-full flex flex-row justify-evenly gap-2"}>
+          <div className={"w-full flex flex-row justify-evenly gap-2 mt-1"}>
             <CheckboxDropdown
-              icon={<LucideUsers size={15} className={"text-zinc-600"} />}
+              icon={<LucideUsers size={15} className={"text-zinc-600 dark:text-zinc-300"} />}
               label={selectedGroupsLabel}
               items={groups.map((g) => ({
                 label: GROUPS[g] ?? "קבוצה " + g,
@@ -178,7 +157,7 @@ const Semester = ({ semester, grades, courseId }: SemesterProps) => {
               }}
             />
             <CheckboxDropdown
-              icon={<LucidePencil size={15} className={"text-zinc-600"} />}
+              icon={<LucidePencil size={15} className={"text-zinc-600 dark:text-zinc-300"} />}
               label={selectedMoedsLabel}
               items={moeds.map((m) => ({
                 label: MOEDS[m],

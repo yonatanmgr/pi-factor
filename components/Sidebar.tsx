@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { LucideTrash } from "lucide-react";
+import { LucideListFilter, LucideTrash } from "lucide-react";
 import React, { useEffect } from "react";
 import { useCourseFilters } from "@/lib/store";
 import Semester from "@/components/Semester";
@@ -35,7 +35,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
   return (
     <section
       className={
-        "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
+        "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 dark:bg-zinc-950 border"
       }
     >
       {selectedCourse &&
@@ -53,7 +53,12 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                 e.stopPropagation();
               }}
             >
-              <h2 className={"text-lg pr-1 font-bold select-none"}>
+              <h2
+                className={
+                  "text-lg pr-1 font-bold select-none flex flex-row gap-2 items-center"
+                }
+              >
+                <LucideListFilter className={"text-zinc-500 dark:text-zinc-400"} size={20} />
                 סינון מועדים
               </h2>
               <Button
@@ -63,7 +68,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                     : "",
                 )}
                 disabled={!Object.values(visibleMoeds).some((v) => v)}
-                className={"bg-zinc-50 border"}
+                className={"bg-zinc-50 dark:bg-zinc-900 border"}
                 variant={"secondary"}
                 onClick={(e) => {
                   clearMoeds();

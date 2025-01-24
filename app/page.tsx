@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useCourses, useGrades } from "@/lib/api";
-import {
-  AllTimeCourseInfo,
-} from "@/lib/types";
+import { AllTimeCourseInfo } from "@/lib/types";
 import { useCourseFilters } from "@/lib/store";
 import MainSection from "@/components/MainSection";
 import Sidebar from "@/components/Sidebar";
+import { Button } from "@/components/ui/button";
+import { LucideSunMoon } from "lucide-react";
+import {useDarkMode} from "@/lib/hooks/useDarkMode"
 
 export const runtime = "edge";
 export const preferredRegion = "home";
@@ -15,13 +16,23 @@ export const dynamic = "force-dynamic";
 export default function Home() {
   const { courses, isLoading } = useCourses();
   const { grades } = useGrades();
+  const { toggle, isDarkMode } = useDarkMode({defaultValue: false, localStorageKey: "pi-factor-theme"});
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
+
   const options =
     Object.fromEntries(
       Object.entries(courses ?? {}).map((c) => [c[0], { ...c[1], id: c[0] }]),
     ) ?? null;
-  const [selectedCourses, setSelectedCourses] = useState<
-    AllTimeCourseInfo[]
-  >([]);
+  const [selectedCourses, setSelectedCourses] = useState<AllTimeCourseInfo[]>(
+    [],
+  );
 
   useEffect(() => {
     const selectedCourses = localStorage.getItem("selectedCourses");
@@ -37,8 +48,8 @@ export default function Home() {
   useEffect(() => {
     if (selectedCourses.length > 0) {
       localStorage.setItem(
-          "selectedCourses",
-          JSON.stringify(selectedCourses.map((c) => c.id)),
+        "selectedCourses",
+        JSON.stringify(selectedCourses.map((c) => c.id)),
       );
     }
   }, [selectedCourses]);
@@ -58,8 +69,6 @@ export default function Home() {
     }
   }, []);
 
-  const { clearMoeds } = useCourseFilters();
-
   const onSelectedOptions = (course: AllTimeCourseInfo) => {
     if (selectedCourses) {
       if (
@@ -73,13 +82,13 @@ export default function Home() {
           ),
         );
         localStorage.setItem(
-            "selectedCourses",
-            JSON.stringify(
-                selectedCourses.filter(
-                (selectedCourse) => selectedCourse.name !== course.name,
-                ),
+          "selectedCourses",
+          JSON.stringify(
+            selectedCourses.filter(
+              (selectedCourse) => selectedCourse.name !== course.name,
             ),
-          );
+          ),
+        );
         setSelectedTab(
           selectedCourses.indexOf(selectedCourses[selectedTab ?? 0]) - 1,
         );
@@ -102,11 +111,20 @@ export default function Home() {
     <main
       dir={"rtl"}
       className={
-        "flex text-zinc-800 sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between"
+        "flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between"
       }
     >
-      <header className={"w-full flex flex-row items-stretch"}>
+      <header className={"w-full flex flex-row justify-between items-center"}>
         <h1 className={"text-3xl font-black select-none"}>📊 Pi-Factor</h1>
+        <section>
+          <Button
+              className={"w-9 h-9"}
+              variant={"outline"}
+            onClick={toggle}
+          >
+            <LucideSunMoon size={20} />
+          </Button>
+        </section>
       </header>
       <section
         dir={"rtl"}
@@ -115,9 +133,22 @@ export default function Home() {
         }
       >
         {selectedCourses && selectedTab >= 0 && (
-            <Sidebar {...{selectedCourse, currentCourseGrades}} />
+          <Sidebar {...{ selectedCourse, currentCourseGrades }} />
         )}
-       <MainSection {...{grades, options, onSelectedOptions, isLoading, selectedCourses, setSelectedCourses, selectedTab, setSelectedTab, selectedCourse, currentCourseGrades}} />
+        <MainSection
+          {...{
+            grades,
+            options,
+            onSelectedOptions,
+            isLoading,
+            selectedCourses,
+            setSelectedCourses,
+            selectedTab,
+            setSelectedTab,
+            selectedCourse,
+            currentCourseGrades,
+          }}
+        />
       </section>
     </main>
   );

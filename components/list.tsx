@@ -1,8 +1,9 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { AllTimeCourseInfo, AllTimeCourses } from "@/lib/types";
 import Spinner from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
+import { LucideCheckSquare, LucideSquare } from "lucide-react";
 
 interface VirtualizedListProps {
   options: AllTimeCourses;
@@ -109,24 +110,24 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           setSearch(e.target.value);
         }}
         placeholder="חפשו שם או מספר קורס..."
-        className="p-2 rounded-md border border-zinc-200 focus:outline-none focus:ring focus:ring-zinc-300"
+        className="p-2 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-hidden focus:ring-3 focus:ring-zinc-300 transition-all"
       />
 
       {isLoading && (
-        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 border-gray-200 rounded-md">
+        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
           <Spinner />
           <span>טוען נתונים...</span>
         </div>
       )}
       {filteredOptions.length === 0 && !isLoading && (
-        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 border-gray-200 rounded-md">
+        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
           לא נמצאו תוצאות
         </div>
       )}
       {filteredOptions.length > 0 && (
         <div
           ref={parentRef}
-          className="h-52 sm:h-72 overflow-auto border gap-0 bg-zinc-50 border-gray-200 rounded-md"
+          className="h-52 sm:h-72 overflow-auto border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
           style={{ contain: "strict" }}
         >
           <div
@@ -146,14 +147,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                 <div
                   key={virtualRow.key}
                   className={cn(
-                    "absolute flex group flex-row transition-all justify-between text-[15px] active:bg-zinc-300 select-none top-0 left-0 w-full p-3 cursor-pointer",
+                    "absolute flex group flex-row transition-all justify-between text-[15px] active:bg-zinc-300 dark:active:bg-zinc-700 select-none top-0 left-0 w-full p-3",
                     isFocused
-                      ? "bg-zinc-200/70 hover:bg-zinc-200/70"
-                      : "bg-zinc-50 hover:bg-zinc-100",
-                    isSelected && "bg-zinc-200 hover:bg-zinc-200",
-                    isSelected &&
-                      isFocused &&
-                      "bg-zinc-300/80 hover:bg-zinc-300/80",
+                      ? "bg-zinc-200/70 hover:bg-zinc-200/70 dark:bg-zinc-800/70 dark:hover:bg-zinc-800/70"
+                      : "bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:bg-zinc-900",
                   )}
                   style={{
                     transform: `translateY(${virtualRow.start}px)`,
@@ -162,10 +159,21 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                     course && onSelectedOption(course);
                   }}
                 >
-                  <span className={"truncate group-active:text-black"}>
-                    {course?.name}
+                  <span className={"flex flex-row gap-2 items-center"}>
+                    {
+                      <span className={"text-zinc-500 dark:text-zinc-400 mt-[1px]"}>
+                        {isSelected ? (
+                          <LucideCheckSquare size={17} />
+                        ) : (
+                          <LucideSquare size={17} />
+                        )}
+                      </span>
+                    }
+                    <span className={"truncate"}>
+                      {course?.name}
+                    </span>
                   </span>
-                  <span className={"text-zinc-500 font-light"}>{option}</span>
+                  <span className={"text-zinc-500 dark:text-zinc-400 font-light"}>{option}</span>
                 </div>
               );
             })}
