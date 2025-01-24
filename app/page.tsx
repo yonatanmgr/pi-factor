@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { LucideMoon, LucideSun } from "lucide-react";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
+import { useViewport } from "@/components/CheckboxDropdown";
 
 export const runtime = "edge";
 export const preferredRegion = "home";
@@ -15,6 +16,8 @@ export const dynamic = "force-dynamic";
 export default function Home() {
   const { courses, isLoading } = useCourses();
   const { grades } = useGrades();
+  const { isMobile } = useViewport();
+
   const { toggle, isDarkMode } = useDarkMode({
     defaultValue: false,
     localStorageKey: "pi-factor-theme",
@@ -134,7 +137,7 @@ export default function Home() {
           "flex sm:flex-row sm:overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
         }
       >
-        {selectedCourses && selectedTab >= 0 && (
+        {!isMobile && selectedCourses && selectedTab >= 0 && (
           <Sidebar {...{ selectedCourse, currentCourseGrades }} />
         )}
         <MainSection

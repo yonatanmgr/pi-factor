@@ -5,7 +5,6 @@ import { useCourseFilters } from "@/lib/store";
 import Semester from "@/components/Semester";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { useViewport } from "@/components/CheckboxDropdown";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -21,8 +20,6 @@ interface SidebarProps {
 
 const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
   const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
-  const { isMobile } = useViewport();
-  const [showSemesters, setShowSemesters] = React.useState(true);
 
   useEffect(() => {
     if (selectedCourse?.id) {
@@ -48,17 +45,16 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
               className={
                 "flex flex-row gap-2  justify-between w-full items-center"
               }
-              onClick={(e) => {
-                isMobile && setShowSemesters(!showSemesters);
-                e.stopPropagation();
-              }}
             >
               <h2
                 className={
                   "text-lg pr-1 font-bold select-none flex flex-row gap-2 items-center"
                 }
               >
-                <LucideListFilter className={"text-zinc-500 dark:text-zinc-400"} size={20} />
+                <LucideListFilter
+                  className={"text-zinc-500 dark:text-zinc-400"}
+                  size={20}
+                />
                 סינון מועדים
               </h2>
               <Button
@@ -79,24 +75,22 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
               </Button>
             </header>
 
-            {showSemesters && (
-              <div className={"grow overflow-hidden"}>
-                <div className={"flex flex-col gap-2 max-h-full overflow-auto"}>
-                  {Object.entries(currentCourseGrades ?? {})
-                    .filter((o) => Object.values(o[1] ?? {}).length)
-                    .map(([semester, data]) => {
-                      return (
-                        <Semester
-                          key={semester}
-                          semester={semester}
-                          grades={data}
-                          courseId={selectedCourse.id ?? ""}
-                        />
-                      );
-                    })}
-                </div>
+            <div className={"grow overflow-hidden"}>
+              <div className={"flex flex-col gap-2 max-h-full overflow-auto"}>
+                {Object.entries(currentCourseGrades ?? {})
+                  .filter((o) => Object.values(o[1] ?? {}).length)
+                  .map(([semester, data]) => {
+                    return (
+                      <Semester
+                        key={semester}
+                        semester={semester}
+                        grades={data}
+                        courseId={selectedCourse.id ?? ""}
+                      />
+                    );
+                  })}
               </div>
-            )}
+            </div>
           </>
         )}
     </section>
