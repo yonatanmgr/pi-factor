@@ -3,11 +3,6 @@ import { cn } from "@/lib/utils";
 import { LucideBookPlus, LucideTrash, LucideX } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
 import React from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import VirtualizedList from "@/components/ui/list";
 import { AllTimeCourseInfo } from "@/lib/types";
 import { useViewport } from "@/components/CheckboxDropdown";
@@ -18,8 +13,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
-  Dialog, DialogClose,
-  DialogContent, DialogFooter,
+  Dialog,
+  DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -264,7 +259,7 @@ const MainSection = ({
           </div>
         )}
         {selectedCourses.length > 0 && selectedTab > -1 && selectedCourse && (
-          <div className={"px-4 py-3 flex flex-col gap-2 max-h-full"}>
+          <div className={"px-4 py-3 h-full flex flex-col gap-2 max-h-full"}>
             <div className={"flex flex-row flex-wrap gap-2 text-2xl"}>
               {selectedCourse?.name && (
                 <span className={"font-bold"}>
@@ -285,7 +280,7 @@ const MainSection = ({
             </span>
 
             <div className={"w-full h-px bg-zinc-300/50 my-2"}></div>
-            <div className={"grow h-1/2 w-full overflow-auto"}>
+            <div className={"grow h-full w-full overflow-auto"}>
               <GradeChart data={currentCourseGrades} />
             </div>
           </div>

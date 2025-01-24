@@ -12,6 +12,7 @@ import { SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters } from "@/lib/store";
 import { useMemo, useState } from "react";
 import { LucideUserX } from "lucide-react";
+import * as React from "react";
 
 const MOEDS = ["מועד קובע", "מועד א'", "מועד ב'", "מועד ג'"];
 
@@ -158,7 +159,6 @@ export function GradeChart({ data }: ChartProps) {
   );
 
   const dataAsPercentage = chartData.map((entry) => {
-    // const total: number = totalPerGradeRange[entry.gradeRange];
     return Object.keys(entry).reduce((acc, key) => {
       if (key === "gradeRange") {
         return { ...acc, gradeRange: entry.gradeRange };
@@ -168,7 +168,7 @@ export function GradeChart({ data }: ChartProps) {
   });
 
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer className={"grow h-full"} config={chartConfig}>
       <BarChart accessibilityLayer data={dataAsPercentage}>
         <CartesianGrid vertical={false} />
         <XAxis
@@ -177,45 +177,54 @@ export function GradeChart({ data }: ChartProps) {
           tickMargin={10}
           axisLine={false}
         />
-        <YAxis
-            unit={"%"}
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-        />
+        <YAxis unit={"%"} tickLine={false} tickMargin={10} axisLine={false} />
         <ChartTooltip
-          // formatter={(value: number) => `${value.toFixed(2)}%`}
           content={
             <ChartTooltipContent
-              // labelFormatter={value => {
-              //   return `טווח ציונים: ${value}`;
-              // }}
-              // formatter={(value: number, name) => {
-              //   console.log(value, name)
-              //   return <div>{name}{value.toFixed(2)}%</div>;
-              // }}
-              // formatter={(v, n, i, idx, p) => {
-              //   console.log(v, n, i, idx, p);
-              //   return (
-              //     <div>
-              //       {n}: {v.toFixed(2)}%
-              //     </div>
-              //   );
-              // }}
-              labelFormatter={(v) => `טווח ציונים: ${v}`}
-              dir={"rtl"}
-              nameKey={"label"}
-            />
-          }
-        />
-        {Array.from(barKeys).map(({ key, label }) => (
-          <Bar
-            name={label}
-            key={key}
-            isAnimationActive={false}
-            unit={"%"}
-            ˆ
-            //   animationDuration={50}
+              formatter={(v, n, i) => {
+                return (
+                  <div className={"flex flex-row gap-1 items-center w-full"}>
+                    <section className={"flex flex-row gap-1.5 items-center grow"}>
+                      <div
+                          className={
+                            "shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg] h-2.5 w-2.5 mt-[1px]"
+                          }
+                          style={
+                            {
+                              "--color-bg": i.color,
+                              "--color-border": i.color,
+                            } as React.CSSProperties
+                          }
+                      />
+                      <span className={"text-zinc-700"}>{n}:</span>
+                    </section>
+                      <span className={"font-mono font-bold pl-1"}>
+                      {parseFloat(v.toString()).toFixed(2)}%
+                    </span>
+                  </div>
+              );
+              }}
+              labelFormatter={
+                (v) => <span>טווח ציונים: <span className={"font-bold"}>{v}</span></span>
+              }
+              dir={
+                "rtl"
+              }
+              nameKey={
+                "label"
+              }
+              />
+              }
+              />
+              {
+                Array.from(barKeys).map(({key, label}, index) => (
+                    <Bar
+                        name={label}
+                        key={key}
+                        isAnimationActive={false}
+                        unit={"%"}
+                        //   animationDuration={50}
+            radius={index == barKeys.size - 1 ? [10, 10, 0,0] : [0,0,0,0]}
             dataKey={key}
             stackId="a"
             fill={"#" + textToRGB(key)}
