@@ -76,7 +76,7 @@ const CourseList = ({
   setSelectedCourses,
 }: CourseListProps) => {
   return (
-    <div className={"flex flex-col gap-2"}>
+    <div className={"flex pt-4 flex-col gap-2 overflow-x-hidden"}>
       <VirtualizedList
         options={options ?? {}}
         isLoading={isLoading}
@@ -152,7 +152,7 @@ const MainSection = ({
                 עריכת קורסים
               </Button>
             </DrawerTrigger>
-            <DrawerContent dir={"rtl"} className={"px-4"}>
+            <DrawerContent dir={"rtl"} className={"px-4 overflow-x-hidden"}>
               <CourseList
                 {...{
                   selectedCourses,

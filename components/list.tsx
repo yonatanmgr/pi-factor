@@ -98,7 +98,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
 
   return (
     <div
-      className="flex flex-col gap-2 w-full"
+      className="flex flex-col gap-2 w-full overflow-x-hidden"
       onKeyDown={handleKeyDown}
       tabIndex={0} // Makes the container focusable to capture keyboard events
     >
@@ -127,7 +127,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
       {filteredOptions.length > 0 && (
         <div
           ref={parentRef}
-          className="h-52 sm:h-72 overflow-auto border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
+          className="h-52 sm:h-72 overflow-y-auto overflow-x-hidden border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
           style={{ contain: "strict" }}
         >
           <div
@@ -159,7 +159,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                     course && onSelectedOption(course);
                   }}
                 >
-                  <span className={"flex flex-row gap-2 items-center"}>
+                  <span className={"flex flex-row gap-2 overflow-x-hidden items-center"}>
                     {
                       <span
                         className={"text-zinc-500 dark:text-zinc-400 mt-[1px]"}
@@ -174,7 +174,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                     <span className={"truncate"}>{course?.name}</span>
                   </span>
                   <span
-                    className={"text-zinc-500 dark:text-zinc-400 font-light"}
+                    className={"text-zinc-500 mr-2 min-w-fit dark:text-zinc-400 font-light"}
                   >
                     {option}
                   </span>
