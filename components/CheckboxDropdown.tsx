@@ -44,7 +44,7 @@ export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <DropdownMenu open={isOpen} modal={false} dir={"rtl"}>
+    <DropdownMenu open={isOpen} modal={true} dir={"rtl"}>
       <DropdownMenuTrigger asChild>
         <Button
           triggerclassname={"w-full"}
