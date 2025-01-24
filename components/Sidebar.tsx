@@ -35,7 +35,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
   return (
     <section
       className={
-        "max-h-full sm:py-3 sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
+        "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-lg bg-zinc-100 border"
       }
     >
       {selectedCourse &&
@@ -46,7 +46,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
             {/*<div className={"h-px w-full bg-zinc-300/50 my-2"}></div>*/}
             <header
               className={
-                "flex flex-row gap-2 h-10 justify-between w-full items-center"
+                "flex flex-row gap-2  justify-between w-full items-center"
               }
               onClick={(e) => {
                 isMobile && setShowSemesters(!showSemesters);

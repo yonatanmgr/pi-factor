@@ -100,12 +100,12 @@ const MainSection = ({
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-3 sm:h-full w-full rounded-lg bg-zinc-100 border"
+        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-lg bg-zinc-100 border"
       }
     >
       <header
         className={
-          "flex flex-row gap-2 overflow-x-auto overflow-y-hidden min-h-10"
+          "flex flex-row gap-2 overflow-x-auto overflow-y-hidden min-h-fit"
         }
       >
         {isMobile ? (
