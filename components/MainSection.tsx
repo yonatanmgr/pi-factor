@@ -355,8 +355,7 @@ const MainSection = ({
               >
                 <DrawerTrigger asChild>
                   <Button
-                    className={"bg-zinc-50 w-full dark:bg-zinc-900 border"}
-                    variant={"secondary"}
+                    className={"w-full"}
                     disabled={isLoading}
                   >
                     <LucideListFilter
