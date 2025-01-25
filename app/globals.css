@@ -137,7 +137,3 @@
         @apply bg-background text-foreground;
     }
 }
-
-html {
-    font-family: var(--font-ibm-plex-sans-hebrew), var(--font-ibm-plex-sans-arabic), "sans-serif";
-}

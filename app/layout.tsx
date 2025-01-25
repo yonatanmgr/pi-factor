@@ -2,7 +2,6 @@ import "./globals.css";
 import { IBM_Plex_Sans_Arabic, IBM_Plex_Sans_Hebrew } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-import { cn } from "@/lib/utils";
 
 export const metadata = {
   metadataBase: new URL("https://pi-factor.vercel.app"),
@@ -32,8 +31,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he">
-      <body className={cn(ibmPlexSansHebrew.className, ibmPlexSansArabic.className)}>
+    <html lang="he"
+      style={{
+        fontFamily: `${ibmPlexSansHebrew.style.fontFamily}, ${ibmPlexSansArabic.style.fontFamily}, sans-serif`,
+      }}
+    >
+      <body>
         {children}
         <SpeedInsights />
         <Analytics />
