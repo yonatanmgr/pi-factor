@@ -15,6 +15,7 @@ const ibmPlexSansHebrew = IBM_Plex_Sans_Hebrew({
   fallback: ["IBM Plex Sans Arabic"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
   display: "swap",
+  preload: true,
 });
 
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
@@ -22,6 +23,7 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   fallback: ["IBM Plex Sans Hebrew"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
   display: "swap",
+  preload: true,
 });
 
 export default function RootLayout({
@@ -31,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he">
-      <body className={cn(ibmPlexSansHebrew.className)}>
+      <body className={cn(ibmPlexSansArabic.className, ibmPlexSansHebrew.className)}>
         {children}
         <SpeedInsights />
         <Analytics />
