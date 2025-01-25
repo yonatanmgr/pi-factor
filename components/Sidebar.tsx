@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { LucideListFilter, LucideTrash } from "lucide-react";
 import React, { useEffect } from "react";
-import { useCourseFilters } from "@/lib/store";
+import {useCourseFilters, useSettings} from "@/lib/store";
 import Semester from "@/components/Semester";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import {AnimatePresence} from "motion/react";
+import { AnimatePresence } from "motion/react";
+import {TRANSLATIONS} from "@/lib/constants";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -21,6 +22,7 @@ interface SidebarProps {
 
 const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
   const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
+  const { language } = useSettings();
 
   useEffect(() => {
     if (selectedCourse?.id) {
@@ -56,7 +58,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                   className={"text-zinc-500 dark:text-zinc-400"}
                   size={20}
                 />
-                סינון מועדים
+                  {TRANSLATIONS[language].dates_filter}
               </h2>
               <Button
                 triggerclassname={cn(
@@ -72,7 +74,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                   e.stopPropagation();
                 }}
               >
-                <LucideTrash className={"text-red-500"} size={14} /> נקה מועדים
+                <LucideTrash className={"text-red-500"} size={14} /> {TRANSLATIONS[language].clear_filters}
               </Button>
             </header>
 
@@ -84,7 +86,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                     .map(([semester, data]) => {
                       return (
                         <Semester
-                          key={selectedCourse.id+semester}
+                          key={selectedCourse.id + semester}
                           semester={semester}
                           grades={data}
                           courseId={selectedCourse.id ?? ""}

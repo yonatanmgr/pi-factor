@@ -11,6 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {useSettings} from "@/lib/store";
+import {dir} from "@/lib/utils";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -23,9 +25,10 @@ interface Props {
 
 export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const {language} = useSettings();
 
   return (
-    <DropdownMenu open={isOpen} modal={true} dir={"rtl"}>
+    <DropdownMenu open={isOpen} modal={true} dir={dir(language)}>
       <DropdownMenuTrigger asChild>
         <Button
           triggerclassname={"w-full"}

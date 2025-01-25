@@ -10,12 +10,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { SemesterGroupGradeInfo } from "@/lib/types";
-import { useCourseFilters } from "@/lib/store";
+import {useCourseFilters, useSettings} from "@/lib/store";
 import * as React from "react";
 import { useMemo, useState } from "react";
 import { LucideUserX } from "lucide-react";
-
-const MOEDS = ["מועד קובע", "מועד א'", "מועד ב'", "מועד ג'"];
+import {dir, getMoedsList, getSemesterName} from "@/lib/utils";
+import {TRANSLATIONS} from "@/lib/constants";
 
 const GRADE_LABELS = [
   "0-49",
@@ -96,6 +96,7 @@ export function GradeChart({ data }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
   const { width } = useWindowSize();
   const isMobile = width < 640;
+  const {language} = useSettings();
 
   const [barKeys, setBarKeys] = useState<Set<{ key: string; label: string }>>(
     new Set(),
@@ -113,7 +114,7 @@ export function GradeChart({ data }: ChartProps) {
           group.forEach((moed) => {
             if (moed.distribution) {
               const key = `${semester}${moed.moed}-${semester}${groupKey}`;
-              const label = `${semester.replace("a", " א'").replace("b", " ב'")} - ${groupKey == "00" ? "כל הקבוצות" : "קבוצה " + groupKey} - ${MOEDS[moed.moed ?? 0]}`;
+              const label = `${getSemesterName(semester, language)} - ${groupKey == "00" ? TRANSLATIONS[language].all_groups : TRANSLATIONS[language].group + " " + groupKey} - ${getMoedsList(language)[moed.moed ?? 0]}`;
               newBarKeys.add({ key, label });
               preprocessed[key] = moed.distribution;
             }
@@ -124,7 +125,7 @@ export function GradeChart({ data }: ChartProps) {
 
     setBarKeys(newBarKeys);
     return preprocessed;
-  }, [data]);
+  }, [data, language]);
 
   const groupsKeys = Object.keys(visibleGroups);
   const moedsKeys = Object.keys(visibleMoeds);
@@ -144,7 +145,7 @@ export function GradeChart({ data }: ChartProps) {
       });
       return entry;
     });
-  }, [groupsKeys, moedsKeys]);
+  }, [groupsKeys, moedsKeys, language]);
 
   if (!data) {
     return null;
@@ -183,6 +184,7 @@ export function GradeChart({ data }: ChartProps) {
           tickLine={false}
           tickMargin={10}
           axisLine={false}
+          padding={"no-gap"}
         />
         <YAxis unit={"%"} tickLine={false} tickMargin={10} axisLine={false} />
         <ChartTooltip
@@ -218,10 +220,10 @@ export function GradeChart({ data }: ChartProps) {
               }}
               labelFormatter={(v) => (
                 <span>
-                  טווח ציונים: <span className={"font-bold"}>{v}</span>
+                  {TRANSLATIONS[language].grade_range}: <span className={"font-bold"}>{v}</span>
                 </span>
               )}
-              dir={"rtl"}
+              dir={dir(language)}
               nameKey={"label"}
             />
           }
@@ -234,7 +236,7 @@ export function GradeChart({ data }: ChartProps) {
             unit={"%"}
             dataKey={key}
             stackId="a"
-            fill={textToRGB(label)}
+            fill={textToRGB(key)}
           />
         ))}
       </BarChart>

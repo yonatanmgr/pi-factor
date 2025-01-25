@@ -1,3 +1,5 @@
+import {useSettings} from "@/lib/store";
+
 "use-client";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import {cn, dir} from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
@@ -43,6 +45,7 @@ const VirtualizedCommand = ({
     React.useState<Option[]>(options);
   const [focusedIndex, setFocusedIndex] = React.useState(0);
   const [isKeyboardNavActive, setIsKeyboardNavActive] = React.useState(false);
+  const {language} = useSettings();
 
   const parentRef = React.useRef(null);
 
@@ -123,7 +126,7 @@ const VirtualizedCommand = ({
   return (
     <Command shouldFilter={false} onKeyDown={handleKeyDown}>
       <CommandInput
-        dir={"rtl"}
+        dir={dir(language)}
         onValueChange={handleSearch}
         placeholder={placeholder}
       />
@@ -148,7 +151,7 @@ const VirtualizedCommand = ({
           >
             {virtualOptions.map((virtualOption) => (
               <CommandItem
-                dir={"rtl"}
+                dir={dir(language)}
                 key={filteredOptions[virtualOption.index].value}
                 disabled={isKeyboardNavActive}
                 className={cn(
@@ -172,7 +175,7 @@ const VirtualizedCommand = ({
               >
                 <Check
                   className={cn(
-                    "mr-2 h-4 w-4",
+                    "h-4 w-4",
                     selectedOption ===
                       filteredOptions[virtualOption.index].value
                       ? "opacity-100"

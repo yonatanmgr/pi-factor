@@ -1,47 +1,27 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import {
-  LucideBookPlus,
-  LucideListFilter,
-  LucideTrash,
-  LucideX,
-} from "lucide-react";
+import {cn, dir, first} from "@/lib/utils";
+import { LucideListFilter, LucideTrash } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
 import React, { useEffect, useState } from "react";
-import VirtualizedList from "@/components/list";
-import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  AllTimeCourseInfo,
+  AllTimeGrades,
+  SemesterGroupGradeInfo,
+} from "@/lib/types";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import Semester from "@/components/Semester";
-import { useCourseFilters } from "@/lib/store";
+import {useCourseFilters, useSettings} from "@/lib/store";
 import { useWindowSize } from "usehooks-ts";
 import { AnimatePresence } from "motion/react";
-
-const snapPoints = ["355px", 1];
-const courseListSnapPoints = ["400px", 1];
+import {courseListSnapPoints, snapPoints, TRANSLATIONS} from "@/lib/constants";
+import CourseSelectionHeader from "@/components/CourseSelectionHeader";
 
 interface MainSectionProps {
-  selectedCourses: any[];
-  setSelectedCourses: any;
+  selectedCourses: AllTimeCourseInfo[];
+  setSelectedCourses: (courses: AllTimeCourseInfo[]) => void;
   selectedTab: number;
-  setSelectedTab: any;
-  grades: any;
+  setSelectedTab: (tab: number) => void;
+  grades: AllTimeGrades | undefined;
   selectedCourse: AllTimeCourseInfo | null;
   currentCourseGrades:
     | {
@@ -51,58 +31,12 @@ interface MainSectionProps {
       }
     | null
     | undefined;
-  options: {
-    [id: string]: AllTimeCourseInfo & { id: string };
-  };
+  options: { [id: string]: AllTimeCourseInfo & { id: string } };
   isLoading: boolean;
   onSelectedOptions: (option: AllTimeCourseInfo) => void;
 }
 
-interface CourseListProps {
-  options: {
-    [id: string]: AllTimeCourseInfo & { id: string };
-  };
-  isLoading: boolean;
-  selectedCourses: any[];
-  onSelectedOptions: (option: AllTimeCourseInfo) => void;
-  setSelectedCourses: any;
-  setSelectedTab: any;
-  snapPoint: number;
-}
-
-const CourseList = ({
-  options,
-  isLoading,
-  selectedCourses,
-  onSelectedOptions,
-  setSelectedTab,
-  setSelectedCourses,
-    snapPoint
-}: CourseListProps) => {
-  return (
-    <div className={"flex h-full flex-col gap-2 overflow-x-hidden"}>
-      <VirtualizedList
-        options={options ?? {}}
-        isLoading={isLoading}
-        selectedOptions={selectedCourses ?? []}
-        onSelectedOption={onSelectedOptions}
-        snapPoint={snapPoint}
-      />
-      <Button
-        className={"bg-zinc-50 dark:bg-zinc-900 border w-full"}
-        variant={"secondary"}
-        disabled={!selectedCourses?.length}
-        onClick={() => {
-          setSelectedCourses([]);
-          localStorage.setItem("selectedCourses", "[]");
-          setSelectedTab(-1);
-        }}
-      >
-        <LucideTrash className={"text-red-500"} size={14} /> נקה בחירה
-      </Button>
-    </div>
-  );
-};
+export type snapPoint = number | string | null;
 
 const MainSection = ({
   selectedCourses,
@@ -119,6 +53,7 @@ const MainSection = ({
   const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
   const { width } = useWindowSize();
   const isMobile = width < 640;
+  const {language} = useSettings();
 
   useEffect(() => {
     if (selectedCourse?.id) {
@@ -130,7 +65,11 @@ const MainSection = ({
   }, [selectedCourse]);
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
-  const [courseListSnap, setCourseListSnap] = useState<number | string | null>(courseListSnapPoints[0]);
+  const [courseListSnap, setCourseListSnap] = useState<number | string | null>(
+    courseListSnapPoints[0],
+  );
+
+  console.log(selectedCourse)
 
   return (
     <section
@@ -138,190 +77,19 @@ const MainSection = ({
         "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-lg bg-zinc-100 dark:bg-zinc-950 border"
       }
     >
-      <header
-        className={
-          "flex flex-row gap-2 overflow-x-auto overflow-y-hidden min-h-fit"
-        }
-      >
-        {isMobile ? (
-            <Drawer
-                snapPoints={courseListSnapPoints}
-                activeSnapPoint={courseListSnap}
-                setActiveSnapPoint={setCourseListSnap}
-                fadeFromIndex={0}
-            >
-            <DrawerTrigger asChild>
-              <Button
-                className={"bg-zinc-50 dark:bg-zinc-900 border"}
-                variant={"secondary"}
-                disabled={isLoading}
-              >
-                <LucideBookPlus
-                  className={"text-zinc-500 dark:text-zinc-400"}
-                  size={14}
-                />
-                עריכת קורסים
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent
-                className="fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
-                dir={"rtl"}
-            >
-              <div
-                  className={cn(
-                      "flex flex-col max-w-md mx-auto gap-4 h-full w-full p-4 pt-5",
-                      {
-                        "overflow-y-auto": courseListSnap === 1,
-                        "overflow-hidden": courseListSnap !== 1,
-                      },
-                  )}
-              >
-              <CourseList
-                {...{
-                  selectedCourses,
-                  setSelectedCourses,
-                  onSelectedOptions,
-                  setSelectedTab,
-                  options,
-                  isLoading,
-                  snapPoint: courseListSnap === 1 ? 1 : 0
-                }}
-              />
-              <DrawerFooter className="pt-1"></DrawerFooter>
-                </div>
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant={"outlined"} disabled={isLoading}>
-                <LucideBookPlus
-                  className={"text-zinc-500 dark:text-zinc-400"}
-                  size={14}
-                />
-                עריכת קורסים
-              </Button>
-            </DialogTrigger>
-            <DialogContent className={"min-w-[300px]"} dir={"rtl"}>
-              <DialogTitle>
-                <h2 className={"text-xl font-bold select-none"}>
-                  עריכת קורסים
-                  {selectedCourses?.length > 0 && (
-                    <span className={"text-zinc-500 dark:text-zinc-400"}>
-                      {" "}
-                      ({selectedCourses.length})
-                    </span>
-                  )}
-                </h2>
-              </DialogTitle>
-              <CourseList
-                {...{
-                  selectedCourses,
-                  setSelectedCourses,
-                  onSelectedOptions,
-                  setSelectedTab,
-                  options,
-                  isLoading,
-                  snapPoint: courseListSnap === 1 ? 1 : 0
-                }}
-              />
-            </DialogContent>
-          </Dialog>
-        )}
-        {!selectedCourses?.length && (
-          <span
-            className={
-              "w-full text-sm h-9 mr-1 text-zinc-500 dark:text-zinc-400 select-none flex flex-row items-center"
-            }
-          >
-            קורסים נבחרים יופיעו כאן...
-          </span>
-        )}
-        {selectedCourses?.map((course) => (
-          <Button
-            tooltipproviderprops={{ delayDuration: 300 }}
-            tooltip={
-              grades?.[course.id ?? ""] === undefined ||
-              !grades?.[course.id ?? ""] ? (
-                <span>אין נתוני ציונים זמינים</span>
-              ) : null
-            }
-            key={course?.name}
-            className={cn(
-              (grades?.[course.id ?? ""] === undefined ||
-                !grades?.[course.id ?? ""]) &&
-                "opacity-50 cursor-help",
-            )}
-            variant={
-              selectedTab !== null &&
-              selectedTab == selectedCourses.indexOf(course)
-                ? "default"
-                : "outlined"
-            }
-            onClick={() => {
-              if (
-                grades?.[course.id ?? ""] === undefined ||
-                !grades?.[course.id ?? ""]
-              ) {
-                return;
-              }
-              const tab =
-                selectedTab == selectedCourses.indexOf(course)
-                  ? -1
-                  : selectedCourses.indexOf(course);
-
-              setSelectedTab(tab);
-
-              localStorage.setItem("selectedTab", tab.toString());
-            }}
-          >
-            <span>{course?.name}</span>|
-            <span className={"opacity-80 font-light"}>{course?.id}</span>
-            <TooltipProvider
-              delayDuration={
-                grades?.[course.id ?? ""] === undefined ||
-                !grades?.[course.id ?? ""]
-                  ? 300
-                  : 100
-              }
-            >
-              <Tooltip>
-                <TooltipTrigger className={"h-4 w-4"}>
-                  <span
-                    className={
-                      "h-4 w-4 flex flex-row items-center hover:text-red-500 active:text-red-600 transition-all justify-center"
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCourses(
-                        selectedCourses.filter(
-                          (selectedCourse) =>
-                            selectedCourse.name !== course.name,
-                        ),
-                      );
-                      if (
-                        selectedTab !== null &&
-                        selectedTab == selectedCourses.indexOf(course)
-                      ) {
-                        setSelectedTab(-1);
-                      } else {
-                        setSelectedTab(
-                          selectedCourses.indexOf(
-                            selectedCourses[selectedTab ?? 0],
-                          ) - 1,
-                        );
-                      }
-                    }}
-                  >
-                    <LucideX size={14} />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>הסרת קורס</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </Button>
-        ))}
-      </header>
+      <CourseSelectionHeader
+        isMobile={isMobile}
+        isLoading={isLoading}
+        selectedCourses={selectedCourses}
+        setSelectedCourses={setSelectedCourses}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        options={options}
+        onSelectedOptions={onSelectedOptions}
+        courseListSnap={courseListSnap}
+        grades={grades}
+        setCourseListSnap={setCourseListSnap}
+      />
       <section
         className={
           "grow rounded-md w-full bg-zinc-50 dark:bg-zinc-900 border overflow-hidden"
@@ -333,7 +101,7 @@ const MainSection = ({
               "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
             }
           >
-            הוסיפו קורסים מהרשימה...
+            {TRANSLATIONS[language].select_courses}
           </div>
         )}
         {selectedCourses.length > 0 && selectedTab < 0 && (
@@ -342,15 +110,20 @@ const MainSection = ({
               "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
             }
           >
-            סמנו קורס מלמעלה כדי לראות את התפלגות הציונים שלו...
+            {TRANSLATIONS[language].chart_placeholder}
           </div>
         )}
         {selectedCourses.length > 0 && selectedTab > -1 && selectedCourse && (
           <div
-            dir={"rtl"}
+            dir={dir(language)}
             className={"px-4 py-3 h-full flex flex-col gap-2 max-h-full"}
           >
-            <div className={"flex flex-row flex-wrap gap-2 text-2xl"}>
+            <a
+              target={"_blank"}
+              rel={"noreferrer"}
+              href={`https://www.ims.tau.ac.il/Tal/Syllabus/Syllabus_L.aspx?course=${selectedCourse.id}01&year=${parseInt(first(selectedCourse.semesters)?.slice(0, 4) ?? "") - 1}`}
+              className={"flex flex-row flex-wrap gap-2 text-2xl hover:underline w-fit"}
+            >
               {selectedCourse?.name && (
                 <span className={"font-bold"}>
                   {selectedCourse?.name}
@@ -362,20 +135,18 @@ const MainSection = ({
                   )}
                 </span>
               )}
-            </div>
-
-            <span className={"font-bold"}>
-              פקולטה:{" "}
-              <span className={"font-normal"}>{selectedCourse?.faculty}</span>
+            </a>
+            <span className={"opacity-80"}>
+              {TRANSLATIONS[language].faculty}:{" "}
+              <span className={"font-bold"}>{selectedCourse?.faculty}</span>
             </span>
-
             <div className={"w-full h-px bg-zinc-300/50 my-2"}></div>
             <div className={"grow h-full w-full overflow-auto"}>
               <GradeChart data={currentCourseGrades} />
             </div>
-            {isMobile ? (
+            {isMobile && (
               <Drawer
-                snapPoints={snapPoints}
+                snapPoints={snapPoints as (number | string)[]}
                 activeSnapPoint={snap}
                 setActiveSnapPoint={setSnap}
               >
@@ -385,12 +156,12 @@ const MainSection = ({
                       className={"text-zinc-300 dark:text-zinc-400"}
                       size={14}
                     />
-                    סינון מועדים
+                    {TRANSLATIONS[language].dates_filter}
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent
                   className="fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
-                  dir={"rtl"}
+                  dir={dir(language)}
                 >
                   <div
                     className={cn(
@@ -406,7 +177,6 @@ const MainSection = ({
                         (o) => Object.values(o[1] ?? {}).length,
                       ) && (
                         <>
-                          {/*<div className={"h-px w-full bg-zinc-300/50 my-2"}></div>*/}
                           <header
                             className={
                               "flex flex-row gap-2 justify-between w-full items-center"
@@ -421,7 +191,7 @@ const MainSection = ({
                                 className={"text-zinc-500 dark:text-zinc-400"}
                                 size={20}
                               />
-                              סינון מועדים
+                              {TRANSLATIONS[language].dates_filter}
                             </h2>
                             <Button
                               triggerclassname={cn(
@@ -443,10 +213,9 @@ const MainSection = ({
                                 className={"text-red-500"}
                                 size={14}
                               />{" "}
-                              נקה מועדים
+                              {TRANSLATIONS[language].clear_filters}
                             </Button>
                           </header>
-
                           <div className={""}>
                             <div className={"flex flex-col gap-2"}>
                               <AnimatePresence mode={"popLayout"}>
@@ -472,8 +241,6 @@ const MainSection = ({
                   </div>
                 </DrawerContent>
               </Drawer>
-            ) : (
-              <></>
             )}
           </div>
         )}

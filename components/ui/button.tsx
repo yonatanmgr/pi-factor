@@ -43,10 +43,13 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
+export interface RawButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+}
+
+export interface ButtonProps extends RawButtonProps {
   tooltip?: React.ReactNode;
   triggerclassname?: ClassNameValue;
   tooltipproviderprops?: Omit<
@@ -55,25 +58,35 @@ export interface ButtonProps
   >;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const RawButton = React.forwardRef<HTMLButtonElement, RawButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
-      <TooltipProvider {...props.tooltipproviderprops}>
-        <Tooltip>
-          <TooltipTrigger className={cn(props.triggerclassname)}>
-            <Comp
-              className={cn(buttonVariants({ variant, size, className }))}
-              ref={ref}
-              {...props}
-            />
-          </TooltipTrigger>
-          {props.tooltip && <TooltipContent>{props.tooltip}</TooltipContent>}
-        </Tooltip>
-      </TooltipProvider>
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
     );
   },
 );
-Button.displayName = "Button";
+RawButton.displayName = "RawButton";
 
-export { Button, buttonVariants };
+const Button = (props: ButtonProps) => {
+  return (
+    <TooltipProvider {...props.tooltipproviderprops}>
+      <Tooltip>
+        <TooltipTrigger className={cn(props.triggerclassname)} asChild>
+          <RawButton {...props} />
+        </TooltipTrigger>
+        {props.tooltip ? (
+          <TooltipContent>{props.tooltip}</TooltipContent>
+        ) : (
+          <></>
+        )}
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
+
+export { Button, RawButton, buttonVariants };

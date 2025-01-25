@@ -172,3 +172,5 @@ export interface GeneralSemesterInfo {
   /** The end date of the semester (e.g. July 2, 2025 00:00:00). */
   endDate: string;
 }
+
+export type Language = "he" | "en" | "ar";

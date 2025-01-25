@@ -4,13 +4,16 @@ import { AllTimeCourseInfo, AllTimeCourses } from "@/lib/types";
 import Spinner from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
 import { LucideCheckSquare, LucideSquare } from "lucide-react";
+import { snapPoint } from "@/components/MainSection";
+import {TRANSLATIONS} from "@/lib/constants";
+import {useSettings} from "@/lib/store";
 
 interface VirtualizedListProps {
   options: AllTimeCourses;
   isLoading: boolean;
   onSelectedOption: (option: AllTimeCourseInfo) => void;
   selectedOptions: AllTimeCourseInfo[];
-    snapPoint: number;
+  snapPoint: snapPoint;
 }
 
 const sortByIdThenName = (
@@ -35,20 +38,21 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
   onSelectedOption,
   isLoading,
   selectedOptions,
-    snapPoint
+  snapPoint,
 }) => {
   const [search, setSearch] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const { language } = useSettings();
 
   const filteredOptions = useMemo(
     () =>
       Object.entries(options ?? {})
         .filter(
           ([id, course]) =>
-            id.toLowerCase().includes(search.replace("-", "").toLowerCase()) ||
+            id.toLowerCase().includes(search.trim().replace("-", "").toLowerCase()) ||
             course?.name
               ?.toLowerCase()
-              .includes(search.replace("-", "").toLowerCase()),
+              .includes(search.trim().replace("-", "").toLowerCase()),
         )
         .sort(sortByIdThenName),
     [search, options],
@@ -100,7 +104,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
 
   return (
     <div
-      className={cn("flex flex-col gap-2 w-full overflow-x-hidden", snapPoint === 1 && "h-full")}
+      className={cn(
+        "flex flex-col gap-2 w-full overflow-x-hidden",
+        snapPoint === 1 && "h-full",
+      )}
       onKeyDown={handleKeyDown}
       tabIndex={0} // Makes the container focusable to capture keyboard events
     >
@@ -111,19 +118,19 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           setFocusedIndex(e.target.value ? 0 : null);
           setSearch(e.target.value);
         }}
-        placeholder="חפשו שם או מספר קורס..."
+        placeholder={TRANSLATIONS[language].search_placeholder}
         className="p-2 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-hidden focus:dark:border-zinc-700 focus:border-zinc-300 transition-all"
       />
 
       {isLoading && (
         <div className="min-h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
           <Spinner />
-          <span>טוען נתונים...</span>
+          <span>{TRANSLATIONS[language].loading_data}</span>
         </div>
       )}
       {filteredOptions.length === 0 && !isLoading && (
         <div className="min-h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
-          לא נמצאו תוצאות
+            <span>{TRANSLATIONS[language].no_results}</span>
         </div>
       )}
       {filteredOptions.length > 0 && (
@@ -141,7 +148,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
               const [option, course] = filteredOptions[virtualRow.index];
               const isSelected = selectedOptions.some(
-                (selectedOption) => selectedOption.name === course?.name,
+                (selectedOption) => selectedOption.id === course?.id,
               );
               const isFocused = focusedIndex === virtualRow.index;
 
@@ -171,7 +178,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                         className={"text-zinc-500 dark:text-zinc-400 mt-[1px]"}
                       >
                         {isSelected ? (
-                          <LucideCheckSquare className={"text-emerald-400"} size={17} />
+                          <LucideCheckSquare
+                            className={"text-emerald-600 dark:text-emerald-400"}
+                            size={17}
+                          />
                         ) : (
                           <LucideSquare size={17} />
                         )}
@@ -180,9 +190,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                     <span className={"truncate"}>{course?.name}</span>
                   </span>
                   <span
-                    className={
-                      "text-zinc-500 mr-2 min-w-fit dark:text-zinc-400 font-light"
-                    }
+                    className={cn(
+                      "text-zinc-500 min-w-fit dark:text-zinc-400 font-light",
+                        language === "he" ? "mr-2" : "ml-2"
+                    )}
                   >
                     {option}
                   </span>

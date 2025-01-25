@@ -1,7 +1,8 @@
 import "./globals.css";
-import { IBM_Plex_Sans_Hebrew } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, IBM_Plex_Sans_Hebrew } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
   metadataBase: new URL("https://pi-factor.vercel.app"),
@@ -11,6 +12,14 @@ export const metadata = {
 
 const ibmPlexSansHebrew = IBM_Plex_Sans_Hebrew({
   subsets: ["hebrew", "latin"],
+  fallback: ["IBM Plex Sans Arabic"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  fallback: ["IBM Plex Sans Hebrew"],
   weight: ["100", "200", "300", "400", "500", "600", "700"],
   display: "swap",
 });
@@ -22,17 +31,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he">
-      <body className={ibmPlexSansHebrew.className}>
-        <main
-          dir={"rtl"}
-          className={
-            "flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between"
-          }
-        >
-          {children}
-          <SpeedInsights />
-          <Analytics />
-        </main>
+      <body
+        className={cn(ibmPlexSansArabic.className, ibmPlexSansHebrew.className)}
+      >
+        {children}
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
