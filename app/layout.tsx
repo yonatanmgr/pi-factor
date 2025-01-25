@@ -31,9 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he">
-      <body
-        className={cn(ibmPlexSansArabic.className, ibmPlexSansHebrew.className)}
-      >
+      <body className={cn(ibmPlexSansHebrew.className)}>
         {children}
         <SpeedInsights />
         <Analytics />

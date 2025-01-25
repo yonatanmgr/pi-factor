@@ -68,9 +68,7 @@ const MainSection = ({
   const [courseListSnap, setCourseListSnap] = useState<number | string | null>(
     courseListSnapPoints[0],
   );
-
-  console.log(selectedCourse)
-
+  
   return (
     <section
       className={
