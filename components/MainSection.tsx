@@ -31,8 +31,10 @@ import {
 import Semester from "@/components/Semester";
 import { useCourseFilters } from "@/lib/store";
 import { useWindowSize } from "usehooks-ts";
+import { AnimatePresence } from "motion/react";
 
 const snapPoints = ["355px", 1];
+const courseListSnapPoints = ["400px", 1];
 
 interface MainSectionProps {
   selectedCourses: any[];
@@ -65,6 +67,7 @@ interface CourseListProps {
   onSelectedOptions: (option: AllTimeCourseInfo) => void;
   setSelectedCourses: any;
   setSelectedTab: any;
+  snapPoint: number;
 }
 
 const CourseList = ({
@@ -74,16 +77,17 @@ const CourseList = ({
   onSelectedOptions,
   setSelectedTab,
   setSelectedCourses,
+    snapPoint
 }: CourseListProps) => {
   return (
-    <div className={"flex pt-4 flex-col gap-2 overflow-x-hidden"}>
+    <div className={"flex h-full flex-col gap-2 overflow-x-hidden"}>
       <VirtualizedList
         options={options ?? {}}
         isLoading={isLoading}
         selectedOptions={selectedCourses ?? []}
         onSelectedOption={onSelectedOptions}
+        snapPoint={snapPoint}
       />
-
       <Button
         className={"bg-zinc-50 dark:bg-zinc-900 border w-full"}
         variant={"secondary"}
@@ -126,6 +130,7 @@ const MainSection = ({
   }, [selectedCourse]);
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
+  const [courseListSnap, setCourseListSnap] = useState<number | string | null>(courseListSnapPoints[0]);
 
   return (
     <section
@@ -139,7 +144,12 @@ const MainSection = ({
         }
       >
         {isMobile ? (
-          <Drawer>
+            <Drawer
+                snapPoints={courseListSnapPoints}
+                activeSnapPoint={courseListSnap}
+                setActiveSnapPoint={setCourseListSnap}
+                fadeFromIndex={0}
+            >
             <DrawerTrigger asChild>
               <Button
                 className={"bg-zinc-50 dark:bg-zinc-900 border"}
@@ -153,7 +163,19 @@ const MainSection = ({
                 עריכת קורסים
               </Button>
             </DrawerTrigger>
-            <DrawerContent dir={"rtl"} className={"px-4 overflow-hidden"}>
+            <DrawerContent
+                className="fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
+                dir={"rtl"}
+            >
+              <div
+                  className={cn(
+                      "flex flex-col max-w-md mx-auto gap-4 h-full w-full p-4 pt-5",
+                      {
+                        "overflow-y-auto": courseListSnap === 1,
+                        "overflow-hidden": courseListSnap !== 1,
+                      },
+                  )}
+              >
               <CourseList
                 {...{
                   selectedCourses,
@@ -162,9 +184,11 @@ const MainSection = ({
                   setSelectedTab,
                   options,
                   isLoading,
+                  snapPoint: courseListSnap === 1 ? 1 : 0
                 }}
               />
               <DrawerFooter className="pt-1"></DrawerFooter>
+                </div>
             </DrawerContent>
           </Drawer>
         ) : (
@@ -198,6 +222,7 @@ const MainSection = ({
                   setSelectedTab,
                   options,
                   isLoading,
+                  snapPoint: courseListSnap === 1 ? 1 : 0
                 }}
               />
             </DialogContent>
@@ -206,7 +231,7 @@ const MainSection = ({
         {!selectedCourses?.length && (
           <span
             className={
-              "w-full text-sm h-9 mr-1 text-zinc-400 select-none flex flex-row items-center"
+              "w-full text-sm h-9 mr-1 text-zinc-500 dark:text-zinc-400 select-none flex flex-row items-center"
             }
           >
             קורסים נבחרים יופיעו כאן...
@@ -424,18 +449,22 @@ const MainSection = ({
 
                           <div className={""}>
                             <div className={"flex flex-col gap-2"}>
-                              {Object.entries(currentCourseGrades ?? {})
-                                .filter((o) => Object.values(o[1] ?? {}).length)
-                                .map(([semester, data]) => {
-                                  return (
-                                    <Semester
-                                      key={semester}
-                                      semester={semester}
-                                      grades={data}
-                                      courseId={selectedCourse.id ?? ""}
-                                    />
-                                  );
-                                })}
+                              <AnimatePresence mode={"popLayout"}>
+                                {Object.entries(currentCourseGrades ?? {})
+                                  .filter(
+                                    (o) => Object.values(o[1] ?? {}).length,
+                                  )
+                                  .map(([semester, data]) => {
+                                    return (
+                                      <Semester
+                                        key={selectedCourse.id + semester}
+                                        semester={semester}
+                                        grades={data}
+                                        courseId={selectedCourse.id ?? ""}
+                                      />
+                                    );
+                                  })}
+                              </AnimatePresence>
                             </div>
                           </div>
                         </>

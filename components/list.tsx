@@ -10,6 +10,7 @@ interface VirtualizedListProps {
   isLoading: boolean;
   onSelectedOption: (option: AllTimeCourseInfo) => void;
   selectedOptions: AllTimeCourseInfo[];
+    snapPoint: number;
 }
 
 const sortByIdThenName = (
@@ -34,6 +35,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
   onSelectedOption,
   isLoading,
   selectedOptions,
+    snapPoint
 }) => {
   const [search, setSearch] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
@@ -98,7 +100,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
 
   return (
     <div
-      className="flex flex-col gap-2 w-full overflow-x-hidden"
+      className={cn("flex flex-col gap-2 w-full overflow-x-hidden", snapPoint === 1 && "h-full")}
       onKeyDown={handleKeyDown}
       tabIndex={0} // Makes the container focusable to capture keyboard events
     >
@@ -110,24 +112,24 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           setSearch(e.target.value);
         }}
         placeholder="חפשו שם או מספר קורס..."
-        className="p-2 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-hidden focus:ring-3 focus:ring-zinc-300 transition-all"
+        className="p-2 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-hidden focus:dark:border-zinc-700 focus:border-zinc-300 transition-all"
       />
 
       {isLoading && (
-        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
+        <div className="min-h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
           <Spinner />
           <span>טוען נתונים...</span>
         </div>
       )}
       {filteredOptions.length === 0 && !isLoading && (
-        <div className="h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
+        <div className="min-h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
           לא נמצאו תוצאות
         </div>
       )}
       {filteredOptions.length > 0 && (
         <div
           ref={parentRef}
-          className="h-52 sm:h-72 overflow-y-auto overflow-x-hidden border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
+          className="min-h-52 sm:min-h-72 h-full overflow-y-auto overflow-x-hidden border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
           style={{ contain: "strict" }}
         >
           <div
@@ -169,7 +171,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                         className={"text-zinc-500 dark:text-zinc-400 mt-[1px]"}
                       >
                         {isSelected ? (
-                          <LucideCheckSquare size={17} />
+                          <LucideCheckSquare className={"text-emerald-400"} size={17} />
                         ) : (
                           <LucideSquare size={17} />
                         )}

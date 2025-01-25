@@ -5,6 +5,7 @@ import { useCourseFilters } from "@/lib/store";
 import Semester from "@/components/Semester";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import {AnimatePresence} from "motion/react";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -77,18 +78,20 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
 
             <div className={"grow overflow-hidden"}>
               <div className={"flex flex-col gap-2 max-h-full overflow-auto"}>
-                {Object.entries(currentCourseGrades ?? {})
-                  .filter((o) => Object.values(o[1] ?? {}).length)
-                  .map(([semester, data]) => {
-                    return (
-                      <Semester
-                        key={semester}
-                        semester={semester}
-                        grades={data}
-                        courseId={selectedCourse.id ?? ""}
-                      />
-                    );
-                  })}
+                <AnimatePresence mode={"popLayout"}>
+                  {Object.entries(currentCourseGrades ?? {})
+                    .filter((o) => Object.values(o[1] ?? {}).length)
+                    .map(([semester, data]) => {
+                      return (
+                        <Semester
+                          key={selectedCourse.id+semester}
+                          semester={semester}
+                          grades={data}
+                          courseId={selectedCourse.id ?? ""}
+                        />
+                      );
+                    })}
+                </AnimatePresence>
               </div>
             </div>
           </>
