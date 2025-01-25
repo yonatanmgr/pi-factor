@@ -19,7 +19,7 @@ import {
   TRANSLATIONS,
 } from "@/lib/constants";
 import CourseSelectionHeader from "@/components/CourseSelectionHeader";
-import { ibmPlexSansArabic } from "@/lib/fonts";
+import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 
 interface MainSectionProps {
   selectedCourses: AllTimeCourseInfo[];
@@ -167,7 +167,8 @@ const MainSection = ({
                 <DrawerContent
                   className={cn(
                     "fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
-                    language === "ar" && ibmPlexSansArabic.className,
+                    language === "ar" &&
+                      `${ibmPlexSansHebrew.className} ${ibmPlexSansArabic.className}`,
                   )}
                   dir={dir(language)}
                 >

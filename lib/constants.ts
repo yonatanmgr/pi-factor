@@ -39,6 +39,9 @@ export const TRANSLATIONS = {
     chart_placeholder: "Select a course from above to see its grade distribution...",
     select_courses: "Add courses from the list...",
     faculty: "Faculty",
+    download_extension: "Download Chrome Extension",
+    dark_mode: "Dark Mode",
+    light_mode: "Light Mode",
   },
   he: {
     language: "שפה",
@@ -75,6 +78,9 @@ export const TRANSLATIONS = {
     chart_placeholder: "סמנו קורס מלמעלה כדי לראות את התפלגות הציונים שלו...",
     select_courses: "הוסיפו קורסים מהרשימה...",
     faculty: "פקולטה",
+    download_extension: "הורדת תוסף לכרום",
+    dark_mode: "מצב לילה",
+    light_mode: "מצב יום",
   },
   ar: {
     language: "اللغة",
@@ -111,5 +117,8 @@ export const TRANSLATIONS = {
     chart_placeholder: "اختر دورة من الأعلى لرؤية توزيع درجاتها...",
     select_courses: "أضف دورات من القائمة...",
     faculty: "كلية",
+    download_extension: "تحميل امتداد كروم",
+    dark_mode: "الوضع الليلي",
+    light_mode: "الوضع النهاري",
   },
 };
