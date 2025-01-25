@@ -10,7 +10,6 @@ import { GradeChart } from "@/components/Chart";
 import React, { useEffect, useState } from "react";
 import VirtualizedList from "@/components/list";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
-import { useViewport } from "@/components/CheckboxDropdown";
 import {
   Drawer,
   DrawerContent,
@@ -31,6 +30,7 @@ import {
 } from "@/components/ui/tooltip";
 import Semester from "@/components/Semester";
 import { useCourseFilters } from "@/lib/store";
+import {useWindowSize} from "usehooks-ts";
 
 const snapPoints = ["355px", 1];
 
@@ -113,7 +113,8 @@ const MainSection = ({
   onSelectedOptions,
 }: MainSectionProps) => {
   const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
-  const { isMobile } = useViewport();
+  const { width } = useWindowSize();
+  const isMobile = width < 640;
 
   useEffect(() => {
     if (selectedCourse?.id) {
@@ -359,7 +360,7 @@ const MainSection = ({
                     disabled={isLoading}
                   >
                     <LucideListFilter
-                      className={"text-zinc-500 dark:text-zinc-400"}
+                      className={"text-zinc-300 dark:text-zinc-400"}
                       size={14}
                     />
                     סינון מועדים

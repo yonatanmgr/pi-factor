@@ -1,5 +1,6 @@
 "use client";
 
+import { useWindowSize } from "usehooks-ts";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
@@ -93,6 +94,8 @@ export const textToRGB = (text: string) => {
 
 export function GradeChart({ data }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
+  const { width } = useWindowSize();
+  const isMobile = width < 640;
 
   const [barKeys, setBarKeys] = useState<Set<{ key: string; label: string }>>(
     new Set(),
@@ -183,6 +186,7 @@ export function GradeChart({ data }: ChartProps) {
         />
         <YAxis unit={"%"} tickLine={false} tickMargin={10} axisLine={false} />
         <ChartTooltip
+          trigger={isMobile ? "click" : "hover"}
           content={
             <ChartTooltipContent
               formatter={(v, n, i) => {

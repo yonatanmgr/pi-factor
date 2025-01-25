@@ -1,11 +1,10 @@
 import "./globals.css";
 import { IBM_Plex_Sans_Hebrew } from "next/font/google";
-import { SWRConfig } from "swr";
 
 export const metadata = {
   metadataBase: new URL("https://pi-factor.vercel.app"),
   title: "Pi-Factor",
-  description: "TAU-Factor 2"
+  description: "TAU-Factor 2",
 };
 
 const ibmPlexSansHebrew = IBM_Plex_Sans_Hebrew({
@@ -20,8 +19,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={ibmPlexSansHebrew.className}>{children}</body>
+    <html lang="he">
+      <body className={ibmPlexSansHebrew.className}>
+        <main
+          dir={"rtl"}
+          className={
+            "flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between"
+          }
+        >
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
