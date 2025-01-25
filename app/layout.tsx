@@ -1,5 +1,7 @@
 import "./globals.css";
 import { IBM_Plex_Sans_Hebrew } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = {
   metadataBase: new URL("https://pi-factor.vercel.app"),
@@ -28,6 +30,8 @@ export default function RootLayout({
           }
         >
           {children}
+          <SpeedInsights />
+          <Analytics />
         </main>
       </body>
     </html>

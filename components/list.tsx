@@ -159,7 +159,11 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                     course && onSelectedOption(course);
                   }}
                 >
-                  <span className={"flex flex-row gap-2 overflow-x-hidden items-center"}>
+                  <span
+                    className={
+                      "flex flex-row gap-2 overflow-x-hidden items-center"
+                    }
+                  >
                     {
                       <span
                         className={"text-zinc-500 dark:text-zinc-400 mt-[1px]"}
@@ -174,7 +178,9 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                     <span className={"truncate"}>{course?.name}</span>
                   </span>
                   <span
-                    className={"text-zinc-500 mr-2 min-w-fit dark:text-zinc-400 font-light"}
+                    className={
+                      "text-zinc-500 mr-2 min-w-fit dark:text-zinc-400 font-light"
+                    }
                   >
                     {option}
                   </span>

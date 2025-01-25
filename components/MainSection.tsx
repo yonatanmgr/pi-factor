@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/tooltip";
 import Semester from "@/components/Semester";
 import { useCourseFilters } from "@/lib/store";
-import {useWindowSize} from "usehooks-ts";
+import { useWindowSize } from "usehooks-ts";
 
 const snapPoints = ["355px", 1];
 
@@ -355,10 +355,7 @@ const MainSection = ({
                 setActiveSnapPoint={setSnap}
               >
                 <DrawerTrigger asChild>
-                  <Button
-                    className={"w-full"}
-                    disabled={isLoading}
-                  >
+                  <Button className={"w-full"} disabled={isLoading}>
                     <LucideListFilter
                       className={"text-zinc-300 dark:text-zinc-400"}
                       size={14}

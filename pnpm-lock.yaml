@@ -45,9 +45,15 @@ dependencies:
   '@types/react-dom':
     specifier: 19.0.3
     version: 19.0.3(@types/react@19.0.8)
+  '@vercel/analytics':
+    specifier: ^1.4.1
+    version: 1.4.1(next@15.1.6)(react@19.0.0)
   '@vercel/postgres':
     specifier: 0.5.0
     version: 0.5.0
+  '@vercel/speed-insights':
+    specifier: ^1.1.0
+    version: 1.1.0(next@15.1.6)(react@19.0.0)
   class-variance-authority:
     specifier: ^0.7.1
     version: 0.7.1
@@ -1807,6 +1813,36 @@ packages:
       eslint-visitor-keys: 4.2.0
     dev: false
 
+  /@vercel/analytics@1.4.1(next@15.1.6)(react@19.0.0):
+    resolution: {integrity: sha512-ekpL4ReX2TH3LnrRZTUKjHHNpNy9S1I7QmS+g/RQXoSUQ8ienzosuX7T9djZ/s8zPhBx1mpHP/Rw5875N+zQIQ==}
+    peerDependencies:
+      '@remix-run/react': ^2
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      next: 15.1.6(react-dom@19.0.0)(react@19.0.0)
+      react: 19.0.0
+    dev: false
+
   /@vercel/postgres@0.5.0:
     resolution: {integrity: sha512-MFWp9SZmADqBe2x2mzEvwmGLiwOd8PVkUxYeBZx/RqdHl0bd8/1BH0zBR+zSimGyi9P/MVtZoJLdf5dkWw9m5Q==}
     engines: {node: '>=14.6'}
@@ -1815,6 +1851,34 @@ packages:
       bufferutil: 4.0.7
       utf-8-validate: 6.0.3
       ws: 8.14.2(bufferutil@4.0.7)(utf-8-validate@6.0.3)
+    dev: false
+
+  /@vercel/speed-insights@1.1.0(next@15.1.6)(react@19.0.0):
+    resolution: {integrity: sha512-rAXxuhhO4mlRGC9noa5F7HLMtGg8YF1zAN6Pjd1Ny4pII4cerhtwSG4vympbCl+pWkH7nBS9kVXRD4FAn54dlg==}
+    requiresBuild: true
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      next: 15.1.6(react-dom@19.0.0)(react@19.0.0)
+      react: 19.0.0
     dev: false
 
   /acorn-jsx@5.3.2(acorn@8.10.0):

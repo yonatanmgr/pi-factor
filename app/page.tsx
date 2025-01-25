@@ -7,7 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { LucideMoon, LucideSun } from "lucide-react";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
-import {useWindowSize} from "usehooks-ts";
+import { useWindowSize } from "usehooks-ts";
 
 export const runtime = "edge";
 export const preferredRegion = "home";
@@ -114,43 +114,43 @@ export default function Home() {
     : null;
 
   return (
-      <>
-        <header className={"w-full flex flex-row justify-between items-center"}>
-          <h1 className={"text-3xl font-black select-none"}>📊 Pi-Factor</h1>
-          <section>
-            <Button className={"w-9 h-9"} variant={"outline"} onClick={toggle}>
-              {isDarkMode ? (
-                  <LucideSun className={"text-amber-300"} size={24}/>
-              ) : (
-                  <LucideMoon className={"text-sky-800"} size={24}/>
-              )}
-            </Button>
-          </section>
-        </header>
-        <section
-            dir={"rtl"}
-            className={
-              "flex sm:flex-row sm:overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
-            }
-        >
-          {!isMobile && selectedCourses && selectedTab >= 0 && (
-              <Sidebar {...{selectedCourse, currentCourseGrades}} />
-          )}
-          <MainSection
-              {...{
-                grades,
-                options,
-                onSelectedOptions,
-                isLoading,
-                selectedCourses,
-                setSelectedCourses,
-                selectedTab,
-                setSelectedTab,
-                selectedCourse,
-                currentCourseGrades,
-              }}
-          />
+    <>
+      <header className={"w-full flex flex-row justify-between items-center"}>
+        <h1 className={"text-3xl font-black select-none"}>📊 Pi-Factor</h1>
+        <section>
+          <Button className={"w-9 h-9"} variant={"outline"} onClick={toggle}>
+            {isDarkMode ? (
+              <LucideSun className={"text-amber-300"} size={24} />
+            ) : (
+              <LucideMoon className={"text-sky-800"} size={24} />
+            )}
+          </Button>
         </section>
-      </>
+      </header>
+      <section
+        dir={"rtl"}
+        className={
+          "flex sm:flex-row sm:overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
+        }
+      >
+        {!isMobile && selectedCourses && selectedTab >= 0 && (
+          <Sidebar {...{ selectedCourse, currentCourseGrades }} />
+        )}
+        <MainSection
+          {...{
+            grades,
+            options,
+            onSelectedOptions,
+            isLoading,
+            selectedCourses,
+            setSelectedCourses,
+            selectedTab,
+            setSelectedTab,
+            selectedCourse,
+            currentCourseGrades,
+          }}
+        />
+      </section>
+    </>
   );
 }
