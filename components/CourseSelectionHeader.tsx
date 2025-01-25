@@ -25,7 +25,7 @@ import { snapPoint } from "@/components/MainSection";
 import CourseList from "@/components/CourseList";
 import { courseListSnapPoints, TRANSLATIONS } from "@/lib/constants";
 import { useSettings } from "@/lib/store";
-import { ibmPlexSansArabic } from "@/lib/fonts";
+import {ibmPlexSansArabic, ibmPlexSansHebrew} from "@/lib/fonts";
 
 interface CourseSelectionHeaderProps {
   isMobile: boolean;
@@ -227,7 +227,7 @@ const SelectedCourseButton = ({
         localStorage.setItem("selectedTab", tab.toString());
       }}
     >
-      <span>{course?.name}</span>|
+      <span className={ibmPlexSansHebrew.className}>{course?.name}</span>|
       <span className={"opacity-80 font-light"}>{course?.id}</span>
       <TooltipProvider
         delayDuration={

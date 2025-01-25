@@ -12,7 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {useSettings} from "@/lib/store";
-import {dir} from "@/lib/utils";
+import {cn, dir} from "@/lib/utils";
+import {ibmPlexSansArabic} from "@/lib/fonts";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -42,7 +43,7 @@ export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         onInteractOutside={() => setIsOpen(false)}
-        className="w-full"
+        className={cn("w-full", language == "ar" && ibmPlexSansArabic.className)}
       >
         {/*<DropdownMenuLabel></DropdownMenuLabel>*/}
         {items.map((item, index) => (

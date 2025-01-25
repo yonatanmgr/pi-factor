@@ -7,7 +7,8 @@ import { CheckboxDropdown } from "@/components/CheckboxDropdown";
 import { LucidePencil, LucideUsers } from "lucide-react";
 import {TRANSLATIONS} from "@/lib/constants";
 import { motion } from "motion/react";
-import {getAllGroups, getMoedsList, getSemesterName} from "@/lib/utils";
+import {cn, getAllGroups, getMoedsList, getSemesterName} from "@/lib/utils";
+import {ibmPlexSansHebrew} from "@/lib/fonts";
 
 interface SemesterProps {
   semester: string;
@@ -125,7 +126,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
           <div className={"flex flex-row gap-1 text-sm"}>
             <span className={"font-normal text-zinc-500 dark:text-zinc-300"}>
               {lecturers.size == 1 ? TRANSLATIONS[language].lecturer : TRANSLATIONS[language].lecturers}:{" "}
-              <span className={"font-bold"}>
+              <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
                 {lecturers.size ? Array.from(lecturers).join(", ") : TRANSLATIONS[language].unknown}
               </span>
             </span>

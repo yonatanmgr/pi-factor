@@ -7,6 +7,7 @@ import { LucideCheckSquare, LucideSquare } from "lucide-react";
 import { snapPoint } from "@/components/MainSection";
 import {TRANSLATIONS} from "@/lib/constants";
 import {useSettings} from "@/lib/store";
+import {ibmPlexSansHebrew} from "@/lib/fonts";
 
 interface VirtualizedListProps {
   options: AllTimeCourses;
@@ -187,7 +188,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                         )}
                       </span>
                     }
-                    <span className={"truncate"}>{course?.name}</span>
+                    <span className={cn("truncate", ibmPlexSansHebrew.className)}>{course?.name}</span>
                   </span>
                   <span
                     className={cn(

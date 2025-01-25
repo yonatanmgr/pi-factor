@@ -10,6 +10,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ClassNameValue } from "tailwind-merge";
+import {useSettings} from "@/lib/store";
+import {ibmPlexSansArabic, ibmPlexSansHebrew} from "@/lib/fonts";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -80,7 +82,7 @@ const Button = (props: ButtonProps) => {
           <RawButton {...props} />
         </TooltipTrigger>
         {props.tooltip ? (
-          <TooltipContent>{props.tooltip}</TooltipContent>
+          <TooltipContent className={useSettings.getState().language == "ar" ? ibmPlexSansArabic.className : ibmPlexSansHebrew.className}>{props.tooltip}</TooltipContent>
         ) : (
           <></>
         )}
