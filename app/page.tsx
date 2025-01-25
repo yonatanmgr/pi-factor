@@ -9,7 +9,7 @@ import { LucideMoon, LucideSun } from "lucide-react";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
 import { useWindowSize } from "usehooks-ts";
 import { useSettings } from "@/lib/store";
-import { dir } from "@/lib/utils";
+import {cn, dir} from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {TRANSLATIONS} from "@/lib/constants";
+import {ibmPlexSansArabic} from "@/lib/fonts";
 
 export const runtime = "edge";
 export const preferredRegion = "home";
@@ -143,7 +144,9 @@ export default function Home() {
     <main
       dir={dir(language)}
       className={
-        "flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between"
+        cn("flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between",
+            language === "ar" && ibmPlexSansArabic.className,
+          )
       }
     >
       <header className={"w-full flex flex-row justify-between items-center"}>

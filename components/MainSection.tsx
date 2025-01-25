@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {cn, dir, first} from "@/lib/utils";
+import { cn, dir, first } from "@/lib/utils";
 import { LucideListFilter, LucideTrash } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
 import React, { useEffect, useState } from "react";
@@ -10,11 +10,16 @@ import {
 } from "@/lib/types";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import Semester from "@/components/Semester";
-import {useCourseFilters, useSettings} from "@/lib/store";
+import { useCourseFilters, useSettings } from "@/lib/store";
 import { useWindowSize } from "usehooks-ts";
 import { AnimatePresence } from "motion/react";
-import {courseListSnapPoints, snapPoints, TRANSLATIONS} from "@/lib/constants";
+import {
+  courseListSnapPoints,
+  snapPoints,
+  TRANSLATIONS,
+} from "@/lib/constants";
 import CourseSelectionHeader from "@/components/CourseSelectionHeader";
+import { ibmPlexSansArabic } from "@/lib/fonts";
 
 interface MainSectionProps {
   selectedCourses: AllTimeCourseInfo[];
@@ -53,7 +58,7 @@ const MainSection = ({
   const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
   const { width } = useWindowSize();
   const isMobile = width < 640;
-  const {language} = useSettings();
+  const { language } = useSettings();
 
   useEffect(() => {
     if (selectedCourse?.id) {
@@ -68,7 +73,7 @@ const MainSection = ({
   const [courseListSnap, setCourseListSnap] = useState<number | string | null>(
     courseListSnapPoints[0],
   );
-  
+
   return (
     <section
       className={
@@ -120,7 +125,9 @@ const MainSection = ({
               target={"_blank"}
               rel={"noreferrer"}
               href={`https://www.ims.tau.ac.il/Tal/Syllabus/Syllabus_L.aspx?course=${selectedCourse.id}01&year=${parseInt(first(selectedCourse.semesters)?.slice(0, 4) ?? "") - 1}`}
-              className={"flex flex-row flex-wrap gap-2 text-2xl hover:underline w-fit"}
+              className={
+                "flex flex-row flex-wrap gap-2 text-2xl hover:underline w-fit"
+              }
             >
               {selectedCourse?.name && (
                 <span className={"font-bold"}>
@@ -158,7 +165,10 @@ const MainSection = ({
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent
-                  className="fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
+                  className={cn(
+                    "fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
+                    language === "ar" && ibmPlexSansArabic.className,
+                  )}
                   dir={dir(language)}
                 >
                   <div

@@ -25,6 +25,7 @@ import { snapPoint } from "@/components/MainSection";
 import CourseList from "@/components/CourseList";
 import { courseListSnapPoints, TRANSLATIONS } from "@/lib/constants";
 import { useSettings } from "@/lib/store";
+import { ibmPlexSansArabic } from "@/lib/fonts";
 
 interface CourseSelectionHeaderProps {
   isMobile: boolean;
@@ -82,7 +83,10 @@ const CourseSelectionHeader = ({
             </Button>
           </DrawerTrigger>
           <DrawerContent
-            className="fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
+            className={cn(
+              "fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
+              language === "ar" && ibmPlexSansArabic.className,
+            )}
             dir={dir(language)}
           >
             <div
@@ -120,7 +124,7 @@ const CourseSelectionHeader = ({
               {TRANSLATIONS[language].edit_courses}
             </Button>
           </DialogTrigger>
-          <DialogContent className={"min-w-[300px]"} dir={dir(language)}>
+          <DialogContent className={cn("min-w-[300px]", language === "ar" && ibmPlexSansArabic.className,)} dir={dir(language)}>
             <DialogTitle>
               <span className={"text-xl font-bold select-none"}>
                 {TRANSLATIONS[language].edit_courses}
