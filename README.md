@@ -1,57 +1,90 @@
----
-name: Vercel Postgres Next.js Starter
-slug: postgres-starter
-description: Simple Next.js template that uses Vercel Postgres as the database.
-framework: Next.js
-useCase: Starter
-css: Tailwind
-database: Vercel Postgres
-deployUrl: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fstorage%2Fpostgres-starter&project-name=postgres-starter&repository-name=postgres-starter&demo-title=Vercel%20Postgres%20Next.js%20Starter&demo-description=Simple%20Next.js%20template%20that%20uses%20Vercel%20Postgres%20as%20the%20database.&demo-url=https%3A%2F%2Fpostgres-starter.vercel.app%2F&demo-image=https%3A%2F%2Fpostgres-starter.vercel.app%2Fopengraph-image.png&stores=%5B%7B"type"%3A"postgres"%7D%5D
-demoUrl: https://postgres-starter.vercel.app/
-relatedTemplates:
-  - postgres-prisma
-  - postgres-kysely
-  - postgres-sveltekit
----
+# 📊 Pi-Factor
 
-# Vercel Postgres Next.js Starter
+Pi-Factor ([TAU-Factor](https://tau-factor.com/) 2) is a web application designed to help TAU students track course grades accross semesters. The application is built with React and Next.js, and is optimized for both mobile and desktop views.
 
-Simple Next.js template that uses [Vercel Postgres](https://vercel.com/postgres) as the database.
+## Features
 
-## Demo
+- **Course Management**: Add, remove, and track courses.
+- **Grade Tracking**: View grades for selected courses.
+- **Language Support**: Switch between Hebrew, Arabic, and English.
+- **Dark Mode**: Toggle between light and dark themes.
+- **Responsive Design**: Optimized for both mobile and desktop views.
 
-https://postgres-starter.vercel.app/
+## Technologies Used
 
-## How to Use
+- **TypeScript**
+- **JavaScript**
+- **React**
+- **Next.js**
+- **Tailwind CSS**
+- **shadcn/ui**
+- **Recharts**
+- **Zustand**
+- **Vercel Analytics**
+- **Vercel Speed Insights**
 
-You can choose from one of the following two methods to use this repository:
+## Getting Started
 
-### One-Click Deploy
+### Prerequisites
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
+- Node.js
+- pnpm
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fstorage%2Fpostgres-starter&project-name=postgres-starter&repository-name=postgres-starter&demo-title=Vercel%20Postgres%20Next.js%20Starter&demo-description=Simple%20Next.js%20template%20that%20uses%20Vercel%20Postgres%20as%20the%20database.&demo-url=https%3A%2F%2Fpostgres-starter.vercel.app%2F&demo-image=https%3A%2F%2Fpostgres-starter.vercel.app%2Fopengraph-image.png&stores=%5B%7B"type"%3A"postgres"%7D%5D)
+### Installation
 
-### Clone and Deploy
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yonatanmgr/pi-factor.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd pi-factor
+   ```
+3. Install the dependencies:
+   ```bash
+   pnpm install
+   ```
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [pnpm](https://pnpm.io/installation) to bootstrap the example:
+### Running the Application
 
+To start the development server, run:
 ```bash
-pnpm create next-app --example https://github.com/vercel/examples/tree/main/storage/postgres-starter
+next dev
 ```
+Open your browser and navigate to `http://localhost:3000` to view the application.
 
-Once that's done, copy the .env.example file in this directory to .env.local (which will be ignored by Git):
+### Building for Production
 
+To build the application for production, run:
 ```bash
-cp .env.local.example .env.local.local
+next build
 ```
+This will create an optimized build in the `out` directory.
 
-Then open `.env.local` and set the environment variables to match the ones in your Vercel Storage Dashboard.
+### Deployment
 
-Next, run Next.js in development mode:
+The application is configured to be deployed on Vercel. Follow the Vercel documentation for deployment instructions.
 
-```bash
-pnpm dev
-```
+## Project Structure
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples) ([Documentation](https://nextjs.org/docs/deployment)).
+- `app/page.tsx`: Main page component.
+- `app/layout.tsx`: Root layout component.
+- `lib/utils.ts`: Utility functions.
+- `public/`: Static assets.
+- `styles/`: Global styles.
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## Acknowledgements
+
+- [TAU-Factor](https://tau-factor.com/)
+- [Arazim Project](https://arazim-project.com/)
+- [Next.js](https://nextjs.org/)
+- [Vercel](https://vercel.com/)
+- [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
+
+## Contact
+
+For any inquiries, please contact the project maintainer at [yonatanmgr](https://github.com/yonatanmgr).
