@@ -5,11 +5,16 @@ import { AllTimeCourseInfo, Language } from "@/lib/types";
 import MainSection from "@/components/MainSection";
 import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
-import {LucideChrome, LucideLanguages, LucideMoon, LucideSun} from "lucide-react";
+import {
+  LucideBlocks,
+  LucideLanguages,
+  LucideMoon,
+  LucideSun,
+} from "lucide-react";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
 import { useWindowSize } from "usehooks-ts";
 import { useSettings } from "@/lib/store";
-import {cn, dir} from "@/lib/utils";
+import { cn, dir } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,8 +23,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {TRANSLATIONS} from "@/lib/constants";
-import {ibmPlexSansArabic, ibmPlexSansHebrew} from "@/lib/fonts";
+import { TRANSLATIONS } from "@/lib/constants";
+import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 
 export const runtime = "edge";
 export const preferredRegion = "home";
@@ -143,11 +148,10 @@ export default function Home() {
   return (
     <main
       dir={dir(language)}
-      className={
-        cn("flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between",
-            language === "ar" && `${ibmPlexSansHebrew.className} ${ibmPlexSansArabic.className}`,
-          )
-      }
+      className={cn(
+        "flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between",
+        language === "ar" && ibmPlexSansArabic.className,
+      )}
     >
       <header className={"w-full flex flex-row justify-between items-center"}>
         <h1 className={"text-3xl font-black select-none"}>📊 Pi-Factor</h1>
@@ -155,21 +159,37 @@ export default function Home() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                  tooltip={TRANSLATIONS[language].language}
+                tooltip={TRANSLATIONS[language].language}
                 className={"w-9 h-9 text-xl"}
                 variant={"outline"}
                 onClick={toggleLanguage}
               >
-                <LucideLanguages/>
+                <LucideLanguages />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel className={"flex flex-row gap-2 items-center"} dir={dir(language)}><span>🌍</span>{TRANSLATIONS[language].language}</DropdownMenuLabel>
-              <DropdownMenuRadioGroup dir={dir(language)} value={language} onValueChange={setLanguage as (value: string) => void}>
-                <DropdownMenuRadioItem value={"he"}>
+              <DropdownMenuLabel
+                className={"flex flex-row gap-2 items-center"}
+                dir={dir(language)}
+              >
+                <span>🌍</span>
+                {TRANSLATIONS[language].language}
+              </DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                dir={dir(language)}
+                value={language}
+                onValueChange={setLanguage as (value: string) => void}
+              >
+                <DropdownMenuRadioItem
+                  className={ibmPlexSansHebrew.className}
+                  value={"he"}
+                >
                   עברית
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value={"ar"}>
+                <DropdownMenuRadioItem
+                  className={ibmPlexSansArabic.className}
+                  value={"ar"}
+                >
                   العربية
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value={"en"}>
@@ -179,17 +199,29 @@ export default function Home() {
             </DropdownMenuContent>
           </DropdownMenu>
           <Button
-              className={"w-9 h-9"} variant={"outline"}
-              onClick={() => {
-                  if (typeof window !== "undefined") {
-                    window.open("https://chromewebstore.google.com/detail/tau-factor/ocnjdmhgcphlaeaoneikpobbjlkdpiib");
-                  }
-              }}
-              tooltip={TRANSLATIONS[language].download_extension}
+            className={"w-9 h-9"}
+            variant={"outline"}
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.open(
+                  "https://chromewebstore.google.com/detail/tau-factor/ocnjdmhgcphlaeaoneikpobbjlkdpiib",
+                );
+              }
+            }}
+            tooltip={TRANSLATIONS[language].download_extension}
           >
-            <LucideChrome size={24} />
-            </Button>
-          <Button tooltip={isDarkMode ? TRANSLATIONS[language].light_mode : TRANSLATIONS[language].dark_mode} className={"w-9 h-9"} variant={"outline"} onClick={toggle}>
+            <LucideBlocks size={24} />
+          </Button>
+          <Button
+            tooltip={
+              isDarkMode
+                ? TRANSLATIONS[language].light_mode
+                : TRANSLATIONS[language].dark_mode
+            }
+            className={"w-9 h-9"}
+            variant={"outline"}
+            onClick={toggle}
+          >
             {isDarkMode ? (
               <LucideSun className={"text-amber-300"} size={24} />
             ) : (
