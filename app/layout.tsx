@@ -31,11 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he"
-      style={{
-        fontFamily: `${ibmPlexSansHebrew.style.fontFamily}, ${ibmPlexSansArabic.style.fontFamily}, sans-serif`,
-      }}
-    >
+    <html lang="he" className={`${ibmPlexSansHebrew.className} ${ibmPlexSansArabic.className}`}>
       <body>
         {children}
         <SpeedInsights />
