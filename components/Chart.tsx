@@ -230,7 +230,7 @@ export function GradeChart({ data }: ChartProps) {
           <Bar
             name={label}
             key={key}
-            isAnimationActive={false}
+            // isAnimationActive={false}
             unit={"%"}
             dataKey={key}
             stackId="a"
