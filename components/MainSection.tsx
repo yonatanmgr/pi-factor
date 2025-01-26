@@ -77,7 +77,7 @@ const MainSection = ({
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-lg bg-zinc-100 dark:bg-zinc-950 border"
+        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-lg bg-zinc-100 dark:bg-zinc-900/30 dark:border-zinc-500/20 border"
       }
     >
       <CourseSelectionHeader

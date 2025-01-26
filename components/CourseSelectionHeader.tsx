@@ -55,7 +55,7 @@ const CourseSelectionHeader = ({
       {isMobile ? (
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant={"outlined"} disabled={isLoading}>
+            <Button variant={"outlined"} className={"bg-zinc-50 dark:bg-zinc-900 border"} disabled={isLoading}>
               <LucideBookPlus
                 className={"text-zinc-500 dark:text-zinc-400"}
                 size={14}
@@ -92,7 +92,7 @@ const CourseSelectionHeader = ({
       ) : (
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant={"outlined"} className={"enabled:dark:hover:bg-zinc-700/55"} disabled={isLoading}>
+            <Button variant={"outlined"} className={"bg-zinc-50 dark:bg-zinc-900 border"} disabled={isLoading}>
               <LucideBookPlus
                 className={"text-zinc-500 dark:text-zinc-400"}
                 size={14}
