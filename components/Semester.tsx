@@ -120,7 +120,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
       >
         <h3
           className={
-            "font-bold flex flex-row items-center justify-between pl-1"
+            "font-bold flex flex-row items-center justify-between"
           }
         >
           {getSemesterName(semester, language)}
