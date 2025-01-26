@@ -75,7 +75,6 @@ const chartConfig = {
   },
   "200-210": {
     label: "200-210",
-    icon: LucideUserX,
   },
 } satisfies ChartConfig;
 
@@ -182,9 +181,10 @@ export function GradeChart({ data }: ChartProps) {
         <XAxis
           dataKey="gradeRange"
           tickLine={false}
-          tickMargin={10}
+          tickMargin={8}
           axisLine={false}
-          padding={"no-gap"}
+          angle={isMobile ? -25 : 0}
+          interval={0}
         />
         <YAxis unit={"%"} tickLine={false} tickMargin={10} axisLine={false} />
         <ChartTooltip
