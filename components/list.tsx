@@ -4,17 +4,16 @@ import { AllTimeCourseInfo, AllTimeCourses } from "@/lib/types";
 import Spinner from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
 import { LucideCheckSquare, LucideSquare } from "lucide-react";
-import { snapPoint } from "@/components/MainSection";
-import {TRANSLATIONS} from "@/lib/constants";
-import {useSettings} from "@/lib/store";
-import {ibmPlexSansHebrew} from "@/lib/fonts";
+import { TRANSLATIONS } from "@/lib/constants";
+import { useSettings } from "@/lib/store";
+import { ibmPlexSansHebrew } from "@/lib/fonts";
+import {useWindowSize} from "usehooks-ts";
 
 interface VirtualizedListProps {
   options: AllTimeCourses;
   isLoading: boolean;
   onSelectedOption: (option: AllTimeCourseInfo) => void;
   selectedOptions: AllTimeCourseInfo[];
-  snapPoint: snapPoint;
 }
 
 const sortByIdThenName = (
@@ -39,18 +38,20 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
   onSelectedOption,
   isLoading,
   selectedOptions,
-  snapPoint,
 }) => {
   const [search, setSearch] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const { language } = useSettings();
+  const isMobile = useWindowSize().width < 640;
 
   const filteredOptions = useMemo(
     () =>
       Object.entries(options ?? {})
         .filter(
           ([id, course]) =>
-            id.toLowerCase().includes(search.trim().replace("-", "").toLowerCase()) ||
+            id
+              .toLowerCase()
+              .includes(search.trim().replace("-", "").toLowerCase()) ||
             course?.name
               ?.toLowerCase()
               .includes(search.trim().replace("-", "").toLowerCase()),
@@ -106,13 +107,13 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 w-full overflow-x-hidden",
-        snapPoint === 1 && "h-full",
+        "flex flex-col gap-2 w-full overflow-x-hidden transition-all h-full",
       )}
       onKeyDown={handleKeyDown}
       tabIndex={0} // Makes the container focusable to capture keyboard events
     >
       <input
+        autoFocus={!isMobile}
         type="text"
         value={search}
         onChange={(e) => {
@@ -124,20 +125,20 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
       />
 
       {isLoading && (
-        <div className="min-h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
+        <div className="min-h-52 sm:h-72 transition-all items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
           <Spinner />
           <span>{TRANSLATIONS[language].loading_data}</span>
         </div>
       )}
       {filteredOptions.length === 0 && !isLoading && (
-        <div className="min-h-52 sm:h-72 items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
-            <span>{TRANSLATIONS[language].no_results}</span>
+        <div className="min-h-52 sm:h-72 transition-all items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
+          <span>{TRANSLATIONS[language].no_results}</span>
         </div>
       )}
       {filteredOptions.length > 0 && (
         <div
           ref={parentRef}
-          className="min-h-52 sm:min-h-72 h-full overflow-y-auto overflow-x-hidden border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
+          className="min-h-52 sm:min-h-72 transition-all h-full overflow-y-auto overflow-x-hidden border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
           style={{ contain: "strict" }}
         >
           <div
@@ -188,12 +189,16 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
                         )}
                       </span>
                     }
-                    <span className={cn("truncate", ibmPlexSansHebrew.className)}>{course?.name}</span>
+                    <span
+                      className={cn("truncate", ibmPlexSansHebrew.className)}
+                    >
+                      {course?.name}
+                    </span>
                   </span>
                   <span
                     className={cn(
                       "text-zinc-500 min-w-fit dark:text-zinc-400 font-light",
-                        language === "he" ? "mr-2" : "ml-2"
+                      language === "he" ? "mr-2" : "ml-2",
                     )}
                   >
                     {option}

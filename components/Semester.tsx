@@ -5,10 +5,10 @@ import useSWRImmutable from "swr/immutable";
 import { fetcher } from "@/lib/api";
 import { CheckboxDropdown } from "@/components/CheckboxDropdown";
 import { LucidePencil, LucideUsers } from "lucide-react";
-import {TRANSLATIONS} from "@/lib/constants";
+import { TRANSLATIONS } from "@/lib/constants";
 import { motion } from "motion/react";
-import {cn, getAllGroups, getMoedsList, getSemesterName} from "@/lib/utils";
-import {ibmPlexSansHebrew} from "@/lib/fonts";
+import { cn, getAllGroups, getMoedsList, getSemesterName } from "@/lib/utils";
+import { ibmPlexSansHebrew } from "@/lib/fonts";
 
 interface SemesterProps {
   semester: string;
@@ -71,10 +71,18 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
         ? TRANSLATIONS[language].no_moed
         : selectedMoeds.length === 1 && selectedMoeds[0][0].endsWith("0")
           ? TRANSLATIONS[language].decisive_moed
-          : (selectedMoeds.length === 1 ? TRANSLATIONS[language].moed : TRANSLATIONS[language].moeds) + " " +
+          : (selectedMoeds.length === 1
+              ? TRANSLATIONS[language].moed
+              : TRANSLATIONS[language].moeds) +
+            " " +
             selectedMoeds
               .filter((m) => !m[0].endsWith("0"))
-              .map((m) => getMoedsList(language)[parseInt(m[0][m[0].length - 1])].split(" ")[1])
+              .map(
+                (m) =>
+                  getMoedsList(language)[parseInt(m[0][m[0].length - 1])].split(
+                    " ",
+                  )[1],
+              )
               .join(", ");
 
     const selectedGroups = Object.entries(visibleGroups).filter(
@@ -85,7 +93,10 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
         ? TRANSLATIONS[language].no_group
         : selectedGroups.length === 1 && selectedGroups[0][0].endsWith("00")
           ? TRANSLATIONS[language].all_groups
-          : (selectedGroups.length === 1 ? TRANSLATIONS[language].group : TRANSLATIONS[language].groups) + " " +
+          : (selectedGroups.length === 1
+              ? TRANSLATIONS[language].group
+              : TRANSLATIONS[language].groups) +
+            " " +
             selectedGroups
               .filter((g) => !g[0].endsWith("00"))
               .map((g) => g[0].slice(-2))
@@ -104,7 +115,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
         exit={{ opacity: 0, y: 5, scale: 0.99 }}
         transition={{ duration: 0.3 }}
         className={
-          "flex p-2 bg-zinc-50 dark:bg-zinc-900 rounded-md flex-col gap-1 border bg-card text-card-foreground shadow-sm"
+          "flex p-2 bg-zinc-50 dark:bg-zinc-900 overflow-x-hidden rounded-md flex-col gap-1 border bg-card text-card-foreground shadow-sm"
         }
       >
         <h3
@@ -114,20 +125,27 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
         >
           {getSemesterName(semester, language)}
           <span
-            className={"font-normal text-sm text-zinc-500 dark:text-zinc-300"}
+            className={"font-normal text-sm text-zinc-700 dark:text-zinc-300"}
           >
             {TRANSLATIONS[language].mean}:{" "}
             <span className={"font-bold"}>
-              {avarageMean ? avarageMean.toFixed(2) : TRANSLATIONS[language].no_info}
+              {avarageMean
+                ? avarageMean.toFixed(2)
+                : TRANSLATIONS[language].no_info}
             </span>
           </span>
         </h3>
         <div className={"flex flex-col gap-1"}>
           <div className={"flex flex-row gap-1 text-sm"}>
-            <span className={"font-normal text-zinc-500 dark:text-zinc-300"}>
-              {lecturers.size == 1 ? TRANSLATIONS[language].lecturer : TRANSLATIONS[language].lecturers}:{" "}
+            <span className={"font-normal text-zinc-700 dark:text-zinc-300"}>
+              {lecturers.size == 1
+                ? TRANSLATIONS[language].lecturer
+                : TRANSLATIONS[language].lecturers}
+              :{" "}
               <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
-                {lecturers.size ? Array.from(lecturers).join(", ") : TRANSLATIONS[language].unknown}
+                {lecturers.size
+                  ? Array.from(lecturers).join(", ")
+                  : TRANSLATIONS[language].unknown}
               </span>
             </span>
           </div>
@@ -141,7 +159,9 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
               }
               label={selectedGroupsLabel}
               items={groups.map((g) => ({
-                label: getAllGroups(g, language) ?? TRANSLATIONS[language].group + " " + g,
+                label:
+                  getAllGroups(g, language) ??
+                  TRANSLATIONS[language].group + " " + g,
                 value: g,
                 checked: visibleGroups[semester + g],
               }))}

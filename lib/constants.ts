@@ -42,6 +42,7 @@ export const TRANSLATIONS = {
     download_extension: "Download Chrome Extension",
     dark_mode: "Dark Mode",
     light_mode: "Light Mode",
+    save_selection: "Save Selection",
   },
   he: {
     language: "שפה",
@@ -81,6 +82,7 @@ export const TRANSLATIONS = {
     download_extension: "הורדת תוסף לכרום",
     dark_mode: "מצב לילה",
     light_mode: "מצב יום",
+    save_selection: "שמור בחירה",
   },
   ar: {
     language: "اللغة",
@@ -120,5 +122,6 @@ export const TRANSLATIONS = {
     download_extension: "تحميل امتداد كروم",
     dark_mode: "الوضع الليلي",
     light_mode: "الوضع النهاري",
+    save_selection: "حفظ الاختيار",
   },
 };

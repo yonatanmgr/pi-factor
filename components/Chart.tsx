@@ -10,12 +10,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { SemesterGroupGradeInfo } from "@/lib/types";
-import {useCourseFilters, useSettings} from "@/lib/store";
+import { useCourseFilters, useSettings } from "@/lib/store";
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { LucideUserX } from "lucide-react";
-import {dir, getMoedsList, getSemesterName} from "@/lib/utils";
-import {TRANSLATIONS} from "@/lib/constants";
+import { dir, getMoedsList, getSemesterName } from "@/lib/utils";
+import { TRANSLATIONS } from "@/lib/constants";
 
 const GRADE_LABELS = [
   "0-49",
@@ -95,7 +94,7 @@ export function GradeChart({ data }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
   const { width } = useWindowSize();
   const isMobile = width < 640;
-  const {language} = useSettings();
+  const { language } = useSettings();
 
   const [barKeys, setBarKeys] = useState<Set<{ key: string; label: string }>>(
     new Set(),
@@ -220,7 +219,8 @@ export function GradeChart({ data }: ChartProps) {
               }}
               labelFormatter={(v) => (
                 <span>
-                  {TRANSLATIONS[language].grade_range}: <span className={"font-bold"}>{v}</span>
+                  {TRANSLATIONS[language].grade_range}:{" "}
+                  <span className={"font-bold"}>{v}</span>
                 </span>
               )}
               dir={dir(language)}

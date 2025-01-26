@@ -11,9 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {useSettings} from "@/lib/store";
-import {cn, dir} from "@/lib/utils";
-import {ibmPlexSansArabic} from "@/lib/fonts";
+import { useSettings } from "@/lib/store";
+import { cn, dir } from "@/lib/utils";
+import { ibmPlexSansArabic } from "@/lib/fonts";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -26,7 +26,7 @@ interface Props {
 
 export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const {language} = useSettings();
+  const { language } = useSettings();
 
   return (
     <DropdownMenu open={isOpen} modal={true} dir={dir(language)}>
@@ -43,7 +43,10 @@ export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         onInteractOutside={() => setIsOpen(false)}
-        className={cn("w-full", language == "ar" && ibmPlexSansArabic.className)}
+        className={cn(
+          "w-full",
+          language == "ar" && ibmPlexSansArabic.className,
+        )}
       >
         {/*<DropdownMenuLabel></DropdownMenuLabel>*/}
         {items.map((item, index) => (

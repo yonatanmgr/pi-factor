@@ -1,9 +1,4 @@
-import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { LucideBookPlus, LucideX } from "lucide-react";
 import { cn, dir } from "@/lib/utils";
@@ -21,11 +16,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import React from "react";
-import { snapPoint } from "@/components/MainSection";
 import CourseList from "@/components/CourseList";
-import { courseListSnapPoints, TRANSLATIONS } from "@/lib/constants";
+import { TRANSLATIONS } from "@/lib/constants";
 import { useSettings } from "@/lib/store";
-import {ibmPlexSansArabic, ibmPlexSansHebrew} from "@/lib/fonts";
+import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 
 interface CourseSelectionHeaderProps {
   isMobile: boolean;
@@ -36,8 +30,6 @@ interface CourseSelectionHeaderProps {
   setSelectedTab: (tab: number) => void;
   options: { [id: string]: AllTimeCourseInfo & { id: string } };
   onSelectedOptions: (option: AllTimeCourseInfo) => void;
-  courseListSnap: snapPoint;
-  setCourseListSnap: (snap: snapPoint) => void;
   grades: AllTimeGrades | undefined;
 }
 
@@ -50,8 +42,6 @@ const CourseSelectionHeader = ({
   setSelectedTab,
   options,
   onSelectedOptions,
-  courseListSnap,
-  setCourseListSnap,
   grades,
 }: CourseSelectionHeaderProps) => {
   const { language } = useSettings();
@@ -63,18 +53,9 @@ const CourseSelectionHeader = ({
       }
     >
       {isMobile ? (
-        <Drawer
-          snapPoints={courseListSnapPoints as (number | string)[]}
-          activeSnapPoint={courseListSnap}
-          setActiveSnapPoint={setCourseListSnap}
-          fadeFromIndex={0}
-        >
+        <Drawer>
           <DrawerTrigger asChild>
-            <Button
-              // className={"bg-zinc-50 dark:bg-zinc-900 border"}
-              variant={"outlined"}
-              disabled={isLoading}
-            >
+            <Button variant={"outlined"} disabled={isLoading}>
               <LucideBookPlus
                 className={"text-zinc-500 dark:text-zinc-400"}
                 size={14}
@@ -90,13 +71,9 @@ const CourseSelectionHeader = ({
             dir={dir(language)}
           >
             <div
-              className={cn(
-                "flex flex-col max-w-md mx-auto gap-4 h-full w-full p-4 pt-5",
-                {
-                  "overflow-y-auto": courseListSnap === 1,
-                  "overflow-hidden": courseListSnap !== 1,
-                },
-              )}
+              className={
+                "flex flex-col max-w-md mx-auto gap-4 h-full w-full p-4 pt-5"
+              }
             >
               <CourseList
                 {...{
@@ -106,17 +83,16 @@ const CourseSelectionHeader = ({
                   setSelectedTab,
                   options,
                   isLoading,
-                  snapPoint: courseListSnap === 1 ? 1 : 0,
                 }}
               />
-              <DrawerFooter className="pt-1"></DrawerFooter>
+              {/*<DrawerFooter className="pt-1"></DrawerFooter>*/}
             </div>
           </DrawerContent>
         </Drawer>
       ) : (
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant={"outlined"} disabled={isLoading}>
+            <Button variant={"outlined"} className={"enabled:dark:hover:bg-zinc-700/55"} disabled={isLoading}>
               <LucideBookPlus
                 className={"text-zinc-500 dark:text-zinc-400"}
                 size={14}
@@ -124,7 +100,13 @@ const CourseSelectionHeader = ({
               {TRANSLATIONS[language].edit_courses}
             </Button>
           </DialogTrigger>
-          <DialogContent className={cn("min-w-[300px]", language === "ar" && ibmPlexSansArabic.className,)} dir={dir(language)}>
+          <DialogContent
+            className={cn(
+              "min-w-[300px]",
+              language === "ar" && ibmPlexSansArabic.className,
+            )}
+            dir={dir(language)}
+          >
             <DialogTitle>
               <span className={"text-xl font-bold select-none"}>
                 {TRANSLATIONS[language].edit_courses}
@@ -144,7 +126,6 @@ const CourseSelectionHeader = ({
                 setSelectedTab,
                 options,
                 isLoading,
-                snapPoint: courseListSnap === 1 ? 1 : 0,
               }}
             />
           </DialogContent>
@@ -210,7 +191,7 @@ const SelectedCourseButton = ({
       variant={
         selectedTab !== null && selectedTab == selectedCourses.indexOf(course)
           ? "default"
-          : "outlined"
+          : "ghost"
       }
       onClick={() => {
         if (

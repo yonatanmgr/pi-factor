@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { LucideListFilter, LucideTrash } from "lucide-react";
 import React, { useEffect } from "react";
-import {useCourseFilters, useSettings} from "@/lib/store";
+import { useCourseFilters, useSettings } from "@/lib/store";
 import Semester from "@/components/Semester";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { AnimatePresence } from "motion/react";
-import {TRANSLATIONS} from "@/lib/constants";
+import { TRANSLATIONS } from "@/lib/constants";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -58,7 +58,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                   className={"text-zinc-500 dark:text-zinc-400"}
                   size={20}
                 />
-                  {TRANSLATIONS[language].dates_filter}
+                {TRANSLATIONS[language].dates_filter}
               </h2>
               <Button
                 triggerclassname={cn(
@@ -68,13 +68,14 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
                 )}
                 disabled={!Object.values(visibleMoeds).some((v) => v)}
                 className={"bg-zinc-50 dark:bg-zinc-900 border"}
-                variant={"secondary"}
+                variant={"outlined"}
                 onClick={(e) => {
                   clearMoeds();
                   e.stopPropagation();
                 }}
               >
-                <LucideTrash className={"text-red-500"} size={14} /> {TRANSLATIONS[language].clear_filters}
+                <LucideTrash className={"text-red-500"} size={14} />{" "}
+                {TRANSLATIONS[language].clear_filters}
               </Button>
             </header>
 

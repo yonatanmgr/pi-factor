@@ -89,9 +89,7 @@ const MainSection = ({
         setSelectedTab={setSelectedTab}
         options={options}
         onSelectedOptions={onSelectedOptions}
-        courseListSnap={courseListSnap}
         grades={grades}
-        setCourseListSnap={setCourseListSnap}
       />
       <section
         className={
@@ -143,9 +141,11 @@ const MainSection = ({
             </a>
             <span className={"opacity-80"}>
               {TRANSLATIONS[language].faculty}:{" "}
-              <span className={cn("font-bold", ibmPlexSansHebrew.className)}>{selectedCourse?.faculty}</span>
+              <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
+                {selectedCourse?.faculty}
+              </span>
             </span>
-            <div className={"w-full h-px bg-zinc-300/50 my-2"}></div>
+            <div className={"w-full h-px bg-zinc-300/50 dark:bg-zinc-500/40 my-2"}></div>
             <div className={"grow h-full w-full overflow-auto"}>
               <GradeChart data={currentCourseGrades} />
             </div>
@@ -154,6 +154,7 @@ const MainSection = ({
                 snapPoints={snapPoints as (number | string)[]}
                 activeSnapPoint={snap}
                 setActiveSnapPoint={setSnap}
+                fadeFromIndex={0}
               >
                 <DrawerTrigger asChild>
                   <Button className={"w-full"} disabled={isLoading}>

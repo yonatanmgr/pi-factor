@@ -1,7 +1,4 @@
-import {useSettings} from "@/lib/store";
-
-"use-client";
-
+import { useSettings } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -16,10 +13,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {cn, dir} from "@/lib/utils";
+import { cn, dir } from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
+
+("use-client");
 
 type Option = {
   value: string;
@@ -45,7 +44,7 @@ const VirtualizedCommand = ({
     React.useState<Option[]>(options);
   const [focusedIndex, setFocusedIndex] = React.useState(0);
   const [isKeyboardNavActive, setIsKeyboardNavActive] = React.useState(false);
-  const {language} = useSettings();
+  const { language } = useSettings();
 
   const parentRef = React.useRef(null);
 
