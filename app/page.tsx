@@ -237,7 +237,8 @@ export default function Home() {
         }
       >
         {!isMobile && selectedCourses && selectedTab >= 0 && (
-          <Sidebar {...{ selectedCourse, currentCourseGrades }} />
+            <Sidebar {...{ selectedCourse, currentCourseGrades }} />
+
         )}
         <MainSection
           {...{

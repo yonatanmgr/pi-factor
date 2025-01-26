@@ -20,6 +20,7 @@ import CourseList from "@/components/CourseList";
 import { TRANSLATIONS } from "@/lib/constants";
 import { useSettings } from "@/lib/store";
 import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
+import { AnimatePresence, motion } from "motion/react";
 
 interface CourseSelectionHeaderProps {
   isMobile: boolean;
@@ -55,7 +56,11 @@ const CourseSelectionHeader = ({
       {isMobile ? (
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant={"outlined"} className={"bg-zinc-50 dark:bg-zinc-900 border"} disabled={isLoading}>
+            <Button
+              variant={"outlined"}
+              className={"bg-zinc-50 dark:bg-zinc-900 border"}
+              disabled={isLoading}
+            >
               <LucideBookPlus
                 className={"text-zinc-500 dark:text-zinc-400"}
                 size={14}
@@ -92,7 +97,11 @@ const CourseSelectionHeader = ({
       ) : (
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant={"outlined"} className={"bg-zinc-50 dark:bg-zinc-900 border"} disabled={isLoading}>
+            <Button
+              variant={"outlined"}
+              className={"bg-zinc-50 dark:bg-zinc-900 border"}
+              disabled={isLoading}
+            >
               <LucideBookPlus
                 className={"text-zinc-500 dark:text-zinc-400"}
                 size={14}
@@ -134,23 +143,34 @@ const CourseSelectionHeader = ({
       {!selectedCourses?.length && (
         <span
           className={
-            "min-w-fit text-sm h-9 mr-1 text-zinc-500 dark:text-zinc-400 select-none flex flex-row items-center"
+            "min-w-fit text-sm h-9 mx-1 text-zinc-500 dark:text-zinc-400 select-none flex flex-row items-center"
           }
         >
           {TRANSLATIONS[language].selected_courses_will_appear_here}
         </span>
       )}
-      {selectedCourses?.map((course) => (
-        <SelectedCourseButton
-          key={course?.name}
-          course={course}
-          grades={grades}
-          selectedCourses={selectedCourses}
-          setSelectedCourses={setSelectedCourses}
-          selectedTab={selectedTab}
-          setSelectedTab={setSelectedTab}
-        />
-      ))}
+      <AnimatePresence mode={"popLayout"}>
+        {selectedCourses?.map((course) => (
+          <motion.div
+            layout
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            key={course.id}
+          >
+            <SelectedCourseButton
+              key={course?.name}
+              course={course}
+              grades={grades}
+              selectedCourses={selectedCourses}
+              setSelectedCourses={setSelectedCourses}
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </header>
   );
 };
