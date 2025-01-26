@@ -185,7 +185,7 @@ export function GradeChart({ data }: ChartProps) {
           angle={isMobile ? -25 : 0}
           interval={0}
         />
-        <YAxis unit={"%"} tickLine={false} tickMargin={10} axisLine={false} />
+        <YAxis unit={"%"} tickLine={false} tickMargin={25} axisLine={false} />
         <ChartTooltip
           trigger={isMobile ? "click" : "hover"}
           content={

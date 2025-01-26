@@ -115,7 +115,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
         exit={{ opacity: 0, y: 5, scale: 0.99 }}
         transition={{ duration: 0.3 }}
         className={
-          "flex p-2 bg-zinc-50 dark:bg-zinc-900 overflow-x-hidden rounded-md flex-col gap-1 border bg-card text-card-foreground shadow-sm"
+          "flex p-2 bg-zinc-50 dark:bg-zinc-900 rounded-md flex-col gap-1 border bg-card text-card-foreground shadow-sm"
         }
       >
         <h3
@@ -149,7 +149,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
               </span>
             </span>
           </div>
-          <div className={"w-full flex flex-row justify-evenly gap-2 mt-1"}>
+          <div className={"w-full overflow-x-auto rounded-md flex flex-row justify-evenly gap-2 mt-1"}>
             <CheckboxDropdown
               icon={
                 <LucideUsers
