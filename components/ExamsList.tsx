@@ -57,7 +57,7 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
             className={"bg-zinc-50 dark:bg-zinc-900 border"}
             variant={"secondary"}
             onClick={(e) => {
-              clearMoeds();
+              clearMoeds(selectedCourse?.id ?? "");
               e.stopPropagation();
             }}
           >

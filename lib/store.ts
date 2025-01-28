@@ -7,7 +7,7 @@ interface SCourseFilters {
   setVisibility: (type: "moed" | "group", id: string, value: boolean) => void;
   setVisibleMoeds: (moeds: string[]) => void;
   clearGroups: () => void;
-  clearMoeds: () => void;
+  clearMoeds: (courseId: string) => void;
 }
 
 export const useCourseFilters = create<SCourseFilters>((set) => ({
@@ -31,9 +31,13 @@ export const useCourseFilters = create<SCourseFilters>((set) => ({
       return { ...state };
     });
   },
-  clearMoeds: () =>
+  clearMoeds: (courseId) =>
     set((state) => {
-      state.visibleMoeds = {};
+        for (const key in state.visibleMoeds) {
+          if (key.startsWith(courseId)) {
+            delete state.visibleMoeds[key];
+          }
+        }
       return { ...state };
     }),
   clearGroups: () =>

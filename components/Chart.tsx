@@ -39,6 +39,7 @@ interface ChartProps {
       }
     | null
     | undefined;
+  courseId: string;
 }
 
 const chartConfig = {
@@ -90,7 +91,7 @@ export const textToRGB = (text: string) => {
   return colour;
 };
 
-export function GradeChart({ data }: ChartProps) {
+export function GradeChart({ data, courseId }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
   const { width } = useWindowSize();
   const isMobile = width < 640;
@@ -111,7 +112,7 @@ export function GradeChart({ data }: ChartProps) {
         if (group) {
           group.forEach((moed) => {
             if (moed.distribution) {
-              const key = `${semester}${moed.moed}-${semester}${groupKey}`;
+              const key = `${courseId}:${semester}${moed.moed}-${semester}${groupKey}`;
               const label = `${getSemesterName(semester, language)} - ${groupKey == "00" ? TRANSLATIONS[language].all_groups : TRANSLATIONS[language].group + " " + groupKey} - ${getMoedsList(language)[moed.moed ?? 0]}`;
               newBarKeys.add({ key, label });
               preprocessed[key] = moed.distribution;
@@ -132,9 +133,11 @@ export function GradeChart({ data }: ChartProps) {
     return GRADE_LABELS.map((label, index) => {
       const entry = { gradeRange: label };
       Object.keys(preprocessedData).forEach((key) => {
+        const moed = key.split(":")[1].split("-")[0];
+        const group = key.split(":")[1].split("-")[1];
         if (
-          visibleMoeds[key.split("-")[0]] &&
-          visibleGroups[key.split("-")[1]] &&
+          visibleMoeds[courseId + ":" + moed] &&
+          visibleGroups[courseId + ":" + group] &&
           preprocessedData[key][index] !== undefined
         ) {
           // @ts-ignore
@@ -143,7 +146,7 @@ export function GradeChart({ data }: ChartProps) {
       });
       return entry;
     });
-  }, [groupsKeys, moedsKeys, language]);
+  }, [courseId, groupsKeys, moedsKeys, language]);
 
   if (!data) {
     return null;
@@ -231,7 +234,7 @@ export function GradeChart({ data }: ChartProps) {
         {Array.from(barKeys).map(({ key, label }) => (
           <Bar
             name={label}
-            key={key}
+            key={key.split(":")[1]}
             isAnimationActive={false}
             unit={"%"}
             dataKey={key}

@@ -89,22 +89,24 @@ export function useSemesterData(
 
   // Calculate selected moeds label
   const selectedMoeds = Object.entries(visibleMoeds).filter(
-    (m) => m[1] && m[0].startsWith(semester),
-  );
+    (m) => m[1] && m[0].startsWith(courseId + ":" + semester),
+  ).map((m) => m[0]);
+
+  // Calculate selected moeds label
   const selectedMoedsLabel =
     selectedMoeds.length === 0
       ? TRANSLATIONS[language].no_moed
-      : selectedMoeds.length === 1 && selectedMoeds[0][0].endsWith("0")
+      : selectedMoeds.length === 1 && selectedMoeds[0].endsWith("0")
         ? TRANSLATIONS[language].decisive_moed
         : (selectedMoeds.length === 1
             ? TRANSLATIONS[language].moed
             : TRANSLATIONS[language].moeds) +
           " " +
           selectedMoeds
-            .filter((m) => !m[0].endsWith("0"))
+            .filter((m) => !m.endsWith("0"))
             .map(
               (m) =>
-                getMoedsList(language)[parseInt(m[0][m[0].length - 1])].split(
+                getMoedsList(language)[parseInt(m[m.length - 1])].split(
                   " ",
                 )[1],
             )
@@ -112,7 +114,7 @@ export function useSemesterData(
 
   // Calculate selected groups label
   const selectedGroups = Object.entries(visibleGroups).filter(
-    (g) => g[1] && g[0].startsWith(semester),
+    (g) => g[1] && g[0].startsWith(courseId + ":" + semester),
   );
   const selectedGroupsLabel =
     selectedGroups.length === 0
@@ -135,25 +137,25 @@ export function useSemesterData(
 
   const handleGroupSelect = (group: string, checked: Checked) => {
     if (group === "00") {
-      setVisibility("group", semester + "00", checked === true);
+      setVisibility("group", courseId + ":" + semester + "00", checked === true);
       for (const g of groups) {
-        if (g !== "00") setVisibility("group", semester + g, false);
+        if (g !== "00") setVisibility("group", courseId + ":" + semester + g, false);
       }
     } else {
-      setVisibility("group", semester + "00", false);
-      setVisibility("group", semester + group, checked === true);
+      setVisibility("group", courseId + ":" + semester + "00", false);
+      setVisibility("group", courseId + ":" + semester + group, checked === true);
     }
   };
 
   const handleMoedSelect = (moed: string, checked: Checked) => {
     if (parseInt(moed) === 0) {
-      setVisibility("moed", semester + "0", checked === true);
+      setVisibility("moed", courseId + ":" + semester + "0", checked === true);
       for (const m of moeds) {
-        if (parseInt(m) !== 0) setVisibility("moed", semester + m, false);
+        if (parseInt(m) !== 0) setVisibility("moed", courseId + ":" + semester + m, false);
       }
     } else {
-      setVisibility("moed", semester + moed, checked === true);
-      setVisibility("moed", semester + "0", false);
+      setVisibility("moed", courseId + ":" + semester + moed, checked === true);
+      setVisibility("moed", courseId + ":" + semester + "0", false);
     }
   };
 

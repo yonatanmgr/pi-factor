@@ -1,7 +1,7 @@
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-import {ibmPlexSansHebrew} from "@/lib/fonts";
+import { ibmPlexSansHebrew } from "@/lib/fonts";
 
 export const metadata = {
   metadataBase: new URL("https://pi-factor.vercel.app"),

@@ -97,7 +97,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
                   getAllGroups(g, language) ??
                   TRANSLATIONS[language].group + " " + g,
                 value: g,
-                checked: visibleGroups[semester + g],
+                checked: visibleGroups[courseId + ":" + semester + g],
               }))}
               onSelect={handleGroupSelect}
             />
@@ -112,7 +112,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
               items={moeds.map((m) => ({
                 label: getMoedsList(language)[m],
                 value: m.toString(),
-                checked: visibleMoeds[semester + m],
+                checked: visibleMoeds[courseId + ":" + semester + m],
               }))}
               onSelect={handleMoedSelect}
             />

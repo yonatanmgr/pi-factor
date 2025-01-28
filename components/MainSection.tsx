@@ -2,23 +2,23 @@ import { Button } from "@/components/ui/button";
 import { cn, dir, first } from "@/lib/utils";
 import { LucideListFilter } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AllTimeCourseInfo,
   AllTimeGrades,
   SemesterGroupGradeInfo,
 } from "@/lib/types";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { useCourseFilters, useSettings } from "@/lib/store";
+import { useSettings } from "@/lib/store";
 import { useWindowSize } from "usehooks-ts";
 import {
-  courseListSnapPoints,
   snapPoints,
   TRANSLATIONS,
 } from "@/lib/constants";
 import CourseSelectionHeader from "@/components/CourseSelectionHeader";
 import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 import ExamsList from "@/components/ExamsList";
+import useResetExams from "@/lib/hooks/useResetExams";
 
 interface MainSectionProps {
   selectedCourses: AllTimeCourseInfo[];
@@ -54,19 +54,11 @@ const MainSection = ({
   isLoading,
   onSelectedOptions,
 }: MainSectionProps) => {
-  const {setVisibility } = useCourseFilters();
   const { width } = useWindowSize();
   const isMobile = width < 640;
   const { language } = useSettings();
 
-  useEffect(() => {
-    if (selectedCourse?.id) {
-      for (const semester of selectedCourse.semesters ?? []) {
-        setVisibility("moed", semester + "0", true);
-        setVisibility("group", semester + "00", true);
-      }
-    }
-  }, [selectedCourse]);
+  useResetExams(selectedCourse);
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
 
@@ -145,7 +137,7 @@ const MainSection = ({
               className={"w-full h-px bg-zinc-300/50 dark:bg-zinc-500/40 my-2"}
             ></div>
             <div className={"grow h-full w-full overflow-auto"}>
-              <GradeChart data={currentCourseGrades} />
+              <GradeChart data={currentCourseGrades} courseId={selectedCourse.id ?? ""}/>
             </div>
             {isMobile && (
               <Drawer

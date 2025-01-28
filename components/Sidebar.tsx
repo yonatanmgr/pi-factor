@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { useCourseFilters } from "@/lib/store";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import ExamsList from "@/components/ExamsList";
+import useResetExams from "@/lib/hooks/useResetExams";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -16,16 +15,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
-  const { setVisibility } = useCourseFilters();
-
-  useEffect(() => {
-    if (selectedCourse?.id) {
-      for (const semester of selectedCourse.semesters ?? []) {
-        setVisibility("moed", semester + "0", true);
-        setVisibility("group", semester + "00", true);
-      }
-    }
-  }, [selectedCourse]);
+  useResetExams(selectedCourse);
 
   return (
     <section
