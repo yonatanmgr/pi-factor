@@ -149,7 +149,7 @@ export default function Home() {
     <main
       dir={dir(language)}
       className={cn(
-        "flex sm:overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between",
+        "flex overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between",
         language === "ar" && ibmPlexSansArabic.className,
       )}
     >
@@ -233,7 +233,7 @@ export default function Home() {
       <section
         dir={dir(language)}
         className={
-          "flex sm:flex-row sm:overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
+          "flex sm:flex-row overflow-y-hidden flex-col gap-4 w-full items-center h-full justify-between"
         }
       >
         {!isMobile && selectedCourses && selectedTab >= 0 && (
