@@ -50,7 +50,7 @@ const CourseSelectionHeader = ({
   return (
     <header
       className={
-        "flex flex-row gap-2 overflow-x-auto overflow-y-hidden min-h-fit"
+        "flex flex-row gap-2 snap-x snap-proximity overflow-x-auto overflow-y-hidden min-h-fit"
       }
     >
       {isMobile ? (
@@ -58,7 +58,7 @@ const CourseSelectionHeader = ({
           <DrawerTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-zinc-50 dark:bg-zinc-900 border"}
+              className={"bg-zinc-50 snap-start snap-normal dark:bg-zinc-900 border"}
               disabled={isLoading}
             >
               <LucideBookPlus
@@ -99,7 +99,7 @@ const CourseSelectionHeader = ({
           <DialogTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-zinc-50 dark:bg-zinc-900 border"}
+              className={"bg-zinc-50 dark:bg-zinc-900 border snap-start snap-normal"}
               disabled={isLoading}
             >
               <LucideBookPlus
@@ -158,6 +158,7 @@ const CourseSelectionHeader = ({
       <AnimatePresence mode={"popLayout"}>
         {selectedCourses?.map((course) => (
           <motion.div
+            className={"snap-start snap-normal"}
             layout
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
