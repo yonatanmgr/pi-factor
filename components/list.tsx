@@ -259,9 +259,9 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           onClick={() => toggleGroup(row.content)}
         >
           {expandedGroups.has(row.content) ? (
-            <ChevronDown size={20} className="ml-2" />
+            <ChevronDown size={20} className="mr-2 rtl:ml-2" />
           ) : (
-            <ChevronLeft size={20} className="ml-2" />
+            <ChevronLeft size={20} className="mr-2 rtl:ml-2" />
           )}
           <span className={cn(ibmPlexSansHebrew.className)}>{row.content}</span>
         </div>
@@ -288,9 +288,9 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           onClick={() => toggleSubgroup(row.groupName!, row.content)}
         >
           {expandedSubgroups.has(key) ? (
-            <ChevronDown size={16} className="ml-1" />
+            <ChevronDown size={16} className="mr-1 rtl:ml-1" />
           ) : (
-            <ChevronLeft size={16} className="ml-1" />
+            <ChevronLeft size={16} className="mr-1 rtl:ml-1" />
           )}
           <span className={cn(ibmPlexSansHebrew.className)}>{row.content}</span>
         </div>
@@ -307,7 +307,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
       <div
         key={virtualRow.key}
         className={cn(
-          "absolute flex group flex-row transition-transform transition justify-between text-[15px] active:bg-zinc-300 dark:active:bg-zinc-700 select-none w-full p-3 pr-10",
+          "absolute flex group flex-row transition-transform transition justify-between text-[15px] active:bg-zinc-300 dark:active:bg-zinc-700 select-none w-full p-3 pl-10 rtl:pr-10",
           isFocused
             ? "bg-zinc-200/70 hover:bg-zinc-200/70 dark:bg-zinc-800/70 dark:hover:bg-zinc-800/70"
             : "bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800",
