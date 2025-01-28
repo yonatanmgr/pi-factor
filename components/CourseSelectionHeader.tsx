@@ -116,7 +116,7 @@ const CourseSelectionHeader = ({
             )}
             dir={dir(language)}
           >
-            <DialogTitle>
+            <DialogTitle title={TRANSLATIONS[language].edit_courses + selectedCourses.length ? ` (${selectedCourses.length})` : ""}>
               <span className={"text-xl font-bold select-none"}>
                 {TRANSLATIONS[language].edit_courses}
                 {selectedCourses?.length > 0 && (

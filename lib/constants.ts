@@ -36,13 +36,15 @@ export const TRANSLATIONS = {
     selected_courses_will_appear_here: "Selected courses will appear here...",
     loading_data: "Loading data...",
     no_results: "No results found",
-    chart_placeholder: "Select a course from above to see its grade distribution...",
+    chart_placeholder:
+      "Select a course from above to see its grade distribution...",
     select_courses: "Add courses from the list...",
     faculty: "Faculty",
     download_extension: "Download Chrome Extension",
     dark_mode: "Dark Mode",
     light_mode: "Light Mode",
     save_selection: "Save Selection",
+    search_exam: "Search exam...",
   },
   he: {
     language: "שפה",
@@ -83,6 +85,7 @@ export const TRANSLATIONS = {
     dark_mode: "מצב לילה",
     light_mode: "מצב יום",
     save_selection: "שמור בחירה",
+    search_exam: "חפשו מועד...",
   },
   ar: {
     language: "اللغة",
@@ -123,5 +126,6 @@ export const TRANSLATIONS = {
     dark_mode: "الوضع الليلي",
     light_mode: "الوضع النهاري",
     save_selection: "حفظ الاختيار",
+    search_exam: "ابحث عن امتحان...",
   },
 };
