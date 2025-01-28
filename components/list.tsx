@@ -261,7 +261,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           {expandedGroups.has(row.content) ? (
             <ChevronDown size={20} className="mr-2 rtl:ml-2" />
           ) : (
-            <ChevronLeft size={20} className="mr-2 rtl:ml-2" />
+            <ChevronLeft size={20} className="mr-2 ltr:rotate-180 rtl:ml-2" />
           )}
           <span className={cn(ibmPlexSansHebrew.className)}>{row.content}</span>
         </div>
@@ -290,7 +290,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           {expandedSubgroups.has(key) ? (
             <ChevronDown size={16} className="mr-1 rtl:ml-1" />
           ) : (
-            <ChevronLeft size={16} className="mr-1 rtl:ml-1" />
+            <ChevronLeft size={16} className="mr-1 ltr:rotate-180 rtl:ml-1" />
           )}
           <span className={cn(ibmPlexSansHebrew.className)}>{row.content}</span>
         </div>
