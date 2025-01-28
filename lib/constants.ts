@@ -44,7 +44,7 @@ export const TRANSLATIONS = {
     dark_mode: "Dark Mode",
     light_mode: "Light Mode",
     save_selection: "Save Selection",
-    search_exam: "Search exam...",
+    search_exam: "Search by semester or lecturer...",
   },
   he: {
     language: "שפה",
@@ -85,7 +85,7 @@ export const TRANSLATIONS = {
     dark_mode: "מצב לילה",
     light_mode: "מצב יום",
     save_selection: "שמור בחירה",
-    search_exam: "חפשו מועד...",
+    search_exam: "חפשו סמסטר או שם מרצה...",
   },
   ar: {
     language: "اللغة",
@@ -126,6 +126,6 @@ export const TRANSLATIONS = {
     dark_mode: "الوضع الليلي",
     light_mode: "الوضع النهاري",
     save_selection: "حفظ الاختيار",
-    search_exam: "ابحث عن امتحان...",
+    search_exam: "ابحث بالفصل الدراسي أو اسم المحاضر...",
   },
 };

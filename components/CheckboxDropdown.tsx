@@ -15,7 +15,7 @@ import { useSettings } from "@/lib/store";
 import { cn, dir } from "@/lib/utils";
 import { ibmPlexSansArabic } from "@/lib/fonts";
 
-type Checked = DropdownMenuCheckboxItemProps["checked"];
+export type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 interface Props {
   label: string;

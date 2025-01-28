@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import {Language} from "@/lib/types";
+import { Language } from "@/lib/types";
 
 interface SCourseFilters {
   visibleMoeds: Record<string, boolean>;
@@ -44,15 +44,16 @@ export const useCourseFilters = create<SCourseFilters>((set) => ({
 }));
 
 interface SSettings {
-    language: Language;
-    setLanguage: (language: Language) => void;
-    toggleLanguage: () => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
+  toggleLanguage: () => void;
 }
 
 export const useSettings = create<SSettings>((set) => ({
-    language: "he",
-    setLanguage: (language) => set({ language }),
-    toggleLanguage: () => set((state) => {
+  language: "he",
+  setLanguage: (language) => set({ language }),
+  toggleLanguage: () =>
+    set((state) => {
       switch (state.language) {
         case "he":
           return { language: "ar" };
@@ -61,5 +62,5 @@ export const useSettings = create<SSettings>((set) => ({
         case "en":
           return { language: "he" };
       }
-    })
+    }),
 }));

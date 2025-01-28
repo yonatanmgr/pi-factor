@@ -1,12 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { LucideListFilter, LucideTrash } from "lucide-react";
 import React, { useEffect } from "react";
-import { useCourseFilters, useSettings } from "@/lib/store";
-import Semester from "@/components/Semester";
+import { useCourseFilters } from "@/lib/store";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { AnimatePresence } from "motion/react";
-import { TRANSLATIONS } from "@/lib/constants";
+import ExamsList from "@/components/ExamsList";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -21,8 +16,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
-  const { visibleMoeds, clearMoeds, setVisibility } = useCourseFilters();
-  const { language } = useSettings();
+  const { setVisibility } = useCourseFilters();
 
   useEffect(() => {
     if (selectedCourse?.id) {
@@ -32,73 +26,17 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
       }
     }
   }, [selectedCourse]);
+
   return (
     <section
       className={
         "max-h-full sm:min-h-full sm:h-full max-sm:min-h-fit min-w-1/4 sm:overflow-y-hidden overflow-x-hidden p-2 flex flex-col gap-2 sm:w-1/4 w-full min-w-[300px] rounded-xl bg-zinc-100 dark:bg-zinc-900/30 dark:border-zinc-500/20 border"
       }
     >
-      {selectedCourse &&
-        Object.entries(currentCourseGrades ?? {}).some(
-          (o) => Object.values(o[1] ?? {}).length,
-        ) && (
-          <>
-            {/*<div className={"h-px w-full bg-zinc-300/50 my-2"}></div>*/}
-            <header
-              className={
-                "flex flex-row gap-2  justify-between w-full items-center"
-              }
-            >
-              <h2
-                className={
-                  "text-lg pr-1 font-bold select-none flex flex-row gap-2 items-center"
-                }
-              >
-                <LucideListFilter
-                  className={"text-zinc-500 dark:text-zinc-400"}
-                  size={20}
-                />
-                {TRANSLATIONS[language].dates_filter}
-              </h2>
-              <Button
-                triggerclassname={cn(
-                  !Object.values(visibleMoeds).some((v) => v)
-                    ? "cursor-default"
-                    : "",
-                )}
-                disabled={!Object.values(visibleMoeds).some((v) => v)}
-                className={"bg-zinc-50 dark:bg-zinc-900 border"}
-                variant={"outlined"}
-                onClick={(e) => {
-                  clearMoeds();
-                  e.stopPropagation();
-                }}
-              >
-                <LucideTrash className={"text-red-500"} size={14} />{" "}
-                {TRANSLATIONS[language].clear_filters}
-              </Button>
-            </header>
-
-            <div className={"grow overflow-hidden"}>
-              <div className={"flex flex-col gap-2 max-h-full overflow-auto"}>
-                <AnimatePresence mode={"popLayout"}>
-                  {Object.entries(currentCourseGrades ?? {})
-                    .filter((o) => Object.values(o[1] ?? {}).length)
-                    .map(([semester, data]) => {
-                      return (
-                        <Semester
-                          key={selectedCourse.id + semester}
-                          semester={semester}
-                          grades={data}
-                          courseId={selectedCourse.id ?? ""}
-                        />
-                      );
-                    })}
-                </AnimatePresence>
-              </div>
-            </div>
-          </>
-        )}
+      <ExamsList
+        selectedCourse={selectedCourse}
+        currentCourseGrades={currentCourseGrades}
+      />
     </section>
   );
 };

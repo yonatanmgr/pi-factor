@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual";
 import { AllTimeCourseInfo, AllTimeCourses } from "@/lib/types";
 import Spinner from "@/components/ui/Spinner";
@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import {
   ChevronDown,
   ChevronLeft,
-  ChevronRight,
   LucideCheckSquare,
   LucideSquare,
 } from "lucide-react";
