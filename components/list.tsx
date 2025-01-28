@@ -368,7 +368,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           setSearch(e.target.value);
         }}
         placeholder={TRANSLATIONS[language].search_placeholder}
-        className="p-2 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-hidden focus:dark:border-zinc-700 focus:border-zinc-300 transition-all"
+        className="p-2 rounded-md border placeholder:text-sm border-zinc-200 dark:border-zinc-800 focus:outline-hidden focus:dark:border-zinc-700 focus:border-zinc-300 transition-all"
       />
 
       {isLoading && (
