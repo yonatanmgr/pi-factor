@@ -42,7 +42,7 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
             }
           >
             <LucideListFilter
-              className={"text-zinc-500 dark:text-zinc-400"}
+              className={"text-neutral-500 dark:text-neutral-400"}
               size={20}
             />
             {TRANSLATIONS[language].dates_filter}
@@ -54,8 +54,8 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
                 : "",
             )}
             disabled={!Object.values(visibleMoeds).some((v) => v)}
-            className={"bg-zinc-50 dark:bg-zinc-900 border"}
-            variant={"secondary"}
+            className={"bg-neutral-50 dark:bg-neutral-900 border"}
+            variant={"outlined"}
             onClick={(e) => {
               clearMoeds(selectedCourse?.id ?? "");
               e.stopPropagation();
@@ -68,7 +68,7 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
         <input
           type="text"
           placeholder={TRANSLATIONS[language].search_exam}
-          className="p-2 rounded-md border placeholder:text-sm border-zinc-200 bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-800 focus:outline-hidden focus:dark:border-zinc-700 focus:border-zinc-300 transition-all"
+          className="p-2 rounded-md border placeholder:text-sm border-neutral-200 bg-neutral-50 dark:bg-neutral-900 dark:border-neutral-800 focus:outline-hidden focus:dark:border-neutral-700 focus:border-neutral-300 transition-all"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

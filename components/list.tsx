@@ -246,10 +246,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           className={cn(
             "absolute flex flex-row select-none items-center hover:brightness-[0.98] active:brightness-[0.95] dark:hover:brightness-[1.25] dark:active:brightness-[1.7] px-3 py-2 font-semibold transition-transform",
             isFocused
-              ? "bg-zinc-200/70 dark:bg-zinc-800/70"
-              : "bg-zinc-200/50 dark:bg-zinc-800/80",
+              ? "bg-neutral-200/70 dark:bg-neutral-800/70"
+              : "bg-neutral-200/50 dark:bg-neutral-800/80",
             expandedGroups.has(row.content) &&
-              "bg-zinc-200/90 dark:bg-zinc-700/90",
+              "bg-neutral-200/90 dark:bg-neutral-700/90",
           )}
           style={{
             transform: `translateY(${virtualRow.start}px)`,
@@ -276,9 +276,9 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           className={cn(
             "absolute flex flex-row select-none items-center hover:brightness-[0.98] active:brightness-[0.95] dark:hover:brightness-[1.25] dark:active:brightness-[1.7] px-6 py-2 font-medium transition-transform",
             isFocused
-              ? "bg-zinc-200/70 dark:bg-zinc-800/70"
-              : "bg-zinc-100 dark:bg-zinc-800/30",
-            expandedSubgroups.has(key) && "bg-zinc-200/60 dark:bg-zinc-800/80",
+              ? "bg-neutral-200/70 dark:bg-neutral-800/70"
+              : "bg-neutral-100 dark:bg-neutral-800/30",
+            expandedSubgroups.has(key) && "bg-neutral-200/60 dark:bg-neutral-800/80",
           )}
           style={{
             transform: `translateY(${virtualRow.start}px)`,
@@ -307,10 +307,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
       <div
         key={virtualRow.key}
         className={cn(
-          "absolute flex group flex-row transition-transform transition justify-between text-[15px] active:bg-zinc-300 dark:active:bg-zinc-700 select-none w-full p-3 ltr:pl-10 rtl:pr-10",
+          "absolute flex group flex-row transition-transform transition justify-between text-[15px] active:bg-neutral-300 dark:active:bg-neutral-700 select-none w-full p-3 ltr:pl-10 rtl:pr-10",
           isFocused
-            ? "bg-zinc-200/70 hover:bg-zinc-200/70 dark:bg-zinc-800/70 dark:hover:bg-zinc-800/70"
-            : "bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800",
+            ? "bg-neutral-200/70 hover:bg-neutral-200/70 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/70"
+            : "bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800",
         )}
         style={{
           transform: `translateY(${virtualRow.start}px)`,
@@ -318,7 +318,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
         onClick={() => course && onSelectedOption(course)}
       >
         <span className="flex flex-row gap-2 overflow-x-hidden items-center">
-          <span className="text-zinc-500 dark:text-zinc-400 mt-[1px]">
+          <span className="text-neutral-500 dark:text-neutral-400 mt-[1px]">
             {isSelected ? (
               <LucideCheckSquare
                 className="text-emerald-600 dark:text-emerald-400"
@@ -341,7 +341,7 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
         </span>
         <span
           className={cn(
-            "text-zinc-500 min-w-fit dark:text-zinc-400 font-light",
+            "text-neutral-500 min-w-fit dark:text-neutral-400 font-light",
             language === "he" ? "mr-2" : "ml-2",
           )}
         >
@@ -368,24 +368,24 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           setSearch(e.target.value);
         }}
         placeholder={TRANSLATIONS[language].search_placeholder}
-        className="p-2 rounded-md border placeholder:text-sm border-zinc-200 dark:border-zinc-800 focus:outline-hidden focus:dark:border-zinc-700 focus:border-zinc-300 transition-all"
+        className="p-2 rounded-md border placeholder:text-sm border-neutral-200 dark:border-neutral-800 focus:outline-hidden focus:dark:border-neutral-700 focus:border-neutral-300 transition-all"
       />
 
       {isLoading && (
-        <div className="min-h-52 sm:h-72 transition-all items-center text-zinc-400 select-none justify-center flex flex-row gap-2 border bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
+        <div className="min-h-52 sm:h-72 transition-all items-center text-neutral-400 select-none justify-center flex flex-row gap-2 border bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 rounded-md">
           <Spinner />
           <span>{TRANSLATIONS[language].loading_data}</span>
         </div>
       )}
       {virtualRows.length === 0 && !isLoading && (
-        <div className="min-h-52 sm:h-72 transition-all items-center text-zinc-400 select-none justify-center flex flex-col border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md">
+        <div className="min-h-52 sm:h-72 transition-all items-center text-neutral-400 select-none justify-center flex flex-col border gap-0 bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 rounded-md">
           <span>{TRANSLATIONS[language].no_results}</span>
         </div>
       )}
       {virtualRows.length > 0 && (
         <div
           ref={parentRef}
-          className="min-h-52 sm:min-h-72 transition-all h-full overflow-y-auto overflow-x-hidden border gap-0 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-md"
+          className="min-h-52 sm:min-h-72 transition-all h-full overflow-y-auto overflow-x-hidden border gap-0 bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 rounded-md"
           style={{ contain: "strict" }}
         >
           <div

@@ -56,29 +56,29 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 5, scale: 0.99 }}
         transition={{ duration: 0.3 }}
-        className="flex p-2 bg-zinc-50 dark:bg-zinc-900 rounded-md flex-col gap-1 border bg-card text-card-foreground shadow-sm"
+        className="flex p-2 bg-linear-to-t from-neutral-50/50 to-neutral-50 dark:from-neutral-900/50 dark:to-neutral-900 rounded-md flex-col gap-1 border bg-card text-card-foreground shadow-sm"
       >
         <h3 className="font-bold flex flex-row items-center justify-between">
           {semesterName}
-          <span className="font-normal text-sm text-zinc-700 dark:text-zinc-300">
+          <span className="font-normal text-sm text-neutral-700 dark:text-neutral-300">
             {TRANSLATIONS[language].mean}:{" "}
             <span className="font-bold">
               {averageMean
-                ? averageMean.toFixed(2)
+                ? <span className={"font-mono dark:text-neutral-100 text-neutral-800"}>{averageMean.toFixed(2)}</span>
                 : TRANSLATIONS[language].no_info}
             </span>
           </span>
         </h3>
         <div className="flex flex-col gap-1">
           <div className="flex flex-row gap-1 text-sm">
-            <span className="font-normal text-zinc-700 dark:text-zinc-300">
+            <span className="font-normal text-neutral-700 dark:text-neutral-300">
               {lecturers.size == 1
                 ? TRANSLATIONS[language].lecturer
                 : TRANSLATIONS[language].lecturers}
               :{" "}
               <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
                 {lecturers.size
-                  ? Array.from(lecturers).join(", ")
+                  ? <span className={"dark:text-neutral-100 text-neutral-800"}>{Array.from(lecturers).join(", ")}</span>
                   : TRANSLATIONS[language].unknown}
               </span>
             </span>
@@ -88,7 +88,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
               icon={
                 <LucideUsers
                   size={15}
-                  className="text-zinc-600 dark:text-zinc-300"
+                  className="text-neutral-600 dark:text-neutral-300"
                 />
               }
               label={selectedGroupsLabel}
@@ -105,7 +105,7 @@ const Semester = forwardRef<HTMLDivElement, SemesterProps>(
               icon={
                 <LucidePencil
                   size={15}
-                  className="text-zinc-600 dark:text-zinc-300"
+                  className="text-neutral-600 dark:text-neutral-300"
                 />
               }
               label={selectedMoedsLabel}

@@ -58,11 +58,11 @@ const CourseSelectionHeader = ({
           <DrawerTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-zinc-50 snap-start snap-normal dark:bg-zinc-900 border"}
+              className={"bg-neutral-50 snap-start snap-normal dark:bg-neutral-900 border"}
               disabled={isLoading}
             >
               <LucideBookPlus
-                className={"text-zinc-500 dark:text-zinc-400"}
+                className={"text-neutral-500 dark:text-neutral-400"}
                 size={14}
               />
               {TRANSLATIONS[language].edit_courses}
@@ -70,7 +70,7 @@ const CourseSelectionHeader = ({
           </DrawerTrigger>
           <DrawerContent
             className={cn(
-              "fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
+              "fixed flex flex-col bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
               language === "ar" && ibmPlexSansArabic.className,
             )}
             dir={dir(language)}
@@ -99,11 +99,11 @@ const CourseSelectionHeader = ({
           <DialogTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-zinc-50 dark:bg-zinc-900 border snap-start snap-normal"}
+              className={"bg-neutral-50 dark:bg-neutral-900 border snap-start snap-normal"}
               disabled={isLoading}
             >
               <LucideBookPlus
-                className={"text-zinc-500 dark:text-zinc-400"}
+                className={"text-neutral-500 dark:text-neutral-400"}
                 size={14}
               />
               {TRANSLATIONS[language].edit_courses}
@@ -126,7 +126,7 @@ const CourseSelectionHeader = ({
               <span className={"text-xl font-bold select-none"}>
                 {TRANSLATIONS[language].edit_courses}
                 {selectedCourses?.length > 0 && (
-                  <span className={"text-zinc-500 dark:text-zinc-400"}>
+                  <span className={"text-neutral-500 dark:text-neutral-400"}>
                     {" "}
                     ({selectedCourses.length})
                   </span>
@@ -149,7 +149,7 @@ const CourseSelectionHeader = ({
       {!selectedCourses?.length && (
         <span
           className={
-            "min-w-fit text-sm h-9 mx-1 text-zinc-500 dark:text-zinc-400 select-none flex flex-row items-center"
+            "min-w-fit text-sm h-9 mx-1 text-neutral-500 dark:text-neutral-400 select-none flex flex-row items-center"
           }
         >
           {TRANSLATIONS[language].selected_courses_will_appear_here}

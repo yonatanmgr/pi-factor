@@ -21,7 +21,7 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow-sm enabled:hover:bg-primary/90",
         outlined:
-          "border border-input bg-zinc-50 dark:bg-zinc-800/70 enabled:hover:bg-white enabled:active:bg-zinc-100 enabled:dark:hover:bg-zinc-700/40 enabled:dark:active:bg-zinc-700/50 enabled:hover:text-accent-foreground shadow-xs",
+          "border border-input bg-neutral-50 dark:bg-neutral-800/70 enabled:hover:bg-white enabled:active:bg-neutral-100 enabled:dark:hover:bg-neutral-700/40 enabled:dark:active:bg-neutral-700/50 enabled:hover:text-accent-foreground shadow-xs",
         destructive:
           "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
         outline:
@@ -29,7 +29,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost:
-          "hover:border-input enabled:hover:bg-zinc-200 enabled:active:bg-zinc-300 enabled:dark:hover:bg-zinc-700/30 enabled:dark:active:bg-zinc-700/40 enabled:hover:text-accent-foreground shadow-xs",
+          "hover:border-input enabled:hover:bg-neutral-200 enabled:active:bg-neutral-300 enabled:dark:hover:bg-neutral-700/30 enabled:dark:active:bg-neutral-700/40 enabled:hover:text-accent-foreground shadow-xs",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

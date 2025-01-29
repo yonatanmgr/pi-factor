@@ -65,7 +65,7 @@ const MainSection = ({
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-xl bg-zinc-100 dark:bg-zinc-900/30 dark:border-zinc-500/20 border"
+        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-xl bg-neutral-100 dark:bg-neutral-900/30 dark:border-neutral-500/20 border"
       }
     >
       <CourseSelectionHeader
@@ -81,13 +81,13 @@ const MainSection = ({
       />
       <section
         className={
-          "grow rounded-md w-full bg-zinc-50 dark:bg-zinc-900 border overflow-hidden"
+          "grow rounded-md w-full bg-linear-to-t from-neutral-50/30 to-neutral-50 dark:from-neutral-900/30 dark:to-neutral-900 border overflow-hidden"
         }
       >
         {!selectedCourses?.length && (
           <div
             className={
-              "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
+              "w-full h-full text-lg px-10 text-center text-neutral-400 select-none flex flex-row items-center justify-center"
             }
           >
             {TRANSLATIONS[language].select_courses}
@@ -96,7 +96,7 @@ const MainSection = ({
         {selectedCourses.length > 0 && selectedTab < 0 && (
           <div
             className={
-              "w-full h-full text-lg px-10 text-center text-zinc-400 select-none flex flex-row items-center justify-center"
+              "w-full h-full text-lg px-10 text-center text-neutral-400 select-none flex flex-row items-center justify-center"
             }
           >
             {TRANSLATIONS[language].chart_placeholder}
@@ -134,7 +134,7 @@ const MainSection = ({
               </span>
             </span>
             <div
-              className={"w-full h-px bg-zinc-300/50 dark:bg-zinc-500/40 my-2"}
+              className={"w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"}
             ></div>
             <div className={"grow h-full w-full overflow-auto"}>
               <GradeChart data={currentCourseGrades} courseId={selectedCourse.id ?? ""}/>
@@ -149,7 +149,7 @@ const MainSection = ({
                 <DrawerTrigger asChild>
                   <Button className={"w-full"} disabled={isLoading}>
                     <LucideListFilter
-                      className={"text-zinc-300 dark:text-zinc-400"}
+                      className={"text-neutral-300 dark:text-neutral-400"}
                       size={14}
                     />
                     {TRANSLATIONS[language].dates_filter}
@@ -157,7 +157,7 @@ const MainSection = ({
                 </DrawerTrigger>
                 <DrawerContent
                   className={cn(
-                    "fixed flex flex-col bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
+                    "fixed flex flex-col bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
                     language === "ar" && ibmPlexSansArabic.className,
                   )}
                   dir={dir(language)}

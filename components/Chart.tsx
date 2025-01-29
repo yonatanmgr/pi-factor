@@ -97,14 +97,18 @@ export function GradeChart({ data, courseId }: ChartProps) {
   const isMobile = width < 640;
   const { language } = useSettings();
 
-  const [barKeys, setBarKeys] = useState<Set<{ key: string; label: string }>>(
-    new Set(),
-  );
+  const [barKeys, setBarKeys] = useState<
+    Set<{ key: string; label: string; gradeRange?: string }>
+  >(new Set());
 
   const preprocessedData = useMemo(() => {
     if (!data) return {};
     const preprocessed: { [key: string]: number[] } = {};
-    const newBarKeys = new Set<{ key: string; label: string }>();
+    const newBarKeys = new Set<{
+      key: string;
+      label: string;
+      gradeRange?: string;
+    }>();
 
     Object.keys(data).forEach((semester) => {
       Object.keys(data[semester] ?? {}).forEach((groupKey) => {
@@ -140,8 +144,10 @@ export function GradeChart({ data, courseId }: ChartProps) {
           visibleGroups[courseId + ":" + group] &&
           preprocessedData[key][index] !== undefined
         ) {
-          // @ts-ignore
-          entry[key] = (entry[key] || 0) + preprocessedData[key][index];
+          if (preprocessedData[key][index]) {
+            // @ts-ignore
+            entry[key] = (entry[key] || 0) + preprocessedData[key][index];
+          }
         }
       });
       return entry;
@@ -176,6 +182,31 @@ export function GradeChart({ data, courseId }: ChartProps) {
     }, {});
   });
 
+  // const barKeysWithGradeRange = new Set<{
+  //   key: string;
+  //   label: string;
+  //   gradeRange: string;
+  // }>();
+  //
+  // Object.values(chartData).map((entry) => {
+  //   const gradeRange = entry.gradeRange as string;
+  //   Object.keys(entry).map((key) => {
+  //     if (key !== "gradeRange") {
+  //       barKeysWithGradeRange.add({
+  //         key: key,
+  //         label: Array.from(barKeys).find((b) => b.key == key)?.label ?? "",
+  //         gradeRange: gradeRange,
+  //       });
+  //     }
+  //   });
+  // });
+
+  // const keysOnTop = chartData
+  //   .filter((e) => Object.keys(e).length > 1)
+  //   .map((entry) => {
+  //     return last(Object.keys(entry).filter((key) => key !== "gradeRange"));
+  //   });
+
   return (
     <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
       <BarChart accessibilityLayer data={dataAsPercentage}>
@@ -184,15 +215,21 @@ export function GradeChart({ data, courseId }: ChartProps) {
           dataKey="gradeRange"
           tickLine={false}
           tickMargin={8}
-          axisLine={false}
+          // axisLine={false}
           angle={isMobile ? -25 : 0}
           interval={0}
         />
         <YAxis unit={"%"} tickLine={false} tickMargin={25} axisLine={false} />
         <ChartTooltip
+          // isAnimationActive={false}
+          animationEasing={"ease-in-out"}
+          animationDuration={100}
           trigger={isMobile ? "click" : "hover"}
           content={
             <ChartTooltipContent
+              className={
+                "bg-neutral-50/70 dark:bg-neutral-900/70 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 p-2 rounded-md"
+              }
               formatter={(v, n, i) => {
                 return (
                   <div className={"flex flex-row gap-1 items-center w-full"}>
@@ -210,7 +247,9 @@ export function GradeChart({ data, courseId }: ChartProps) {
                           } as React.CSSProperties
                         }
                       />
-                      <span className={"text-zinc-700 dark:text-zinc-200"}>
+                      <span
+                        className={"text-neutral-700 dark:text-neutral-200"}
+                      >
                         {n}
                       </span>
                     </section>
@@ -237,6 +276,12 @@ export function GradeChart({ data, courseId }: ChartProps) {
             key={key.split(":")[1]}
             isAnimationActive={false}
             unit={"%"}
+            // radius={[
+            //   key == keysOnTop[0] ? 8 : 0,
+            //   key == keysOnTop[0] ? 8 : 0,
+            //   0,
+            //   0,
+            // ]}
             dataKey={key}
             stackId="a"
             fill={textToRGB(key)}

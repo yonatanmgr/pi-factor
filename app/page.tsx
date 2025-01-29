@@ -149,7 +149,7 @@ export default function Home() {
     <main
       dir={dir(language)}
       className={cn(
-        "flex overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between",
+        "flex bg-linear-to-t from-white/30 to-white dark:from-neutral-950/30 dark:to-neutral-950 overflow-hidden flex-col gap-4 p-4 items-center h-[100dvh] min-h-[100dvh] max-h-[100dvh] justify-between",
         language === "ar" && ibmPlexSansArabic.className,
       )}
     >

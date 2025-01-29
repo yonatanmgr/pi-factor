@@ -36,7 +36,7 @@ const CourseList = ({
       />
       <section className={"flex flex-row gap-2 w-full items-center"}>
         <Button
-          className={"bg-zinc-50 dark:bg-zinc-900 border w-full"}
+          className={"bg-neutral-50 dark:bg-neutral-900 border w-full"}
           variant={"outlined"}
           disabled={!selectedCourses?.length}
           onClick={() => {
@@ -51,7 +51,7 @@ const CourseList = ({
         </Button>
         <DrawerClose asChild>
           <Button
-            className={"bg-zinc-50 dark:bg-zinc-900 border w-full"}
+            className={"bg-neutral-50 dark:bg-neutral-900 border w-full"}
             variant={"outlined"}
             disabled={!selectedCourses?.length}
           >
