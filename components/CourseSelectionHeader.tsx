@@ -1,7 +1,7 @@
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { LucideBookPlus, LucideX } from "lucide-react";
-import { cn, dir } from "@/lib/utils";
+import { cn, dir } from "@/lib/utils/utils";
 import {
   Dialog,
   DialogContent,

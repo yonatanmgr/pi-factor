@@ -4,7 +4,7 @@ import { CheckboxDropdown } from "@/components/CheckboxDropdown";
 import { LucidePencil, LucideUsers } from "lucide-react";
 import { TRANSLATIONS } from "@/lib/constants";
 import { motion } from "motion/react";
-import { cn, getAllGroups, getMoedsList } from "@/lib/utils";
+import { cn, getAllGroups, getMoedsList } from "@/lib/utils/utils";
 import { ibmPlexSansHebrew } from "@/lib/fonts";
 import { useSemesterData } from "@/lib/hooks/useSemesterData";
 import { useCourseFilters, useSettings } from "@/lib/store";

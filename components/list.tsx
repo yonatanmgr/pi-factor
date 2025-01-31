@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual";
 import { AllTimeCourseInfo, AllTimeCourses } from "@/lib/types";
 import Spinner from "@/components/ui/Spinner";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import {
   ChevronDown,
   ChevronLeft,

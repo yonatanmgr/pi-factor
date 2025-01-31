@@ -14,7 +14,7 @@ import {
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
 import { useWindowSize } from "usehooks-ts";
 import { useSettings } from "@/lib/store";
-import { cn, dir } from "@/lib/utils";
+import { cn, dir } from "@/lib/utils/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,

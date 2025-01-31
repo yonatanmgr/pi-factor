@@ -13,7 +13,7 @@ import { SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters, useSettings } from "@/lib/store";
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { dir, getMoedsList, getSemesterName } from "@/lib/utils";
+import { dir, getMoedsList, getSemesterName } from "@/lib/utils/utils";
 import { TRANSLATIONS } from "@/lib/constants";
 
 const GRADE_LABELS = [

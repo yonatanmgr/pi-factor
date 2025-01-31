@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSettings } from "@/lib/store";
-import { cn, dir } from "@/lib/utils";
+import { cn, dir } from "@/lib/utils/utils";
 import { ibmPlexSansArabic } from "@/lib/fonts";
 
 export type Checked = DropdownMenuCheckboxItemProps["checked"];

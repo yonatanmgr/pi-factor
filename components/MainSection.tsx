@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { cn, dir, first } from "@/lib/utils";
+import { cn, dir, first } from "@/lib/utils/utils";
 import { LucideListFilter } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
 import React, { useState } from "react";

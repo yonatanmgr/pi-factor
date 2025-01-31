@@ -1,7 +1,7 @@
 import { LucideListFilter, LucideTrash } from "lucide-react";
 import { TRANSLATIONS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { AnimatePresence } from "motion/react";
 import Semester from "@/components/Semester";
 import React, { useState } from "react";

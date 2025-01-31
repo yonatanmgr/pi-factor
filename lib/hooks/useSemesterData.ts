@@ -3,7 +3,7 @@ import useSWRImmutable from "swr/immutable";
 import { fetcher } from "@/lib/api";
 import { Language, SemesterCourses, SemesterGroupGradeInfo } from "@/lib/types";
 import { TRANSLATIONS } from "@/lib/constants";
-import { getMoedsList, getSemesterName } from "@/lib/utils";
+import { getMoedsList, getSemesterName } from "@/lib/utils/utils";
 import { Checked } from "@/components/CheckboxDropdown";
 
 export function extractSemesterSearchData(
