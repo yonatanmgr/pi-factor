@@ -23,7 +23,7 @@ export type Database = {
           extensions?: Json
         }
         Returns: Json
-      }
+      },
     }
     Enums: {
       [_ in never]: never
