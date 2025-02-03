@@ -78,17 +78,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export const textToRGB = (text: string) => {
-  let hash = 0;
-  text.split("").forEach((char: string) => {
-    hash = char.charCodeAt(0) + ((hash << 5) - hash);
-  });
-  let colour = "#";
-  for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xff;
-    colour += value.toString(16).padStart(2, "0");
-  }
-  return colour;
+export const textToHSL = (text: string) => {
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) {
+      hash = text.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = hash % 360;
+    return `hsl(${h}, 55%, 55%)`;
 };
 
 export function GradeChart({ data, courseId }: ChartProps) {
@@ -154,62 +150,37 @@ export function GradeChart({ data, courseId }: ChartProps) {
     });
   }, [courseId, groupsKeys, moedsKeys, language]);
 
-  if (!data) {
-    return null;
-  }
-
-  const totalPerGradeRange = chartData.reduce((acc, curr) => {
-    const total = Object.values(curr).reduce((acc: number, curr) => {
-      if (typeof curr === "number") {
-        return acc + (curr as number);
-      }
-      return acc;
-    }, 0);
-    return { ...acc, [curr.gradeRange]: total };
-  }, {}) as { [key: string]: number };
-
-  const grandTotal: number = Object.values(totalPerGradeRange).reduce(
-    (acc: number, curr: number) => acc + curr,
-    0,
-  );
+  const totalStudentsPerMoed = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(preprocessedData).map(([key, value]) => {
+        return [key, value.reduce((acc, curr) => acc + curr, 0)];
+      }),
+    );
+  }, [preprocessedData]);
 
   const dataAsPercentage = chartData.map((entry) => {
     return Object.keys(entry).reduce((acc, key) => {
       if (key === "gradeRange") {
         return { ...acc, gradeRange: entry.gradeRange };
       }
-      return { ...acc, [key]: ((entry[key] as number) / grandTotal) * 100 };
+      return { ...acc, [key]: ((entry[key] as number) / totalStudentsPerMoed[key]) * 100 };
     }, {});
   });
 
-  // const barKeysWithGradeRange = new Set<{
-  //   key: string;
-  //   label: string;
-  //   gradeRange: string;
-  // }>();
-  //
-  // Object.values(chartData).map((entry) => {
-  //   const gradeRange = entry.gradeRange as string;
-  //   Object.keys(entry).map((key) => {
-  //     if (key !== "gradeRange") {
-  //       barKeysWithGradeRange.add({
-  //         key: key,
-  //         label: Array.from(barKeys).find((b) => b.key == key)?.label ?? "",
-  //         gradeRange: gradeRange,
-  //       });
-  //     }
-  //   });
-  // });
+  const barKeysValues = barKeys.values();
+  const barKeysInData = Array.from(barKeysValues).filter(
+    (b) => Array.from(chartData.map(c => Object.keys(c))).flat().includes(b.key),
+  );
+  console.log(barKeysInData)
+  const newBarKeys = new Set(barKeysInData);
 
-  // const keysOnTop = chartData
-  //   .filter((e) => Object.keys(e).length > 1)
-  //   .map((entry) => {
-  //     return last(Object.keys(entry).filter((key) => key !== "gradeRange"));
-  //   });
+  if (!data) {
+    return <></>;
+  }
 
   return (
     <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
-      <BarChart accessibilityLayer data={dataAsPercentage}>
+      <BarChart accessibilityLayer data={dataAsPercentage.filter(d => Object.keys(d).length > 1)}>
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="gradeRange"
@@ -270,21 +241,18 @@ export function GradeChart({ data, courseId }: ChartProps) {
             />
           }
         />
-        {Array.from(barKeys).map(({ key, label }) => (
+        {Array.from(newBarKeys).map(({ key, label }) => (
           <Bar
             name={label}
             key={key.split(":")[1]}
-            isAnimationActive={false}
             unit={"%"}
-            // radius={[
-            //   key == keysOnTop[0] ? 8 : 0,
-            //   key == keysOnTop[0] ? 8 : 0,
-            //   0,
-            //   0,
-            // ]}
+            radius={[4, 4, 0, 0]}
             dataKey={key}
-            stackId="a"
-            fill={textToRGB(key)}
+            stackId={label}
+            fill={textToHSL(key)}
+            onClick={(e) => {
+              console.log(e);}
+            }
           />
         ))}
       </BarChart>
