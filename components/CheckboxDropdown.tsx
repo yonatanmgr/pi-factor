@@ -22,9 +22,10 @@ interface Props {
   icon?: React.ReactNode;
   items: { label: string; value: string; checked: Checked }[];
   onSelect: (label: string, checked: Checked) => void;
+    className?: string;
 }
 
-export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
+export function CheckboxDropdown({ label, icon, items, onSelect, className }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
   const { language } = useSettings();
 
@@ -34,7 +35,7 @@ export function CheckboxDropdown({ label, icon, items, onSelect }: Props) {
         <Button
           triggerclassname={"w-full"}
           onClick={() => setIsOpen(!isOpen)}
-          className={"w-full flex flex-row gap-2 items-center"}
+          className={cn("w-full flex flex-row gap-2 items-center", className)}
           variant="outlined"
         >
           {icon ? icon : null}

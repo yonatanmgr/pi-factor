@@ -45,6 +45,9 @@ export const TRANSLATIONS = {
     light_mode: "Light Mode",
     save_selection: "Save Selection",
     search_exam: "Search by semester or lecturer...",
+    show_in_stacked: "Show stacked",
+    show_in_grouped: "Show grouped",
+    no_semesters_match: "No semesters match the search",
   },
   he: {
     language: "שפה",
@@ -86,6 +89,9 @@ export const TRANSLATIONS = {
     light_mode: "מצב יום",
     save_selection: "שמור בחירה",
     search_exam: "חפשו סמסטר או שם מרצה...",
+    show_in_stacked: "הצג בערימה",
+    show_in_grouped: "הצג בקבוצות",
+    no_semesters_match: "אין סמסטרים התואמים לחיפוש",
   },
   ar: {
     language: "اللغة",
@@ -127,5 +133,8 @@ export const TRANSLATIONS = {
     light_mode: "الوضع النهاري",
     save_selection: "حفظ الاختيار",
     search_exam: "ابحث بالفصل الدراسي أو اسم المحاضر...",
+    show_in_stacked: "عرض مكدس",
+    show_in_grouped: "عرض مجمع",
+    no_semesters_match: "لا توجد فصول دراسية تطابق البحث",
   },
 };

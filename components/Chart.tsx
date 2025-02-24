@@ -32,14 +32,15 @@ const GRADE_LABELS = [
 
 interface ChartProps {
   data:
-    | {
-        [semester: string]:
-          | { [group: string]: SemesterGroupGradeInfo[] | undefined }
-          | undefined;
-      }
-    | null
-    | undefined;
+      | {
+    [semester: string]:
+        | { [group: string]: SemesterGroupGradeInfo[] | undefined }
+        | undefined;
+  }
+      | null
+      | undefined;
   courseId: string;
+  view: "stacked" | "grouped";
 }
 
 const chartConfig = {
@@ -79,22 +80,22 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const textToHSL = (text: string) => {
-    let hash = 0;
-    for (let i = 0; i < text.length; i++) {
-      hash = text.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const h = hash % 360;
-    return `hsl(${h}, 55%, 55%)`;
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = text.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = hash % 360;
+  return `hsl(${h}, 55%, 55%)`;
 };
 
-export function GradeChart({ data, courseId }: ChartProps) {
+export function GradeChart({ data, courseId, view }: ChartProps) {
   const { visibleGroups, visibleMoeds } = useCourseFilters();
   const { width } = useWindowSize();
   const isMobile = width < 640;
   const { language } = useSettings();
 
   const [barKeys, setBarKeys] = useState<
-    Set<{ key: string; label: string; gradeRange?: string }>
+      Set<{ key: string; label: string; gradeRange?: string }>
   >(new Set());
 
   const preprocessedData = useMemo(() => {
@@ -136,9 +137,9 @@ export function GradeChart({ data, courseId }: ChartProps) {
         const moed = key.split(":")[1].split("-")[0];
         const group = key.split(":")[1].split("-")[1];
         if (
-          visibleMoeds[courseId + ":" + moed] &&
-          visibleGroups[courseId + ":" + group] &&
-          preprocessedData[key][index] !== undefined
+            visibleMoeds[courseId + ":" + moed] &&
+            visibleGroups[courseId + ":" + group] &&
+            preprocessedData[key][index] !== undefined
         ) {
           if (preprocessedData[key][index]) {
             // @ts-ignore
@@ -152,26 +153,42 @@ export function GradeChart({ data, courseId }: ChartProps) {
 
   const totalStudentsPerMoed = useMemo(() => {
     return Object.fromEntries(
-      Object.entries(preprocessedData).map(([key, value]) => {
-        return [key, value.reduce((acc, curr) => acc + curr, 0)];
-      }),
+        Object.entries(preprocessedData).map(([key, value]) => {
+          return [key, value.reduce((acc, curr) => acc + curr, 0)];
+        }),
     );
   }, [preprocessedData]);
+
+  const totalPerGradeRange = chartData.reduce((acc, curr) => {
+    const total = Object.values(curr).reduce((acc: number, curr) => {
+      if (typeof curr === "number") {
+        return acc + (curr as number);
+      }
+      return acc;
+    }, 0);
+    return { ...acc, [curr.gradeRange]: total };
+  }, {}) as { [key: string]: number };
+
+  const grandTotal: number = Object.values(totalPerGradeRange).reduce(
+      (acc: number, curr: number) => acc + curr,
+      0,
+  );
 
   const dataAsPercentage = chartData.map((entry) => {
     return Object.keys(entry).reduce((acc, key) => {
       if (key === "gradeRange") {
         return { ...acc, gradeRange: entry.gradeRange };
       }
-      return { ...acc, [key]: ((entry[key] as number) / totalStudentsPerMoed[key]) * 100 };
+      const total = view === "grouped" ? totalStudentsPerMoed[key] : grandTotal;
+      return { ...acc, [key]: ((entry[key] as number) / total) * 100 };
     }, {});
   });
 
   const barKeysValues = barKeys.values();
   const barKeysInData = Array.from(barKeysValues).filter(
-    (b) => Array.from(chartData.map(c => Object.keys(c))).flat().includes(b.key),
+      (b) => Array.from(chartData.map(c => Object.keys(c))).flat().includes(b.key),
   );
-  console.log(barKeysInData)
+
   const newBarKeys = new Set(barKeysInData);
 
   if (!data) {
@@ -179,83 +196,76 @@ export function GradeChart({ data, courseId }: ChartProps) {
   }
 
   return (
-    <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
-      <BarChart accessibilityLayer data={dataAsPercentage.filter(d => Object.keys(d).length > 1)}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="gradeRange"
-          tickLine={false}
-          tickMargin={8}
-          // axisLine={false}
-          angle={isMobile ? -25 : 0}
-          interval={0}
-        />
-        <YAxis unit={"%"} tickLine={false} tickMargin={25} axisLine={false} />
-        <ChartTooltip
-          // isAnimationActive={false}
-          animationEasing={"ease-in-out"}
-          animationDuration={100}
-          trigger={isMobile ? "click" : "hover"}
-          content={
-            <ChartTooltipContent
-              className={
-                "bg-neutral-50/70 dark:bg-neutral-900/70 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 p-2 rounded-md"
-              }
-              formatter={(v, n, i) => {
-                return (
-                  <div className={"flex flex-row gap-1 items-center w-full"}>
-                    <section
-                      className={"flex flex-row gap-1.5 items-center grow"}
-                    >
-                      <div
-                        className={
-                          "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5 mt-[1px]"
-                        }
-                        style={
-                          {
-                            "--color-bg": i.color,
-                            "--color-border": i.color,
-                          } as React.CSSProperties
-                        }
-                      />
-                      <span
-                        className={"text-neutral-700 dark:text-neutral-200"}
-                      >
-                        {n}
-                      </span>
-                    </section>
-                    <span className={"font-mono font-bold pl-1"}>
-                      {parseFloat(v.toString()).toFixed(2)}%
-                    </span>
-                  </div>
-                );
-              }}
-              labelFormatter={(v) => (
-                <span>
-                  {TRANSLATIONS[language].grade_range}:{" "}
-                  <span className={"font-bold"}>{v}</span>
-                </span>
-              )}
-              dir={dir(language)}
-              nameKey={"label"}
-            />
-          }
-        />
-        {Array.from(newBarKeys).map(({ key, label }) => (
-          <Bar
-            name={label}
-            key={key.split(":")[1]}
-            unit={"%"}
-            radius={[4, 4, 0, 0]}
-            dataKey={key}
-            stackId={label}
-            fill={textToHSL(key)}
-            onClick={(e) => {
-              console.log(e);}
-            }
+      <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
+        <BarChart accessibilityLayer data={dataAsPercentage.filter(d => Object.keys(d).length > 1)}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+              dataKey="gradeRange"
+              tickLine={false}
+              tickMargin={8}
+              angle={isMobile ? -25 : 0}
+              interval={0}
           />
-        ))}
-      </BarChart>
-    </ChartContainer>
+          <YAxis unit={"%"} tickLine={false} tickMargin={25} axisLine={false} />
+          <ChartTooltip
+              animationEasing={"ease-in-out"}
+              animationDuration={100}
+              trigger={isMobile ? "click" : "hover"}
+              content={
+                <ChartTooltipContent
+                    className={
+                      "bg-neutral-50/70 dark:bg-neutral-900/70 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 p-2 rounded-md"
+                    }
+                    formatter={(v, n, i) => (
+                        <div className={"flex flex-row gap-1 items-center w-full"}>
+                          <section
+                              className={"flex flex-row gap-1.5 items-center grow"}
+                          >
+                            <div
+                                className={
+                                  "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5 mt-[1px]"
+                                }
+                                style={
+                                  {
+                                    "--color-bg": i.color,
+                                    "--color-border": i.color,
+                                  } as React.CSSProperties
+                                }
+                            />
+                            <span
+                                className={"text-neutral-700 dark:text-neutral-200"}
+                            >
+                      {n}
+                    </span>
+                          </section>
+                          <span className={"font-mono font-bold pl-1"}>
+                    {parseFloat(v.toString()).toFixed(2)}%
+                  </span>
+                        </div>
+                    )}
+                    labelFormatter={(v) => (
+                        <span>
+                  {TRANSLATIONS[language].grade_range}:{" "}
+                          <span className={"font-bold"}>{v}</span>
+                </span>
+                    )}
+                    dir={dir(language)}
+                    nameKey={"label"}
+                />
+              }
+          />
+          {Array.from(newBarKeys).map(({ key, label }) => (
+              <Bar
+                  name={label}
+                  key={key.split(":")[1]}
+                  unit={"%"}
+                  radius={view === "grouped" ? [4, 4, 0, 0] : 0}
+                  dataKey={key}
+                  stackId={view === "stacked" ? "a" : label}
+                  fill={textToHSL(key)}
+              />
+          ))}
+        </BarChart>
+      </ChartContainer>
   );
 }

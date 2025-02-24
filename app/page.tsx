@@ -42,6 +42,11 @@ export default function Home() {
     localStorageKey: "pi-factor-theme",
   });
 
+  const handleLanguageChange = (value: string) => {
+    localStorage.setItem("language", value);
+    setLanguage(value as Language);
+  }
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
@@ -87,10 +92,6 @@ export default function Home() {
       localStorage.setItem("language", "he");
     }
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("language", language);
-  }, [language]);
 
   const [selectedTab, setSelectedTab] = useState<number>(-1);
 
@@ -178,7 +179,7 @@ export default function Home() {
               <DropdownMenuRadioGroup
                 dir={dir(language)}
                 value={language}
-                onValueChange={setLanguage as (value: string) => void}
+                onValueChange={handleLanguageChange}
               >
                 <DropdownMenuRadioItem
                   className={ibmPlexSansHebrew.className}

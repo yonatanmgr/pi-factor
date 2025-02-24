@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { cn, dir, first } from "@/lib/utils/utils";
-import { LucideListFilter } from "lucide-react";
+import {
+  LucideChartColumnIncreasing,
+  LucideChartColumnStacked,
+  LucideListFilter,
+} from "lucide-react";
 import { GradeChart } from "@/components/Chart";
 import React, { useState } from "react";
 import {
@@ -11,10 +15,7 @@ import {
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useSettings } from "@/lib/store";
 import { useWindowSize } from "usehooks-ts";
-import {
-  snapPoints,
-  TRANSLATIONS,
-} from "@/lib/constants";
+import { snapPoints, TRANSLATIONS } from "@/lib/constants";
 import CourseSelectionHeader from "@/components/CourseSelectionHeader";
 import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 import ExamsList from "@/components/ExamsList";
@@ -61,6 +62,7 @@ const MainSection = ({
   useResetExams(selectedCourse);
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
+  const [view, setView] = useState<"stacked" | "grouped">("stacked");
 
   return (
     <section
@@ -105,8 +107,36 @@ const MainSection = ({
         {selectedCourses.length > 0 && selectedTab > -1 && selectedCourse && (
           <div
             dir={dir(language)}
-            className={"px-4 py-3 h-full flex flex-col gap-2 max-h-full"}
+            className={
+              "px-4 py-3 h-full flex flex-col relative gap-2 max-h-full"
+            }
           >
+            <Button
+              variant={"ghost"}
+              onClick={() =>
+                setView(view === "stacked" ? "grouped" : "stacked")
+              }
+              className={
+                "absolute top-2 shadow-none max-sm:hidden rtl:left-2 ltr:right-2"
+              }
+            >
+              {
+                {
+                  grouped: (
+                    <>
+                      <LucideChartColumnStacked size={14} />
+                      {TRANSLATIONS[language].show_in_stacked}
+                    </>
+                  ),
+                  stacked: (
+                    <>
+                      <LucideChartColumnIncreasing size={14} />
+                        {TRANSLATIONS[language].show_in_grouped}
+                    </>
+                  ),
+                }[view]
+              }
+            </Button>
             <a
               target={"_blank"}
               rel={"noreferrer"}
@@ -133,51 +163,93 @@ const MainSection = ({
                 {selectedCourse?.faculty}
               </span>
             </span>
+
             <div
-              className={"w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"}
+              className={
+                "w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"
+              }
             ></div>
             <div className={"grow h-full w-full overflow-auto"}>
-              <GradeChart data={currentCourseGrades} courseId={selectedCourse.id ?? ""}/>
+              <GradeChart
+                view={view}
+                data={currentCourseGrades}
+                courseId={selectedCourse.id ?? ""}
+              />
             </div>
             {isMobile && (
-              <Drawer
-                snapPoints={snapPoints as (number | string)[]}
-                activeSnapPoint={snap}
-                setActiveSnapPoint={setSnap}
-                fadeFromIndex={0}
+              <section
+                className={
+                  "flex flex-row gap-2 items-center w-full justify-between"
+                }
               >
-                <DrawerTrigger asChild>
-                  <Button className={"w-full"} disabled={isLoading}>
-                    <LucideListFilter
-                      className={"text-neutral-300 dark:text-neutral-400"}
-                      size={14}
-                    />
-                    {TRANSLATIONS[language].dates_filter}
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent
-                  className={cn(
-                    "fixed flex flex-col bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
-                    language === "ar" && ibmPlexSansArabic.className,
-                  )}
-                  dir={dir(language)}
+                <Drawer
+                  snapPoints={snapPoints as (number | string)[]}
+                  activeSnapPoint={snap}
+                  setActiveSnapPoint={setSnap}
+                  fadeFromIndex={0}
                 >
-                  <div
+                  <DrawerTrigger asChild>
+                    <Button className={"w-full"} disabled={isLoading}>
+                      <LucideListFilter
+                        className={"text-neutral-300 dark:text-neutral-600"}
+                        size={14}
+                      />
+                      {TRANSLATIONS[language].dates_filter}
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent
                     className={cn(
-                      "flex flex-col max-w-md mx-auto gap-4 w-full p-4 pt-5",
-                      {
-                        "overflow-y-auto": snap === 1,
-                        "overflow-hidden": snap !== 1,
-                      },
+                      "fixed flex flex-col bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-700 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]",
+                      language === "ar" && ibmPlexSansArabic.className,
                     )}
+                    dir={dir(language)}
                   >
-                    <ExamsList
-                      selectedCourse={selectedCourse}
-                      currentCourseGrades={currentCourseGrades}
-                    />
-                  </div>
-                </DrawerContent>
-              </Drawer>
+                    <div
+                      className={cn(
+                        "flex flex-col max-w-md mx-auto gap-4 w-full p-4 pt-5",
+                        {
+                          "overflow-y-auto": snap === 1,
+                          "overflow-hidden": snap !== 1,
+                        },
+                      )}
+                    >
+                      <ExamsList
+                        selectedCourse={selectedCourse}
+                        currentCourseGrades={currentCourseGrades}
+                      />
+                    </div>
+                  </DrawerContent>
+                </Drawer>
+                <Button
+                  onClick={() =>
+                    setView(view === "stacked" ? "grouped" : "stacked")
+                  }
+                  className={"w-full"}
+                >
+                  {
+                    {
+                      stacked: (
+                        <>
+                          <LucideChartColumnStacked
+                            className={"text-neutral-300 dark:text-neutral-600"}
+                            size={14}
+                          />
+                          הצג בערימה
+                        </>
+                      ),
+                      grouped: (
+                        <>
+                          <LucideChartColumnIncreasing
+                            className={"text-neutral-300 dark:text-neutral-600"}
+                            size={14}
+                          />
+                          הצג בקבוצות
+                        </>
+                      ),
+                    }[view]
+                  }
+                </Button>
+              </section>
             )}
           </div>
         )}

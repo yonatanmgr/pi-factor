@@ -6,7 +6,7 @@ import { AnimatePresence } from "motion/react";
 import Semester from "@/components/Semester";
 import React, { useState } from "react";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
-import { useCourseFilters, useSettings } from "@/lib/store";
+import { useCourseFilters, useSemesters, useSettings } from "@/lib/store";
 
 interface ExamsListProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -24,6 +24,13 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
   const { visibleMoeds, clearMoeds } = useCourseFilters();
   const { language } = useSettings();
   const [search, setSearch] = useState("");
+
+  const exams = Object.entries(currentCourseGrades ?? {}).filter(
+    (o) => Object.values(o[1] ?? {}).length,
+  );
+
+  const { matchesSearch } = useSemesters();
+  const noMatches = Object.values(matchesSearch).every((v) => v == undefined || !v);
 
   if (
     selectedCourse &&
@@ -79,19 +86,20 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
             }
           >
             <AnimatePresence mode={"popLayout"}>
-              {Object.entries(currentCourseGrades ?? {})
-                .filter((o) => Object.values(o[1] ?? {}).length)
-                .map(([semester, data]) => {
-                  return (
-                    <Semester
-                      key={selectedCourse.id + semester}
-                      semester={semester}
-                      grades={data}
-                      courseId={selectedCourse.id ?? ""}
-                      searchQuery={search}
-                    />
-                  );
-                })}
+              {noMatches && (
+                <div className="flex flex-row justify-center items-center p-2 rounded-md text-neutral-500 select-none">
+                  {TRANSLATIONS[language].no_semesters_match}
+                </div>
+              )}
+              {exams.map(([semester, data]) => (
+                <Semester
+                  key={selectedCourse.id + semester}
+                  semester={semester}
+                  grades={data}
+                  courseId={selectedCourse.id ?? ""}
+                  searchQuery={search}
+                />
+              ))}
             </AnimatePresence>
           </div>
         </div>
