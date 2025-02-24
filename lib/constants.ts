@@ -1,7 +1,6 @@
 import { snapPoint } from "@/components/MainSection";
 
-export const courseListSnapPoints: snapPoint[] = ["400px", 1];
-export const snapPoints: snapPoint[] = ["355px", 1];
+export const snapPoints: snapPoint[] = [1];
 
 export const TRANSLATIONS = {
   en: {

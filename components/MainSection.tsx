@@ -164,11 +164,7 @@ const MainSection = ({
               </span>
             </span>
 
-            <div
-              className={
-                "w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"
-              }
-            ></div>
+            <div className="w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"></div>
             <div className={"grow h-full w-full overflow-auto"}>
               <GradeChart
                 view={view}
@@ -204,15 +200,7 @@ const MainSection = ({
                     )}
                     dir={dir(language)}
                   >
-                    <div
-                      className={cn(
-                        "flex flex-col max-w-md mx-auto gap-4 w-full p-4 pt-5",
-                        {
-                          "overflow-y-auto": snap === 1,
-                          "overflow-hidden": snap !== 1,
-                        },
-                      )}
-                    >
+                    <div className="flex flex-col max-w-md mx-auto gap-4 w-full p-4 pt-5 overflow-y-auto">
                       <ExamsList
                         selectedCourse={selectedCourse}
                         currentCourseGrades={currentCourseGrades}
@@ -230,13 +218,19 @@ const MainSection = ({
                     {
                       grouped: (
                         <>
-                          <LucideChartColumnStacked size={14} />
+                          <LucideChartColumnStacked
+                            size={14}
+                            className="text-neutral-300 dark:text-neutral-600"
+                          />
                           {TRANSLATIONS[language].show_in_stacked}
                         </>
                       ),
                       stacked: (
                         <>
-                          <LucideChartColumnIncreasing size={14} />
+                          <LucideChartColumnIncreasing
+                            size={14}
+                            className="text-neutral-300 dark:text-neutral-600"
+                          />
                           {TRANSLATIONS[language].show_in_grouped}
                         </>
                       ),
