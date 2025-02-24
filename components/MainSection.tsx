@@ -131,7 +131,7 @@ const MainSection = ({
                   stacked: (
                     <>
                       <LucideChartColumnIncreasing size={14} />
-                        {TRANSLATIONS[language].show_in_grouped}
+                      {TRANSLATIONS[language].show_in_grouped}
                     </>
                   ),
                 }[view]
@@ -228,22 +228,16 @@ const MainSection = ({
                 >
                   {
                     {
-                      stacked: (
-                        <>
-                          <LucideChartColumnStacked
-                            className={"text-neutral-300 dark:text-neutral-600"}
-                            size={14}
-                          />
-                          הצג בערימה
-                        </>
-                      ),
                       grouped: (
                         <>
-                          <LucideChartColumnIncreasing
-                            className={"text-neutral-300 dark:text-neutral-600"}
-                            size={14}
-                          />
-                          הצג בקבוצות
+                          <LucideChartColumnStacked size={14} />
+                          {TRANSLATIONS[language].show_in_stacked}
+                        </>
+                      ),
+                      stacked: (
+                        <>
+                          <LucideChartColumnIncreasing size={14} />
+                          {TRANSLATIONS[language].show_in_grouped}
                         </>
                       ),
                     }[view]
