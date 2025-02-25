@@ -6,20 +6,25 @@ import {
   LucideListFilter,
 } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   AllTimeCourseInfo,
   AllTimeGrades,
+  SemesterCourses,
   SemesterGroupGradeInfo,
 } from "@/lib/types";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { useSettings } from "@/lib/store";
+import { useCourseFilters, useSettings } from "@/lib/store";
 import { useWindowSize } from "usehooks-ts";
 import { snapPoints, TRANSLATIONS } from "@/lib/constants";
 import CourseSelectionHeader from "@/components/CourseSelectionHeader";
 import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 import ExamsList from "@/components/ExamsList";
 import useResetExams from "@/lib/hooks/useResetExams";
+import { fetcher } from "@/lib/api";
+import { processSemesterData } from "@/lib/hooks/useSemesterData";
+import { useSemesterCache } from "@/lib/store/SemesterCacheContext";
+import TopLecturers from "@/components/TopLecturers";
 
 interface MainSectionProps {
   selectedCourses: AllTimeCourseInfo[];
@@ -58,11 +63,68 @@ const MainSection = ({
   const { width } = useWindowSize();
   const isMobile = width < 640;
   const { language } = useSettings();
+  const { visibleGroups, visibleMoeds, setVisibility } = useCourseFilters();
+  const { semesterCache, setSemesterData } = useSemesterCache();
 
   useResetExams(selectedCourse);
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [view, setView] = useState<"stacked" | "grouped">("stacked");
+  const [isLoadingSemesters, setIsLoadingSemesters] = useState(false);
+
+  // Fetch semester data with caching
+  useEffect(() => {
+    async function fetchSemesterData() {
+      if (!selectedCourse?.semesters) return;
+      
+      setIsLoadingSemesters(true);
+      try {
+        const semestersToFetch = selectedCourse.semesters.filter(
+          semester => !semesterCache[semester]
+        );
+
+        if (semestersToFetch.length > 0) {
+          const semesterPromises = semestersToFetch.map(semester =>
+            fetch(`https://arazim-project.com/data/courses-${semester}.json`)
+              .then(res => res.json())
+              .then(data => {
+                setSemesterData(semester, data);
+                return data;
+              })
+          );
+
+          await Promise.all(semesterPromises);
+        }
+      } catch (error) {
+        console.error('Failed to fetch semester data:', error);
+      } finally {
+        setIsLoadingSemesters(false);
+      }
+    }
+
+    fetchSemesterData();
+  }, [selectedCourse?.semesters, semesterCache, setSemesterData]);
+
+  // Process semester data
+  const semesterDataResults = useMemo(() => {
+    if (!selectedCourse?.semesters) return [];
+    
+    return selectedCourse.semesters.map(semester => ({
+      semester,
+      processedData: processSemesterData(
+        semester,
+        selectedCourse.id ?? "",
+        currentCourseGrades?.[semester],
+        semesterCache[semester],
+        visibleGroups,
+        visibleMoeds,
+        language,
+        setVisibility
+      )
+    }));
+  }, [selectedCourse, currentCourseGrades, semesterCache, visibleGroups, visibleMoeds, language]);
+
+  console.log(semesterDataResults)
 
   return (
     <section
@@ -108,7 +170,7 @@ const MainSection = ({
           <div
             dir={dir(language)}
             className={
-              "px-4 py-3 h-full flex flex-col relative gap-2 max-h-full"
+              "px-4 py-3 h-full flex flex-col relative gap-1 max-h-full"
             }
           >
             <Button
@@ -165,6 +227,12 @@ const MainSection = ({
             </span>
 
             <div className="w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"></div>
+            
+            <TopLecturers
+              semesterDataResults={semesterDataResults}
+              language={language}
+            />
+
             <div className={"grow h-full w-full overflow-auto"}>
               <GradeChart
                 view={view}

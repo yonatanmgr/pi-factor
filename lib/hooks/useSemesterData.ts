@@ -55,19 +55,16 @@ interface SemesterData {
   handleMoedSelect: (moed: string, checked: Checked) => void;
 }
 
-export function useSemesterData(
+export function processSemesterData(
   semester: string,
   courseId: string,
   grades: { [group: string]: SemesterGroupGradeInfo[] | undefined } | undefined,
-): SemesterData {
-  const { visibleGroups, visibleMoeds, setVisibility } = useCourseFilters();
-  const { language } = useSettings();
-
-  const { data: semesterInfo, isValidating } = useSWRImmutable<SemesterCourses>(
-    `https://arazim-project.com/data/courses-${semester}.json`,
-    fetcher,
-  );
-
+  semesterInfo: SemesterCourses | undefined,
+  visibleGroups: Record<string, boolean>,
+  visibleMoeds: Record<string, boolean>,
+  language: Language,
+  setVisibility: (type: "group" | "moed", key: string, value: boolean) => void
+): Omit<SemesterData, 'isValidating'> {
   // Get sorted groups
   const groups = Object.keys(grades ?? {}).sort();
 
@@ -88,11 +85,10 @@ export function useSemesterData(
   ).sort();
 
   // Calculate selected moeds label
-  const selectedMoeds = Object.entries(visibleMoeds).filter(
-    (m) => m[1] && m[0].startsWith(courseId + ":" + semester),
-  ).map((m) => m[0]);
+  const selectedMoeds = Object.entries(visibleMoeds)
+    .filter((m) => m[1] && m[0].startsWith(courseId + ":" + semester))
+    .map((m) => m[0]);
 
-  // Calculate selected moeds label
   const selectedMoedsLabel =
     selectedMoeds.length === 0
       ? TRANSLATIONS[language].no_moed
@@ -113,9 +109,9 @@ export function useSemesterData(
             .join(", ");
 
   // Calculate selected groups label
-  const selectedGroups = Object.entries(visibleGroups).filter(
-    (g) => g[1] && g[0].startsWith(courseId + ":" + semester),
-  );
+  const selectedGroups = Object.entries(visibleGroups)
+    .filter((g) => g[1] && g[0].startsWith(courseId + ":" + semester));
+    
   const selectedGroupsLabel =
     selectedGroups.length === 0
       ? TRANSLATIONS[language].no_group
@@ -168,8 +164,37 @@ export function useSemesterData(
     moeds,
     selectedMoedsLabel,
     selectedGroupsLabel,
-    isValidating,
     handleGroupSelect,
     handleMoedSelect,
+  };
+}
+
+export function useSemesterData(
+  semester: string,
+  courseId: string,
+  grades: { [group: string]: SemesterGroupGradeInfo[] | undefined } | undefined,
+): SemesterData {
+  const { visibleGroups, visibleMoeds, setVisibility } = useCourseFilters();
+  const { language } = useSettings();
+
+  const { data: semesterInfo, isValidating } = useSWRImmutable<SemesterCourses>(
+    `https://arazim-project.com/data/courses-${semester}.json`,
+    fetcher,
+  );
+
+  const processedData = processSemesterData(
+    semester,
+    courseId,
+    grades,
+    semesterInfo,
+    visibleGroups,
+    visibleMoeds,
+    language,
+    setVisibility
+  );
+
+  return {
+    ...processedData,
+    isValidating,
   };
 }

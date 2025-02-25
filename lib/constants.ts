@@ -47,6 +47,7 @@ export const TRANSLATIONS = {
     show_in_stacked: "Show stacked",
     show_in_grouped: "Show grouped",
     no_semesters_match: "No semesters match the search",
+    top_lecturers: "Top Lecturers by Average Grade",
   },
   he: {
     language: "שפה",
@@ -91,6 +92,7 @@ export const TRANSLATIONS = {
     show_in_stacked: "הצג בערימה",
     show_in_grouped: "הצג בקבוצות",
     no_semesters_match: "אין סמסטרים התואמים לחיפוש",
+    top_lecturers: "מרצים מובילים לפי ציון ממוצע",
   },
   ar: {
     language: "اللغة",
@@ -135,5 +137,6 @@ export const TRANSLATIONS = {
     show_in_stacked: "عرض مكدس",
     show_in_grouped: "عرض مجمع",
     no_semesters_match: "لا توجد فصول دراسية تطابق البحث",
+    top_lecturers: "أفضل المحاضرين حسب الدرجة المتوسطة",
   },
 };

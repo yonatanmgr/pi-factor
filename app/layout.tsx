@@ -2,7 +2,8 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { ibmPlexSansHebrew } from "@/lib/fonts";
-import {cn} from "@/lib/utils/utils";
+import { cn } from "@/lib/utils/utils";
+import { SemesterCacheProvider } from '@/lib/store/SemesterCacheContext';
 
 export const metadata = {
   metadataBase: new URL("https://pi-factor.vercel.app"),
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="he">
       <body className={cn(ibmPlexSansHebrew.className, "overflow-hidden")}>
-        {children}
+        <SemesterCacheProvider>
+          {children}
+        </SemesterCacheProvider>
         <SpeedInsights />
         <Analytics />
       </body>
