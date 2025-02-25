@@ -8,8 +8,9 @@ import { TRANSLATIONS } from "@/lib/constants";
 import { ibmPlexSansHebrew } from "@/lib/fonts";
 import { Language } from "@/lib/types";
 import { cn, dir, getSemesterName } from "@/lib/utils/utils";
-import { LucideCrown } from "lucide-react";
+import { LucideCrown, LucideUserMinus, LucideUserPlus } from "lucide-react";
 import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface TopLecturersProps {
   semesterDataResults: Array<{
@@ -34,6 +35,8 @@ const TopLecturers: React.FC<TopLecturersProps> = ({
       semesters: Set<string>;
     }
   >();
+
+  const [showAll, setShowAll] = React.useState(false);
 
   semesterDataResults.forEach(({ semester, processedData }) => {
     processedData.lecturers.forEach((lecturer) => {
@@ -66,13 +69,12 @@ const TopLecturers: React.FC<TopLecturersProps> = ({
       semesters: Array.from(semesters).sort(),
     }))
     .filter(({ average }) => !isNaN(average) && average > 0)
-    .sort((a, b) => b.average - a.average)
-    .slice(0, 5);
+    .sort((a, b) => b.average - a.average);
 
   if (sortedLecturers.length === 0) return null;
 
   return (
-    <div className="flex flex-row overflow-x-auto overflow-y-hidden items-center gap-2 py-2 px-4 bg-neutral-200/50 dark:bg-neutral-800/50 rounded-lg">
+    <div className="flex flex-row overflow-x-auto overflow-y-hidden items-center gap-2 py-2 px-4 bg-neutral-200/60 dark:bg-neutral-800/50 rounded-md sm:rounded-lg">
       <h3
         className={cn(
           "text-sm flex flex-row gap-1.5 items-center select-none min-w-fit text-neutral-600 dark:text-neutral-400",
@@ -83,42 +85,61 @@ const TopLecturers: React.FC<TopLecturersProps> = ({
       </h3>
       <div className="flex gap-2">
         <TooltipProvider delayDuration={100}>
-          {sortedLecturers.map(({ lecturer, average, semesters }, index) => (
-            <Tooltip key={lecturer}>
-              <TooltipTrigger asChild>
-                <div
-                  className={cn(
-                    "flex items-center min-w-fit gap-2 px-2 py-1.5 rounded-md text-sm cursor-default",
-                    index === 0 ? "font-bold" : "",
-                  )}
-                >
-                  <span className={cn(ibmPlexSansHebrew.className)}>
-                    {index + 1}. {lecturer}
-                  </span>
-                  <span className="text-neutral-500 min-w-fit dark:text-neutral-400 font-mono">
-                    {average.toFixed(2)}
-                  </span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent
-                dir={dir(language)}
-                className="max-w-[200px] overflow-hidden"
-              >
-                <div className={"font-bold mb-1"}>
-                  {TRANSLATIONS[language].taught_in_semesters}:
-                </div>
-                <div className="text-xs flex flex-wrap gap-1">
-                  {semesters.toReversed().map((s, index) => (
-                    <span key={index}>
-                      {getSemesterName(s, language)}
-                      {index !== semesters.length - 1 && ", "}
+          {sortedLecturers
+            .slice(0, showAll ? sortedLecturers.length : 5)
+            .map(({ lecturer, average, semesters }, index) => (
+              <Tooltip key={lecturer}>
+                <TooltipTrigger asChild>
+                  <div
+                    className={cn(
+                      "flex items-center min-w-fit gap-2 px-2 py-1.5 rounded-md text-sm cursor-default",
+                      index === 0 ? "font-bold" : "",
+                    )}
+                  >
+                    <span className={cn(ibmPlexSansHebrew.className)}>
+                      {index + 1}. {lecturer}
                     </span>
-                  ))}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          ))}
+                    <span className="text-neutral-500 min-w-fit dark:text-neutral-400 font-mono">
+                      {average.toFixed(2)}
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent
+                  dir={dir(language)}
+                  className="max-w-[200px] overflow-hidden"
+                >
+                  <div className={"font-bold mb-1"}>
+                    {TRANSLATIONS[language].taught_in_semesters}:
+                  </div>
+                  <div className="text-xs flex flex-wrap gap-1">
+                    {semesters.toReversed().map((s, index) => (
+                      <span key={index}>
+                        {getSemesterName(s, language)}
+                        {index !== semesters.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            ))}
         </TooltipProvider>
+        {sortedLecturers.length > 5 && (
+            <Button
+                className={"text-sm min-w-fit"}
+                onClick={() => setShowAll((prev) => !prev)}
+                variant={"outlined"}
+                size={"sm"}
+            >
+              {showAll ? (
+                  <LucideUserMinus size={14} />
+              ) : (
+                  <LucideUserPlus size={14} />
+              )}
+              {showAll
+                  ? TRANSLATIONS[language].show_less
+                  : TRANSLATIONS[language].show_all}
+            </Button>
+        )}
       </div>
     </div>
   );
