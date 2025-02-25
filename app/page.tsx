@@ -212,7 +212,7 @@ export default function Home() {
       )}
     >
       <header className={"w-full flex flex-row justify-between items-center"}>
-        <h1 className={"text-3xl font-black select-none"}>📊 Pi-Factor</h1>
+        <h1 className={"text-3xl font-black select-none max-sm:text-2xl"}>📊 Pi-Factor</h1>
         <section className={"flex flex-row gap-2"}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
