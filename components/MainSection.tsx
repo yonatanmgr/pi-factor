@@ -182,7 +182,7 @@ const MainSection = ({
               language={language}
             />
 
-            <div className={"grow h-full w-full overflow-auto"}>
+            <div className={"grow h-full mt-2 w-full overflow-auto"}>
               <GradeChart
                 view={view}
                 data={currentCourseGrades}
@@ -192,7 +192,7 @@ const MainSection = ({
             {isMobile && (
               <section
                 className={
-                  "flex flex-row gap-2 items-center w-full justify-between"
+                  "flex flex-row mt-2 gap-2 items-center w-full justify-between"
                 }
               >
                 <Drawer

@@ -214,7 +214,7 @@ const SelectedCourseButton = ({
           <span>{TRANSLATIONS[language].no_grade_data}</span>
         ) : null
       }
-      className={cn(
+      className={cn("max-sm:border border-neutral-200 dark:border-neutral-800",
         (grades?.[course.id ?? ""] === undefined ||
           !grades?.[course.id ?? ""]) &&
           "opacity-50 cursor-help",
