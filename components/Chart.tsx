@@ -1,8 +1,7 @@
 "use client";
 
-import { useWindowSize } from "usehooks-ts";
+import { useOnClickOutside, useWindowSize } from "usehooks-ts";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
 import {
   ChartConfig,
   ChartContainer,
@@ -12,7 +11,7 @@ import {
 import { SemesterGroupGradeInfo } from "@/lib/types";
 import { useCourseFilters, useSettings } from "@/lib/store";
 import * as React from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { dir, getMoedsList, getSemesterName } from "@/lib/utils/utils";
 import { TRANSLATIONS } from "@/lib/constants";
 
@@ -93,6 +92,19 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
   const { width } = useWindowSize();
   const isMobile = width < 640;
   const { language } = useSettings();
+  const ref = useRef(null);
+  const [showTooltip, setShowTooltip] = useState(true);
+
+  const handleClickOutside = () => {
+    showTooltip && setShowTooltip(false);
+  };
+
+  const handleClickInside = () => {
+    !showTooltip && setShowTooltip(true);
+  };
+
+  //@ts-ignore
+  useOnClickOutside(ref, handleClickOutside, "touchstart");
 
   const [barKeys, setBarKeys] = useState<
     Set<{ key: string; label: string; gradeRange?: string }>
@@ -198,7 +210,12 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
   }
 
   return (
-    <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
+    <ChartContainer
+      onTouchStart={handleClickInside}
+      ref={ref}
+      className={"grow lg:w-full h-full"}
+      config={chartConfig}
+    >
       <BarChart
         accessibilityLayer
         data={dataAsPercentage.filter((d) => Object.keys(d).length > 1)}
@@ -215,11 +232,12 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
         <ChartTooltip
           animationEasing={"ease-in-out"}
           animationDuration={100}
+          active={isMobile ? (showTooltip ? undefined : false) : undefined}
           trigger={isMobile ? "click" : "hover"}
           content={
             <ChartTooltipContent
               className={
-                "bg-neutral-50/70 dark:bg-neutral-900/70 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 p-2 rounded-md"
+                "bg-neutral-50/70 max-sm:pointer-events-auto dark:bg-neutral-900/70 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 p-2 rounded-md max-sm:max-h-60 max-sm:overflow-y-auto"
               }
               formatter={(v, n, i) => (
                 <div className={"flex flex-row gap-1 items-center w-full"}>
