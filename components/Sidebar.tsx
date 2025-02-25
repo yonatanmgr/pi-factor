@@ -1,6 +1,7 @@
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
 import ExamsList from "@/components/ExamsList";
 import useResetExams from "@/lib/hooks/useResetExams";
+import { SemesterData } from "@/lib/hooks/useSemesterData";
 
 interface SidebarProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -12,9 +13,17 @@ interface SidebarProps {
       }
     | null
     | undefined;
+  semesterDataResults: {
+    semester: string;
+    processedData: Omit<SemesterData, "isValidating">;
+  }[];
 }
 
-const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
+const Sidebar = ({
+  selectedCourse,
+  currentCourseGrades,
+  semesterDataResults,
+}: SidebarProps) => {
   useResetExams(selectedCourse);
 
   return (
@@ -26,6 +35,7 @@ const Sidebar = ({ selectedCourse, currentCourseGrades }: SidebarProps) => {
       <ExamsList
         selectedCourse={selectedCourse}
         currentCourseGrades={currentCourseGrades}
+        semesterDataResults={semesterDataResults}
       />
     </section>
   );

@@ -22,10 +22,16 @@ interface Props {
   icon?: React.ReactNode;
   items: { label: string; value: string; checked: Checked }[];
   onSelect: (label: string, checked: Checked) => void;
-    className?: string;
+  className?: string;
 }
 
-export function CheckboxDropdown({ label, icon, items, onSelect, className }: Props) {
+export function CheckboxDropdown({
+  label,
+  icon,
+  items,
+  onSelect,
+  className,
+}: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
   const { language } = useSettings();
 

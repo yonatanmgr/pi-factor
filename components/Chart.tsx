@@ -32,13 +32,13 @@ const GRADE_LABELS = [
 
 interface ChartProps {
   data:
-      | {
-    [semester: string]:
-        | { [group: string]: SemesterGroupGradeInfo[] | undefined }
-        | undefined;
-  }
-      | null
-      | undefined;
+    | {
+        [semester: string]:
+          | { [group: string]: SemesterGroupGradeInfo[] | undefined }
+          | undefined;
+      }
+    | null
+    | undefined;
   courseId: string;
   view: "stacked" | "grouped";
 }
@@ -95,7 +95,7 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
   const { language } = useSettings();
 
   const [barKeys, setBarKeys] = useState<
-      Set<{ key: string; label: string; gradeRange?: string }>
+    Set<{ key: string; label: string; gradeRange?: string }>
   >(new Set());
 
   const preprocessedData = useMemo(() => {
@@ -137,9 +137,9 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
         const moed = key.split(":")[1].split("-")[0];
         const group = key.split(":")[1].split("-")[1];
         if (
-            visibleMoeds[courseId + ":" + moed] &&
-            visibleGroups[courseId + ":" + group] &&
-            preprocessedData[key][index] !== undefined
+          visibleMoeds[courseId + ":" + moed] &&
+          visibleGroups[courseId + ":" + group] &&
+          preprocessedData[key][index] !== undefined
         ) {
           if (preprocessedData[key][index]) {
             // @ts-ignore
@@ -153,9 +153,9 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
 
   const totalStudentsPerMoed = useMemo(() => {
     return Object.fromEntries(
-        Object.entries(preprocessedData).map(([key, value]) => {
-          return [key, value.reduce((acc, curr) => acc + curr, 0)];
-        }),
+      Object.entries(preprocessedData).map(([key, value]) => {
+        return [key, value.reduce((acc, curr) => acc + curr, 0)];
+      }),
     );
   }, [preprocessedData]);
 
@@ -170,8 +170,8 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
   }, {}) as { [key: string]: number };
 
   const grandTotal: number = Object.values(totalPerGradeRange).reduce(
-      (acc: number, curr: number) => acc + curr,
-      0,
+    (acc: number, curr: number) => acc + curr,
+    0,
   );
 
   const dataAsPercentage = chartData.map((entry) => {
@@ -185,8 +185,10 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
   });
 
   const barKeysValues = barKeys.values();
-  const barKeysInData = Array.from(barKeysValues).filter(
-      (b) => Array.from(chartData.map(c => Object.keys(c))).flat().includes(b.key),
+  const barKeysInData = Array.from(barKeysValues).filter((b) =>
+    Array.from(chartData.map((c) => Object.keys(c)))
+      .flat()
+      .includes(b.key),
   );
 
   const newBarKeys = new Set(barKeysInData);
@@ -196,76 +198,77 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
   }
 
   return (
-      <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
-        <BarChart accessibilityLayer data={dataAsPercentage.filter(d => Object.keys(d).length > 1)}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-              dataKey="gradeRange"
-              tickLine={false}
-              tickMargin={8}
-              angle={isMobile ? -25 : 0}
-              interval={0}
-          />
-          <YAxis unit={"%"} tickLine={false} tickMargin={25} axisLine={false} />
-          <ChartTooltip
-              animationEasing={"ease-in-out"}
-              animationDuration={100}
-              trigger={isMobile ? "click" : "hover"}
-              content={
-                <ChartTooltipContent
-                    className={
-                      "bg-neutral-50/70 dark:bg-neutral-900/70 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 p-2 rounded-md"
-                    }
-                    formatter={(v, n, i) => (
-                        <div className={"flex flex-row gap-1 items-center w-full"}>
-                          <section
-                              className={"flex flex-row gap-1.5 items-center grow"}
-                          >
-                            <div
-                                className={
-                                  "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5 mt-[1px]"
-                                }
-                                style={
-                                  {
-                                    "--color-bg": i.color,
-                                    "--color-border": i.color,
-                                  } as React.CSSProperties
-                                }
-                            />
-                            <span
-                                className={"text-neutral-700 dark:text-neutral-200"}
-                            >
+    <ChartContainer className={"grow lg:w-full h-full"} config={chartConfig}>
+      <BarChart
+        accessibilityLayer
+        data={dataAsPercentage.filter((d) => Object.keys(d).length > 1)}
+      >
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="gradeRange"
+          tickLine={false}
+          tickMargin={8}
+          angle={isMobile ? -25 : 0}
+          interval={0}
+        />
+        <YAxis unit={"%"} tickLine={false} tickMargin={25} axisLine={false} />
+        <ChartTooltip
+          animationEasing={"ease-in-out"}
+          animationDuration={100}
+          trigger={isMobile ? "click" : "hover"}
+          content={
+            <ChartTooltipContent
+              className={
+                "bg-neutral-50/70 dark:bg-neutral-900/70 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 p-2 rounded-md"
+              }
+              formatter={(v, n, i) => (
+                <div className={"flex flex-row gap-1 items-center w-full"}>
+                  <section
+                    className={"flex flex-row gap-1.5 items-center grow"}
+                  >
+                    <div
+                      className={
+                        "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg) h-2.5 w-2.5 mt-[1px]"
+                      }
+                      style={
+                        {
+                          "--color-bg": i.color,
+                          "--color-border": i.color,
+                        } as React.CSSProperties
+                      }
+                    />
+                    <span className={"text-neutral-700 dark:text-neutral-200"}>
                       {n}
                     </span>
-                          </section>
-                          <span className={"font-mono font-bold pl-1"}>
+                  </section>
+                  <span className={"font-mono font-bold pl-1"}>
                     {parseFloat(v.toString()).toFixed(2)}%
                   </span>
-                        </div>
-                    )}
-                    labelFormatter={(v) => (
-                        <span>
+                </div>
+              )}
+              labelFormatter={(v) => (
+                <span>
                   {TRANSLATIONS[language].grade_range}:{" "}
-                          <span className={"font-bold"}>{v}</span>
+                  <span className={"font-bold"}>{v}</span>
                 </span>
-                    )}
-                    dir={dir(language)}
-                    nameKey={"label"}
-                />
-              }
+              )}
+              dir={dir(language)}
+              nameKey={"label"}
+            />
+          }
+        />
+        {Array.from(newBarKeys).map(({ key, label }) => (
+          <Bar
+            name={label}
+            key={key.split(":")[1]}
+            unit={"%"}
+            radius={view === "grouped" ? [4, 4, 0, 0] : 0}
+            dataKey={key}
+            stackId={view === "stacked" ? "a" : label}
+            fill={textToHSL(key)}
           />
-          {Array.from(newBarKeys).map(({ key, label }) => (
-              <Bar
-                  name={label}
-                  key={key.split(":")[1]}
-                  unit={"%"}
-                  radius={view === "grouped" ? [4, 4, 0, 0] : 0}
-                  dataKey={key}
-                  stackId={view === "stacked" ? "a" : label}
-                  fill={textToHSL(key)}
-              />
-          ))}
-        </BarChart>
-      </ChartContainer>
+        ))}
+      </BarChart>
+    </ChartContainer>
   );
 }

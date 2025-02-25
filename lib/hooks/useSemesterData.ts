@@ -1,6 +1,4 @@
 import { useCourseFilters, useSettings } from "@/lib/store";
-import useSWRImmutable from "swr/immutable";
-import { fetcher } from "@/lib/api";
 import { Language, SemesterCourses, SemesterGroupGradeInfo } from "@/lib/types";
 import { TRANSLATIONS } from "@/lib/constants";
 import { getMoedsList, getSemesterName } from "@/lib/utils/utils";
@@ -41,18 +39,16 @@ export function extractSemesterSearchData(
   };
 }
 
-interface SemesterData {
+export interface SemesterData {
   semesterName: string;
   averageMean: number;
   lecturers: Set<string>;
   lecturersList: string;
   groups: string[];
   moeds: number[];
-  selectedMoedsLabel: string;
   selectedGroupsLabel: string;
   isValidating: boolean;
   handleGroupSelect: (group: string, checked: Checked) => void;
-  handleMoedSelect: (moed: string, checked: Checked) => void;
 }
 
 export function processSemesterData(
@@ -60,13 +56,11 @@ export function processSemesterData(
   courseId: string,
   grades: { [group: string]: SemesterGroupGradeInfo[] | undefined } | undefined,
   semesterInfo: SemesterCourses | undefined,
-  visibleGroups: Record<string, boolean>,
-  visibleMoeds: Record<string, boolean>,
-  language: Language,
-  setVisibility: (type: "group" | "moed", key: string, value: boolean) => void
-): Omit<SemesterData, 'isValidating'> {
+): Omit<SemesterData, "isValidating"> {
   // Get sorted groups
   const groups = Object.keys(grades ?? {}).sort();
+
+  const language = useSettings.getState().language;
 
   const { semesterName, lecturersList, lecturers } = extractSemesterSearchData(
     semester,
@@ -74,6 +68,10 @@ export function processSemesterData(
     semesterInfo,
     language,
   );
+
+  const visibleGroups = useCourseFilters.getState().visibleGroups;
+  const visibleMoeds = useCourseFilters.getState().visibleMoeds;
+  const setVisibility = useCourseFilters.getState().setVisibility;
 
   // Get unique sorted moeds
   const moeds = Array.from(
@@ -89,29 +87,11 @@ export function processSemesterData(
     .filter((m) => m[1] && m[0].startsWith(courseId + ":" + semester))
     .map((m) => m[0]);
 
-  const selectedMoedsLabel =
-    selectedMoeds.length === 0
-      ? TRANSLATIONS[language].no_moed
-      : selectedMoeds.length === 1 && selectedMoeds[0].endsWith("0")
-        ? TRANSLATIONS[language].decisive_moed
-        : (selectedMoeds.length === 1
-            ? TRANSLATIONS[language].moed
-            : TRANSLATIONS[language].moeds) +
-          " " +
-          selectedMoeds
-            .filter((m) => !m.endsWith("0"))
-            .map(
-              (m) =>
-                getMoedsList(language)[parseInt(m[m.length - 1])].split(
-                  " ",
-                )[1],
-            )
-            .join(", ");
-
   // Calculate selected groups label
-  const selectedGroups = Object.entries(visibleGroups)
-    .filter((g) => g[1] && g[0].startsWith(courseId + ":" + semester));
-    
+  const selectedGroups = Object.entries(visibleGroups).filter(
+    (g) => g[1] && g[0].startsWith(courseId + ":" + semester),
+  );
+
   const selectedGroupsLabel =
     selectedGroups.length === 0
       ? TRANSLATIONS[language].no_group
@@ -133,25 +113,22 @@ export function processSemesterData(
 
   const handleGroupSelect = (group: string, checked: Checked) => {
     if (group === "00") {
-      setVisibility("group", courseId + ":" + semester + "00", checked === true);
+      setVisibility(
+        "group",
+        courseId + ":" + semester + "00",
+        checked === true,
+      );
       for (const g of groups) {
-        if (g !== "00") setVisibility("group", courseId + ":" + semester + g, false);
+        if (g !== "00")
+          setVisibility("group", courseId + ":" + semester + g, false);
       }
     } else {
       setVisibility("group", courseId + ":" + semester + "00", false);
-      setVisibility("group", courseId + ":" + semester + group, checked === true);
-    }
-  };
-
-  const handleMoedSelect = (moed: string, checked: Checked) => {
-    if (parseInt(moed) === 0) {
-      setVisibility("moed", courseId + ":" + semester + "0", checked === true);
-      for (const m of moeds) {
-        if (parseInt(m) !== 0) setVisibility("moed", courseId + ":" + semester + m, false);
-      }
-    } else {
-      setVisibility("moed", courseId + ":" + semester + moed, checked === true);
-      setVisibility("moed", courseId + ":" + semester + "0", false);
+      setVisibility(
+        "group",
+        courseId + ":" + semester + group,
+        checked === true,
+      );
     }
   };
 
@@ -162,39 +139,9 @@ export function processSemesterData(
     lecturersList,
     groups,
     moeds,
-    selectedMoedsLabel,
     selectedGroupsLabel,
     handleGroupSelect,
-    handleMoedSelect,
   };
 }
 
-export function useSemesterData(
-  semester: string,
-  courseId: string,
-  grades: { [group: string]: SemesterGroupGradeInfo[] | undefined } | undefined,
-): SemesterData {
-  const { visibleGroups, visibleMoeds, setVisibility } = useCourseFilters();
-  const { language } = useSettings();
 
-  const { data: semesterInfo, isValidating } = useSWRImmutable<SemesterCourses>(
-    `https://arazim-project.com/data/courses-${semester}.json`,
-    fetcher,
-  );
-
-  const processedData = processSemesterData(
-    semester,
-    courseId,
-    grades,
-    semesterInfo,
-    visibleGroups,
-    visibleMoeds,
-    language,
-    setVisibility
-  );
-
-  return {
-    ...processedData,
-    isValidating,
-  };
-}

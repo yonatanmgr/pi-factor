@@ -261,7 +261,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           {expandedGroups.has(row.content) ? (
             <ChevronDown size={20} className="ltr:mr-2 rtl:ml-2" />
           ) : (
-            <ChevronLeft size={20} className="ltr:mr-2 ltr:rotate-180 rtl:ml-2" />
+            <ChevronLeft
+              size={20}
+              className="ltr:mr-2 ltr:rotate-180 rtl:ml-2"
+            />
           )}
           <span className={cn(ibmPlexSansHebrew.className)}>{row.content}</span>
         </div>
@@ -278,7 +281,8 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
             isFocused
               ? "bg-neutral-200/70 dark:bg-neutral-800/70"
               : "bg-neutral-100 dark:bg-neutral-800/30",
-            expandedSubgroups.has(key) && "bg-neutral-200/60 dark:bg-neutral-800/80",
+            expandedSubgroups.has(key) &&
+              "bg-neutral-200/60 dark:bg-neutral-800/80",
           )}
           style={{
             transform: `translateY(${virtualRow.start}px)`,
@@ -290,7 +294,10 @@ const VirtualizedList: React.FC<VirtualizedListProps> = ({
           {expandedSubgroups.has(key) ? (
             <ChevronDown size={16} className="ltr:mr-1 rtl:ml-1" />
           ) : (
-            <ChevronLeft size={16} className="ltr:mr-1 ltr:rotate-180 rtl:ml-1" />
+            <ChevronLeft
+              size={16}
+              className="ltr:mr-1 ltr:rotate-180 rtl:ml-1"
+            />
           )}
           <span className={cn(ibmPlexSansHebrew.className)}>{row.content}</span>
         </div>

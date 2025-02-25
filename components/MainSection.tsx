@@ -6,25 +6,22 @@ import {
   LucideListFilter,
 } from "lucide-react";
 import { GradeChart } from "@/components/Chart";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState } from "react";
 import {
   AllTimeCourseInfo,
   AllTimeGrades,
-  SemesterCourses,
   SemesterGroupGradeInfo,
 } from "@/lib/types";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { useCourseFilters, useSettings } from "@/lib/store";
+import { useSettings } from "@/lib/store";
 import { useWindowSize } from "usehooks-ts";
 import { snapPoints, TRANSLATIONS } from "@/lib/constants";
 import CourseSelectionHeader from "@/components/CourseSelectionHeader";
 import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 import ExamsList from "@/components/ExamsList";
 import useResetExams from "@/lib/hooks/useResetExams";
-import { fetcher } from "@/lib/api";
-import { processSemesterData } from "@/lib/hooks/useSemesterData";
-import { useSemesterCache } from "@/lib/store/SemesterCacheContext";
 import TopLecturers from "@/components/TopLecturers";
+import { SemesterData } from "@/lib/hooks/useSemesterData";
 
 interface MainSectionProps {
   selectedCourses: AllTimeCourseInfo[];
@@ -44,6 +41,10 @@ interface MainSectionProps {
   options: { [id: string]: AllTimeCourseInfo & { id: string } };
   isLoading: boolean;
   onSelectedOptions: (option: AllTimeCourseInfo) => void;
+  semesterDataResults: {
+    semester: string;
+    processedData: Omit<SemesterData, "isValidating">;
+  }[];
 }
 
 export type snapPoint = number | string | null;
@@ -59,72 +60,16 @@ const MainSection = ({
   options,
   isLoading,
   onSelectedOptions,
+  semesterDataResults,
 }: MainSectionProps) => {
   const { width } = useWindowSize();
   const isMobile = width < 640;
   const { language } = useSettings();
-  const { visibleGroups, visibleMoeds, setVisibility } = useCourseFilters();
-  const { semesterCache, setSemesterData } = useSemesterCache();
 
   useResetExams(selectedCourse);
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [view, setView] = useState<"stacked" | "grouped">("stacked");
-  const [isLoadingSemesters, setIsLoadingSemesters] = useState(false);
-
-  // Fetch semester data with caching
-  useEffect(() => {
-    async function fetchSemesterData() {
-      if (!selectedCourse?.semesters) return;
-      
-      setIsLoadingSemesters(true);
-      try {
-        const semestersToFetch = selectedCourse.semesters.filter(
-          semester => !semesterCache[semester]
-        );
-
-        if (semestersToFetch.length > 0) {
-          const semesterPromises = semestersToFetch.map(semester =>
-            fetch(`https://arazim-project.com/data/courses-${semester}.json`)
-              .then(res => res.json())
-              .then(data => {
-                setSemesterData(semester, data);
-                return data;
-              })
-          );
-
-          await Promise.all(semesterPromises);
-        }
-      } catch (error) {
-        console.error('Failed to fetch semester data:', error);
-      } finally {
-        setIsLoadingSemesters(false);
-      }
-    }
-
-    fetchSemesterData();
-  }, [selectedCourse?.semesters, semesterCache, setSemesterData]);
-
-  // Process semester data
-  const semesterDataResults = useMemo(() => {
-    if (!selectedCourse?.semesters) return [];
-    
-    return selectedCourse.semesters.map(semester => ({
-      semester,
-      processedData: processSemesterData(
-        semester,
-        selectedCourse.id ?? "",
-        currentCourseGrades?.[semester],
-        semesterCache[semester],
-        visibleGroups,
-        visibleMoeds,
-        language,
-        setVisibility
-      )
-    }));
-  }, [selectedCourse, currentCourseGrades, semesterCache, visibleGroups, visibleMoeds, language]);
-
-  console.log(semesterDataResults)
 
   return (
     <section
@@ -204,22 +149,26 @@ const MainSection = ({
               rel={"noreferrer"}
               href={`https://www.ims.tau.ac.il/Tal/Syllabus/Syllabus_L.aspx?course=${selectedCourse.id}01&year=${parseInt(first(selectedCourse.semesters)?.slice(0, 4) ?? "") - 1}`}
               className={
-                "flex flex-row flex-wrap gap-2 text-2xl hover:underline w-fit"
+                "flex flex-row gap-2 sm:mb-1 text-2xl hover:underline w-fit overflow-y-hidden max-sm:h-10"
               }
             >
               {selectedCourse?.name && (
-                <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
-                  {selectedCourse?.name}
+                <span
+                  className={cn(
+                    "font-bold max-sm:text-lg flex flex-row gap-2",
+                    ibmPlexSansHebrew.className,
+                  )}
+                >
+                  <span className={"min-w-fit"}>{selectedCourse?.name}</span>
                   {selectedCourse?.id && (
-                    <span className={"font-light"}>
-                      {" "}
+                    <span className={"font-light inline-block min-w-fit"}>
                       | {selectedCourse?.id}
                     </span>
                   )}
                 </span>
               )}
             </a>
-            <span className={"opacity-80"}>
+            <span className={"opacity-80 max-sm:text-sm"}>
               {TRANSLATIONS[language].faculty}:{" "}
               <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
                 {selectedCourse?.faculty}
@@ -227,7 +176,7 @@ const MainSection = ({
             </span>
 
             <div className="w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"></div>
-            
+
             <TopLecturers
               semesterDataResults={semesterDataResults}
               language={language}
@@ -272,6 +221,7 @@ const MainSection = ({
                       <ExamsList
                         selectedCourse={selectedCourse}
                         currentCourseGrades={currentCourseGrades}
+                        semesterDataResults={semesterDataResults}
                       />
                     </div>
                   </DrawerContent>

@@ -58,7 +58,9 @@ const CourseSelectionHeader = ({
           <DrawerTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-neutral-50 snap-start snap-normal dark:bg-neutral-900 border"}
+              className={
+                "bg-neutral-50 snap-start snap-normal dark:bg-neutral-900 border"
+              }
               disabled={isLoading}
             >
               <LucideBookPlus
@@ -99,7 +101,9 @@ const CourseSelectionHeader = ({
           <DialogTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-neutral-50 dark:bg-neutral-900 border snap-start snap-normal"}
+              className={
+                "bg-neutral-50 dark:bg-neutral-900 border snap-start snap-normal"
+              }
               disabled={isLoading}
             >
               <LucideBookPlus

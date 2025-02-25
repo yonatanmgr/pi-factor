@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useCourses, useGrades } from "@/lib/api";
 import { AllTimeCourseInfo, Language } from "@/lib/types";
 import MainSection from "@/components/MainSection";
@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
 import { useWindowSize } from "usehooks-ts";
-import { useSettings } from "@/lib/store";
+import { useCourseFilters, useSettings } from "@/lib/store";
 import { cn, dir } from "@/lib/utils/utils";
 import {
   DropdownMenu,
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TRANSLATIONS } from "@/lib/constants";
 import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
+import { useSemesterCache } from "@/lib/store/SemesterCacheContext";
+import { processSemesterData } from "@/lib/hooks/useSemesterData";
 
 export const runtime = "edge";
 export const preferredRegion = "home";
@@ -45,7 +47,7 @@ export default function Home() {
   const handleLanguageChange = (value: string) => {
     localStorage.setItem("language", value);
     setLanguage(value as Language);
-  }
+  };
 
   useEffect(() => {
     if (isDarkMode) {
@@ -146,6 +148,61 @@ export default function Home() {
     ? (grades ?? {})[selectedCourse.id ?? ""]
     : null;
 
+  const { visibleGroups, visibleMoeds, setVisibility } = useCourseFilters();
+  const { semesterCache, setSemesterData } = useSemesterCache();
+
+  // Fetch semester data with caching
+  useEffect(() => {
+    async function fetchSemesterData() {
+      if (!selectedCourse?.semesters) return;
+
+      try {
+        const semestersToFetch = selectedCourse.semesters.filter(
+          (semester) => !semesterCache[semester],
+        );
+
+        if (semestersToFetch.length > 0) {
+          const semesterPromises = semestersToFetch.map((semester) =>
+            fetch(`https://arazim-project.com/data/courses-${semester}.json`)
+              .then((res) => res.json())
+              .then((data) => {
+                setSemesterData(semester, data);
+                return data;
+              }),
+          );
+
+          await Promise.all(semesterPromises);
+        }
+      } catch (error) {
+        console.error("Failed to fetch semester data:", error);
+      }
+    }
+
+    fetchSemesterData();
+  }, [selectedCourse?.semesters, semesterCache, setSemesterData]);
+
+  // Process semester data
+  const semesterDataResults = useMemo(() => {
+    if (!selectedCourse?.semesters) return [];
+
+    return selectedCourse.semesters.map((semester) => ({
+      semester,
+      processedData: processSemesterData(
+        semester,
+        selectedCourse.id ?? "",
+        currentCourseGrades?.[semester],
+        semesterCache[semester],
+      ),
+    }));
+  }, [
+    selectedCourse,
+    currentCourseGrades,
+    semesterCache,
+    visibleGroups,
+    visibleMoeds,
+    language,
+  ]);
+
   return (
     <main
       dir={dir(language)}
@@ -238,8 +295,9 @@ export default function Home() {
         }
       >
         {!isMobile && selectedCourses && selectedTab >= 0 && (
-            <Sidebar {...{ selectedCourse, currentCourseGrades }} />
-
+          <Sidebar
+            {...{ selectedCourse, currentCourseGrades, semesterDataResults }}
+          />
         )}
         <MainSection
           {...{
@@ -253,6 +311,7 @@ export default function Home() {
             setSelectedTab,
             selectedCourse,
             currentCourseGrades,
+            semesterDataResults,
           }}
         />
       </section>
