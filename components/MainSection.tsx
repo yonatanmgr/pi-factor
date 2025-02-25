@@ -74,7 +74,7 @@ const MainSection = ({
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-xl bg-neutral-100 dark:bg-neutral-900/30 dark:border-neutral-500/20 border"
+        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 sm:p-2 sm:h-full w-full sm:rounded-xl sm:bg-neutral-100 sm:dark:bg-neutral-900/30 sm:dark:border-neutral-500/20 sm:border"
       }
     >
       <CourseSelectionHeader
@@ -90,7 +90,7 @@ const MainSection = ({
       />
       <section
         className={
-          "grow rounded-md w-full bg-linear-to-t from-neutral-50/30 to-neutral-50 dark:from-neutral-900/30 dark:to-neutral-900 border overflow-hidden"
+          "grow rounded-md w-full sm:bg-linear-to-t from-neutral-50/30 to-neutral-50 dark:from-neutral-900/30 dark:to-neutral-900 sm:border overflow-hidden"
         }
       >
         {!selectedCourses?.length && (
@@ -115,7 +115,7 @@ const MainSection = ({
           <div
             dir={dir(language)}
             className={
-              "px-4 py-3 h-full flex flex-col relative gap-1 max-h-full"
+              "sm:px-4 sm:py-3 h-full flex flex-col relative gap-1 max-h-full"
             }
           >
             <Button
@@ -124,7 +124,7 @@ const MainSection = ({
                 setView(view === "stacked" ? "grouped" : "stacked")
               }
               className={
-                "absolute top-2 shadow-none max-sm:hidden rtl:left-2 ltr:right-2"
+                "absolute top-2 bg-neutral-50 dark:bg-neutral-900 shadow-none max-sm:hidden rtl:left-2 ltr:right-2"
               }
             >
               {

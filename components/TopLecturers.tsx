@@ -83,8 +83,8 @@ const TopLecturers: React.FC<TopLecturersProps> = ({
       >
         <LucideCrown size={14} /> {TRANSLATIONS[language].top_lecturers}:
       </h3>
-      <div className="flex gap-2">
-        <TooltipProvider delayDuration={100}>
+      <TooltipProvider delayDuration={100}>
+        <div className="flex gap-2">
           {sortedLecturers
             .slice(0, showAll ? sortedLecturers.length : 5)
             .map(({ lecturer, average, semesters }, index) => (
@@ -122,25 +122,26 @@ const TopLecturers: React.FC<TopLecturersProps> = ({
                 </TooltipContent>
               </Tooltip>
             ))}
-        </TooltipProvider>
-        {sortedLecturers.length > 5 && (
+
+          {sortedLecturers.length > 5 && (
             <Button
-                className={"text-sm min-w-fit"}
-                onClick={() => setShowAll((prev) => !prev)}
-                variant={"outlined"}
-                size={"sm"}
+              className={"text-sm min-w-fit"}
+              onClick={() => setShowAll((prev) => !prev)}
+              variant={"outlined"}
+              size={"sm"}
             >
               {showAll ? (
-                  <LucideUserMinus size={14} />
+                <LucideUserMinus size={14} />
               ) : (
-                  <LucideUserPlus size={14} />
+                <LucideUserPlus size={14} />
               )}
               {showAll
-                  ? TRANSLATIONS[language].show_less
-                  : TRANSLATIONS[language].show_all}
+                ? TRANSLATIONS[language].show_less
+                : TRANSLATIONS[language].show_all}
             </Button>
-        )}
-      </div>
+          )}
+        </div>
+      </TooltipProvider>
     </div>
   );
 };

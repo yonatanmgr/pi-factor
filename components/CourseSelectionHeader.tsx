@@ -153,7 +153,7 @@ const CourseSelectionHeader = ({
       {!selectedCourses?.length && (
         <span
           className={
-            "min-w-fit text-sm h-9 mx-1 text-neutral-500 dark:text-neutral-400 select-none flex flex-row items-center"
+            "min-w-fit text-sm h-9 sm:mx-1 text-neutral-500 dark:text-neutral-400 select-none flex flex-row items-center"
           }
         >
           {TRANSLATIONS[language].selected_courses_will_appear_here}
