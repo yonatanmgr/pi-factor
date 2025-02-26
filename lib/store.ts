@@ -6,15 +6,6 @@ interface SSemesters {
   setMatchesSearch: (semester: string, match: boolean) => void;
 }
 
-export const useSemesters = create<SSemesters>((set) => ({
-  matchesSearch: {},
-  setMatchesSearch: (semester, match) =>
-    set((state) => {
-      state.matchesSearch[semester] = match;
-      return { ...state };
-    }),
-}));
-
 interface SCourseFilters {
   visibleMoeds: Record<string, boolean>;
   visibleGroups: Record<string, boolean>;

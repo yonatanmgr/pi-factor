@@ -6,7 +6,8 @@ import { AnimatePresence } from "motion/react";
 import Semester from "@/components/Semester";
 import React, { useState } from "react";
 import { AllTimeCourseInfo, SemesterGroupGradeInfo } from "@/lib/types";
-import { useCourseFilters, useSemesters, useSettings } from "@/lib/store";
+import { useCourseFilters, useSettings } from "@/lib/store";
+import { SemesterData } from "@/lib/hooks/useSemesterData";
 
 interface ExamsListProps {
   selectedCourse: AllTimeCourseInfo | null;
@@ -18,9 +19,17 @@ interface ExamsListProps {
       }
     | null
     | undefined;
+  semesterDataResults: {
+    semester: string;
+    processedData: Omit<SemesterData, "isValidating">;
+  }[];
 }
 
-const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
+const ExamsList = ({
+  selectedCourse,
+  currentCourseGrades,
+  semesterDataResults,
+}: ExamsListProps) => {
   const { visibleMoeds, clearMoeds } = useCourseFilters();
   const { language } = useSettings();
   const [search, setSearch] = useState("");
@@ -29,8 +38,22 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
     (o) => Object.values(o[1] ?? {}).length,
   );
 
-  const { matchesSearch } = useSemesters();
-  const noMatches = Object.values(matchesSearch).every((v) => v == undefined || !v);
+  const matchingSemesters = exams.filter(([semester, data]) => {
+    const semesterData = semesterDataResults.find(
+      (res) => res.semester === semester,
+    )?.processedData;
+    if (!semesterData) {
+      return false;
+    }
+    return search.split(" ").every((word) => {
+      return `${semesterData.semesterName} ${semesterData.lecturersList}`
+        .toLowerCase()
+        .trim()
+        .replace(" ", "")
+        .replace(",", "")
+        .includes(word.toLowerCase().trim());
+    });
+  });
 
   if (
     selectedCourse &&
@@ -86,18 +109,22 @@ const ExamsList = ({ selectedCourse, currentCourseGrades }: ExamsListProps) => {
             }
           >
             <AnimatePresence mode={"popLayout"}>
-              {noMatches && (
+              {matchingSemesters.length == 0 && (
                 <div className="flex flex-row justify-center items-center p-2 rounded-md text-neutral-500 select-none">
                   {TRANSLATIONS[language].no_semesters_match}
                 </div>
               )}
-              {exams.map(([semester, data]) => (
+              {matchingSemesters.map(([semester, data]) => (
                 <Semester
                   key={selectedCourse.id + semester}
                   semester={semester}
                   grades={data}
                   courseId={selectedCourse.id ?? ""}
                   searchQuery={search}
+                  semesterData={
+                    semesterDataResults.find((res) => res.semester === semester)
+                      ?.processedData
+                  }
                 />
               ))}
             </AnimatePresence>

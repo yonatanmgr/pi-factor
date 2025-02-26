@@ -58,7 +58,9 @@ const CourseSelectionHeader = ({
           <DrawerTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-neutral-50 snap-start snap-normal dark:bg-neutral-900 border"}
+              className={
+                "bg-neutral-50 snap-start snap-normal dark:bg-neutral-900 border"
+              }
               disabled={isLoading}
             >
               <LucideBookPlus
@@ -99,7 +101,9 @@ const CourseSelectionHeader = ({
           <DialogTrigger asChild>
             <Button
               variant={"outlined"}
-              className={"bg-neutral-50 dark:bg-neutral-900 border snap-start snap-normal"}
+              className={
+                "bg-neutral-50 dark:bg-neutral-900 border snap-start snap-normal"
+              }
               disabled={isLoading}
             >
               <LucideBookPlus
@@ -149,7 +153,7 @@ const CourseSelectionHeader = ({
       {!selectedCourses?.length && (
         <span
           className={
-            "min-w-fit text-sm h-9 mx-1 text-neutral-500 dark:text-neutral-400 select-none flex flex-row items-center"
+            "min-w-fit text-sm h-9 sm:mx-1 text-neutral-500 dark:text-neutral-400 select-none flex flex-row items-center"
           }
         >
           {TRANSLATIONS[language].selected_courses_will_appear_here}
@@ -210,7 +214,7 @@ const SelectedCourseButton = ({
           <span>{TRANSLATIONS[language].no_grade_data}</span>
         ) : null
       }
-      className={cn(
+      className={cn("max-sm:border border-neutral-200 dark:border-neutral-800",
         (grades?.[course.id ?? ""] === undefined ||
           !grades?.[course.id ?? ""]) &&
           "opacity-50 cursor-help",

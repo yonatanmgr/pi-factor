@@ -20,6 +20,8 @@ import CourseSelectionHeader from "@/components/CourseSelectionHeader";
 import { ibmPlexSansArabic, ibmPlexSansHebrew } from "@/lib/fonts";
 import ExamsList from "@/components/ExamsList";
 import useResetExams from "@/lib/hooks/useResetExams";
+import TopLecturers from "@/components/TopLecturers";
+import { SemesterData } from "@/lib/hooks/useSemesterData";
 
 interface MainSectionProps {
   selectedCourses: AllTimeCourseInfo[];
@@ -39,6 +41,10 @@ interface MainSectionProps {
   options: { [id: string]: AllTimeCourseInfo & { id: string } };
   isLoading: boolean;
   onSelectedOptions: (option: AllTimeCourseInfo) => void;
+  semesterDataResults: {
+    semester: string;
+    processedData: Omit<SemesterData, "isValidating">;
+  }[];
 }
 
 export type snapPoint = number | string | null;
@@ -54,6 +60,7 @@ const MainSection = ({
   options,
   isLoading,
   onSelectedOptions,
+  semesterDataResults,
 }: MainSectionProps) => {
   const { width } = useWindowSize();
   const isMobile = width < 640;
@@ -67,7 +74,7 @@ const MainSection = ({
   return (
     <section
       className={
-        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 p-2 sm:h-full w-full rounded-xl bg-neutral-100 dark:bg-neutral-900/30 dark:border-neutral-500/20 border"
+        "sm:min-h-full max-sm:grow h-fit overflow-hidden flex flex-col gap-2 sm:p-2 sm:h-full w-full sm:rounded-xl sm:bg-neutral-100 sm:dark:bg-neutral-900/30 sm:dark:border-neutral-500/20 sm:border"
       }
     >
       <CourseSelectionHeader
@@ -83,7 +90,7 @@ const MainSection = ({
       />
       <section
         className={
-          "grow rounded-md w-full bg-linear-to-t from-neutral-50/30 to-neutral-50 dark:from-neutral-900/30 dark:to-neutral-900 border overflow-hidden"
+          "grow rounded-md w-full sm:bg-linear-to-t from-neutral-50/30 to-neutral-50 dark:from-neutral-900/30 dark:to-neutral-900 sm:border overflow-hidden"
         }
       >
         {!selectedCourses?.length && (
@@ -108,7 +115,7 @@ const MainSection = ({
           <div
             dir={dir(language)}
             className={
-              "px-4 py-3 h-full flex flex-col relative gap-2 max-h-full"
+              "sm:px-4 sm:py-3 h-full flex flex-col relative gap-1 max-h-full"
             }
           >
             <Button
@@ -117,7 +124,7 @@ const MainSection = ({
                 setView(view === "stacked" ? "grouped" : "stacked")
               }
               className={
-                "absolute top-2 shadow-none max-sm:hidden rtl:left-2 ltr:right-2"
+                "absolute top-2 bg-neutral-50 dark:bg-neutral-900 shadow-none max-sm:hidden rtl:left-2 ltr:right-2"
               }
             >
               {
@@ -142,22 +149,26 @@ const MainSection = ({
               rel={"noreferrer"}
               href={`https://www.ims.tau.ac.il/Tal/Syllabus/Syllabus_L.aspx?course=${selectedCourse.id}01&year=${parseInt(first(selectedCourse.semesters)?.slice(0, 4) ?? "") - 1}`}
               className={
-                "flex flex-row flex-wrap gap-2 text-2xl hover:underline w-fit"
+                "flex flex-row gap-2 sm:mb-1 text-2xl hover:underline w-fit overflow-y-hidden max-sm:min-h-6 min-h-7.5"
               }
             >
               {selectedCourse?.name && (
-                <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
-                  {selectedCourse?.name}
+                <span
+                  className={cn(
+                    "font-bold max-sm:text-lg flex flex-row gap-2 max-sm:min-h-6 min-h-7.5",
+                    ibmPlexSansHebrew.className,
+                  )}
+                >
+                  <span className={"min-w-fit"}>{selectedCourse?.name}</span>
                   {selectedCourse?.id && (
-                    <span className={"font-light"}>
-                      {" "}
+                    <span className={"font-light inline-block min-w-fit"}>
                       | {selectedCourse?.id}
                     </span>
                   )}
                 </span>
               )}
             </a>
-            <span className={"opacity-80"}>
+            <span className={"opacity-80 max-sm:mt-1 max-sm:text-sm"}>
               {TRANSLATIONS[language].faculty}:{" "}
               <span className={cn("font-bold", ibmPlexSansHebrew.className)}>
                 {selectedCourse?.faculty}
@@ -165,7 +176,13 @@ const MainSection = ({
             </span>
 
             <div className="w-full h-px bg-neutral-300/50 dark:bg-neutral-500/40 my-2"></div>
-            <div className={"grow h-full w-full overflow-auto"}>
+
+            <TopLecturers
+              semesterDataResults={semesterDataResults}
+              language={language}
+            />
+
+            <div className={"grow h-full mt-2 w-full overflow-auto"}>
               <GradeChart
                 view={view}
                 data={currentCourseGrades}
@@ -175,7 +192,7 @@ const MainSection = ({
             {isMobile && (
               <section
                 className={
-                  "flex flex-row gap-2 items-center w-full justify-between"
+                  "flex flex-row mt-2 gap-2 items-center w-full justify-between"
                 }
               >
                 <Drawer
@@ -204,6 +221,7 @@ const MainSection = ({
                       <ExamsList
                         selectedCourse={selectedCourse}
                         currentCourseGrades={currentCourseGrades}
+                        semesterDataResults={semesterDataResults}
                       />
                     </div>
                   </DrawerContent>
