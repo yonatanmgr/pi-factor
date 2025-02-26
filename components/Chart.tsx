@@ -209,6 +209,20 @@ export function GradeChart({ data, courseId, view }: ChartProps) {
     return <></>;
   }
 
+  if (!newBarKeys.size) {
+    return (
+      <div
+        className={
+          "flex flex-col gap-2 items-center justify-center h-full w-full"
+        }
+      >
+        <h1 className={"text-neutral-400 dark:text-neutral-600"}>
+          {TRANSLATIONS[language].no_exams}
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <ChartContainer
       onTouchStart={handleClickInside}
