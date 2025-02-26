@@ -66,7 +66,7 @@ const TopLecturers: React.FC<TopLecturersProps> = ({
     .filter(({ average }) => !isNaN(average) && average > 0)
     .sort((a, b) => b.average - a.average);
 
-  if (sortedLecturers.length === 0) return null;
+  if (sortedLecturers.length < 2) return null;
 
   return (
     <div className="flex flex-row overflow-x-auto overflow-y-hidden items-center gap-2 py-2 px-4 bg-neutral-200/60 dark:bg-neutral-800/50 rounded-md sm:rounded-lg">

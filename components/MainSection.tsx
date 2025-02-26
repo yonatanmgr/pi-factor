@@ -149,13 +149,13 @@ const MainSection = ({
               rel={"noreferrer"}
               href={`https://www.ims.tau.ac.il/Tal/Syllabus/Syllabus_L.aspx?course=${selectedCourse.id}01&year=${parseInt(first(selectedCourse.semesters)?.slice(0, 4) ?? "") - 1}`}
               className={
-                "flex flex-row gap-2 sm:mb-1 text-2xl hover:underline w-fit overflow-y-hidden min-h-[20px]"
+                "flex flex-row gap-2 sm:mb-1 text-2xl hover:underline w-fit overflow-y-hidden max-sm:min-h-6 min-h-7.5"
               }
             >
               {selectedCourse?.name && (
                 <span
                   className={cn(
-                    "font-bold max-sm:text-lg flex flex-row gap-2 min-h-[20px]",
+                    "font-bold max-sm:text-lg flex flex-row gap-2 max-sm:min-h-6 min-h-7.5",
                     ibmPlexSansHebrew.className,
                   )}
                 >
